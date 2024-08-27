@@ -1,1 +1,1 @@
-const test = () => {};
+export const screenHeight = window.innerHeight;

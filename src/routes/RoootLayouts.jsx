@@ -1,11 +1,14 @@
 import { Box } from "@mui/joy";
 import React from "react";
 import { Outlet } from "react-router-dom";
+import { screenHeight } from "../Constant/Constant";
 
 const RoootLayouts = () => {
   return (
-    <Box className="flex flex-1 bg-slate-400 justify-center items-center">
-      <Box>Login Page</Box>
+    <Box className="flex flex-grow flex-grow-1 bg-green-300 flex-col">
+      <Box className="flex" sx={{ height: screenHeight }}>
+        Login Page
+      </Box>
     </Box>
   );
 };
