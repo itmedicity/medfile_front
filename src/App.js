@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import RoootLayouts from "./routes/RoootLayouts";
 import Home from "./Pages/Home";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 // Rotes
 
@@ -13,9 +14,19 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <RoootLayouts />,
-    children: [{ path: "/Home", element: <Home /> }],
+    // children: [{ path: "/Home", element: <Home /> }],
   },
-  // { path: "/", element: <RoootLayouts /> },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/Home", element: <Home />,
+        children: [
+          // { path: "/Search", element: <Home /> }
+        ],
+      }
+    ],
+  },
 ]);
 
 function App() {
