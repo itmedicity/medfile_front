@@ -1,34 +1,38 @@
-import * as React from 'react';
-import Box from '@mui/joy/Box';
-import Drawer from '@mui/joy/Drawer';
-import ButtonGroup from '@mui/joy/ButtonGroup';
-import Button from '@mui/joy/Button';
-import List from '@mui/joy/List';
-import Divider from '@mui/joy/Divider';
-import ListItem from '@mui/joy/ListItem';
-import ListItemButton from '@mui/joy/ListItemButton';
-import { useState } from 'react';
+import { Box } from '@mui/joy'
+import React from 'react'
+import { baseColor } from '../Constant/Constant'
+import { Divider, Paper, Toolbar } from '@mui/material'
+import largeLogo from '../assets/medivault04.png'
+import Research from '../assets/Research.gif'
 
-const DrawerWindow = ({ open, toggleDrawer }) => {
-    // const [open, setOpen] = useState(true);
-
-    // const toggleDrawer = (inOpen) => (event) => {
-    //     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-    //         return;
-    //     }
-    //     setOpen(inOpen);
-    // };
-
-
+const DrawerWindow = ({ drawerWidth }) => {
     return (
-        <Drawer
-            size="sm"
-            open={open}
-            onClose={toggleDrawer(false)}
+        <Paper
+            square
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                bgcolor: baseColor.secondary,
+                flexBasis: drawerWidth,
+                boxShadow: 5,
+                outlineColor: baseColor.primarylight,
+                position: 'relative',
+                height: '100%',
+                overflow: 'auto',
+                transition: 'all 0.2s ease-in-out',
+            }}
         >
-            {/* {list(size)} */}
-            <div>sfsdfsdf</div>
-        </Drawer>
+            <Toolbar variant='dense' sx={{ bgcolor: baseColor.secondary, }} >
+                {
+                    drawerWidth === 60 ?
+                        null :
+                        <Box sx={{ transition: 'all 0.2s ease-in-out', height: 70 }} component={'img'} src={largeLogo} alt='MediVault' />
+                }
+            </Toolbar>
+            <Divider sx={{ bgcolor: baseColor.primarylight }} />
+            asdasd
+        </Paper>
+
     )
 }
 

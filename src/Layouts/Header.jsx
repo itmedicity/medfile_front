@@ -8,18 +8,19 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { memo } from 'react';
 import { baseColor } from '../Constant/Constant';
+import backward from '../assets/wired.gif'
+import homegif from '../assets/home.gif'
+import person from '../assets/Individual.gif'
+import Avatar from '@mui/joy/Avatar';
 
 const Header = ({ toggleDrawer }) => {
-
-    const handleDrawer = () => {
-        toggleDrawer(true)
-    }
 
     return (
         // <Box sx={{ flexGrow: 1 }}>
         <AppBar
             position="static"
-            sx={{ backgroundColor: baseColor.primarylight, }}
+            elevation={1}
+            sx={{ backgroundColor: baseColor.secondarylight }}
         >
             <Toolbar
                 variant='dense'
@@ -27,17 +28,18 @@ const Header = ({ toggleDrawer }) => {
                 <IconButton
                     size="large"
                     edge="start"
-                    color="inherit"
+                    // color="inherit"
                     aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={handleDrawer}
+                    sx={{ mr: 2, p: 1, color: baseColor.backGroundFont }}
+                    onClick={toggleDrawer}
                 >
-                    <MenuIcon />
+                    {/* <MenuIcon /> */}
+                    <img src={homegif} alt="backward" height={25} width={25} />
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: baseColor.backGroundFont }}>
                     News
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <Avatar size="md" src={person} alt='person' sx={{ bgcolor: baseColor.primarylight }} />
             </Toolbar>
         </AppBar>
         // </Box>

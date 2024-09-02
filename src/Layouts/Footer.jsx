@@ -10,31 +10,32 @@ import { memo } from "react";
 import { baseColor } from "../Constant/Constant";
 
 const Footer = () => {
-  return (
-    <AppBar
-      position="fixed"
-      // color="primary"
-      sx={{
-        top: "auto",
-        bottom: 0,
-        backgroundColor: baseColor.primarylight,
-        // maxHeight: 35,
-      }}
-    >
-      <Toolbar variant="dense">
-        {/* <IconButton color="inherit" aria-label="open drawer">
+    return (
+        <AppBar
+            position="sticky"
+            elevation={2}
+            // color="primary"
+            sx={{
+                top: 'auto',
+                bottom: 0,
+                backgroundColor: baseColor.primarylight,
+                maxHeight: 20,
+            }}
+        >
+            <Toolbar variant="dense">
+                {/* <IconButton color="inherit" aria-label="open drawer">
                     <MenuIcon />
                 </IconButton> */}
-        <Box sx={{ flexGrow: 1 }} />
-        {/* <IconButton color="inherit">
+                <Box sx={{ flexGrow: 1 }} />
+                {/* <IconButton color="inherit">
           <SearchIcon />
         </IconButton> */}
-        {/* <IconButton color="inherit"> */}
-        {/* <MoreIcon /> */}
-        {/* </IconButton> */}
-      </Toolbar>
-    </AppBar>
-  );
+                {/* <IconButton color="inherit"> */}
+                {/* <MoreIcon /> */}
+                {/* </IconButton> */}
+            </Toolbar>
+        </AppBar>
+    );
 };
 
 export default memo(Footer);

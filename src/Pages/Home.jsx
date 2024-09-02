@@ -5,32 +5,44 @@ import Footer from "../Layouts/Footer";
 import Header from "../Layouts/Header";
 import DrawerWindow from "../Layouts/DrawerWindow";
 import { useState } from "react";
+import { AppBar } from "@mui/material";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
+  const [drawerWidth, setdrawerWidth] = useState(240)
 
-  const toggleDrawer = (inOpen) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setOpen(inOpen);
+  const toggleDrawer = () => {
+    setdrawerWidth(drawerWidth === 240 ? 60 : 240);
+    // setOpen(display);
   };
+
 
   return (
     <Box
       sx={{
-        backgroundColor: "white",
+        backgroundColor: baseColor.backGroundColor,
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         height: screenHeight,
       }}
     >
-      <DrawerWindow open={open} toggleDrawer={toggleDrawer} />
-      <Header toggleDrawer={setOpen} />
-      <Footer />
+      {/* Drawer Start */}
+      <DrawerWindow drawerWidth={drawerWidth} />
+      {/* Drawer End */}
+
+      {/* Content Start */}
+      <Box sx={{ display: 'flex', bgcolor: baseColor.backGroundColor, flexGrow: 1, flexDirection: "column" }}>
+        <Box sx={{ display: 'flex' }} >
+          <Header toggleDrawer={toggleDrawer} />
+        </Box>
+        <Box sx={{ display: 'flex', flexGrow: 1, }} >
+          sdfds
+        </Box>
+        <Box>
+          {/* <Footer /> */}
+        </Box>
+      </Box>
+      {/* Content End */}
     </Box>
   );
 };

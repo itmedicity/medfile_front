@@ -63,6 +63,20 @@ const Colors = () => {
       >
         fontPink
       </Box>
+      <Box
+        sx={{ bgcolor: '#e9fcf6' }}
+        className="flex flex-1 h-[20%] border "
+      >
+        primaryBackground
+      </Box>
+      <Box
+        sx={{ bgcolor: '#119c75' }}
+        className="flex flex-1 h-[20%] border "
+      >
+        backgroundFont
+      </Box>
+
+
     </Box>
   );
 };
