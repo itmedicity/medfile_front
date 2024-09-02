@@ -7,6 +7,7 @@ import {
 import RoootLayouts from "./routes/RoootLayouts";
 import Home from "./Pages/Home";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Colors from "./Pages/Colors";
 
 // Rotes
 
@@ -14,17 +15,20 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <RoootLayouts />,
-    // children: [{ path: "/Home", element: <Home /> }],
+    children: [],
   },
   {
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/Home", element: <Home />,
+        path: "/Home",
+        element: <Home />,
         children: [
-          // { path: "/Search", element: <Home /> }
+          // { path: "/Search", element: <Colors /> },
+          // { path: "/Color", element: <Colors /> },
         ],
-      }
+      },
+      { path: "/Color", element: <Colors /> },
     ],
   },
 ]);
