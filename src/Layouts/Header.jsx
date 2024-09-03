@@ -1,19 +1,15 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { memo } from 'react';
 import { baseColor } from '../Constant/Constant';
-import backward from '../assets/wired.gif'
-import homegif from '../assets/home.gif'
-import person from '../assets/Individual.gif'
-import Avatar from '@mui/joy/Avatar';
+import LogoutMoidal from './LogoutMoidal';
+import forward from '../assets/Forward.gif'
+import backward from '../assets/Back.gif'
 
-const Header = ({ toggleDrawer }) => {
+const Header = ({ toggleDrawer, drawerWidth }) => {
 
     return (
         // <Box sx={{ flexGrow: 1 }}>
@@ -34,12 +30,24 @@ const Header = ({ toggleDrawer }) => {
                     onClick={toggleDrawer}
                 >
                     {/* <MenuIcon /> */}
-                    <img src={homegif} alt="backward" height={25} width={25} />
+                    {
+                        drawerWidth !== 60 ? <img src={backward} alt="backward" height={30} width={32} /> : <img src={forward} alt="backward" height={25} width={25} />
+                    }
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: baseColor.backGroundFont }}>
                     News
                 </Typography>
-                <Avatar size="md" src={person} alt='person' sx={{ bgcolor: baseColor.primarylight }} />
+
+                {/* <Avatar
+                    variant="solid"
+                    size="md"
+                    src={person}
+                    alt='person'
+                    sx={{ bgcolor: baseColor.primarylight, cursor: 'pointer' }}
+                    onClick={() => alert('hai')}
+                /> */}
+
+                <LogoutMoidal />
             </Toolbar>
         </AppBar>
         // </Box>

@@ -1,21 +1,17 @@
 import { Box } from "@mui/joy";
 import React, { memo } from "react";
 import { baseColor, screenHeight } from "../Constant/Constant";
-import Footer from "../Layouts/Footer";
 import Header from "../Layouts/Header";
 import DrawerWindow from "../Layouts/DrawerWindow";
 import { useState } from "react";
-import { AppBar } from "@mui/material";
 
 const Home = () => {
-  const [open, setOpen] = useState(false);
   const [drawerWidth, setdrawerWidth] = useState(240)
 
   const toggleDrawer = () => {
     setdrawerWidth(drawerWidth === 240 ? 60 : 240);
     // setOpen(display);
   };
-
 
   return (
     <Box
@@ -33,7 +29,7 @@ const Home = () => {
       {/* Content Start */}
       <Box sx={{ display: 'flex', bgcolor: baseColor.backGroundColor, flexGrow: 1, flexDirection: "column" }}>
         <Box sx={{ display: 'flex' }} >
-          <Header toggleDrawer={toggleDrawer} />
+          <Header toggleDrawer={toggleDrawer} drawerWidth={drawerWidth} />
         </Box>
         <Box sx={{ display: 'flex', flexGrow: 1, }} >
           sdfds
