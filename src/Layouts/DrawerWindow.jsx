@@ -13,40 +13,45 @@ import Home from '@mui/icons-material/Home';
 import Apps from '@mui/icons-material/Apps';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
+import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
+import FindInPageSharpIcon from '@mui/icons-material/FindInPageSharp';
+import UploadFileSharpIcon from '@mui/icons-material/UploadFileSharp';
+import SettingsSuggestSharpIcon from '@mui/icons-material/SettingsSuggestSharp';
 
 const DrawerWindow = ({ drawerWidth }) => {
 
-    const listComp = ({ icon, title }) => {
-        return (
-            <ListItem>
-                <ListItemButton
-                    sx={{
-                        display: 'flex',
-                        '&.MuiListItemButton-root': {
-                            bgcolor: 'transparent',
-                            color: baseColor.primaryfont,
-                            '&:hover': {
-                                bgcolor: baseColor.primarylight,
-                                color: baseColor.primaryfont
-                            }
-                        },
-                    }}
-                >
-                    <ListItemDecorator >
-                        <Tooltip placement='right'
-                            title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg" arrow
-                            sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
-                            <DashboardIcon sx={{ color: 'white' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
-                        </Tooltip>
-                    </ListItemDecorator>
-                    <Typography
-                        sx={{ px: drawerWidth === 60 ? 1 : 0 }}
-                        level={drawerWidth === 60 ? 'inherit' : 'body-md'}
-                    >Dashboard</Typography>
-                </ListItemButton>
-            </ListItem>
-        )
-    }
+
+    // const listComp = ({ icon, title }) => {
+    //     return (
+    //         <ListItem>
+    //             <ListItemButton
+    //                 sx={{
+    //                     display: 'flex',
+    //                     '&.MuiListItemButton-root': {
+    //                         bgcolor: 'transparent',
+    //                         color: baseColor.primaryfont,
+    //                         '&:hover': {
+    //                             bgcolor: baseColor.primarylight,
+    //                             color: baseColor.primaryfont
+    //                         }
+    //                     },
+    //                 }}
+    //             >
+    //                 <ListItemDecorator >
+    //                     <Tooltip placement='right'
+    //                         title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg" arrow
+    //                         sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+    //                         <DashboardIcon sx={{ color: 'white' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+    //                     </Tooltip>
+    //                 </ListItemDecorator>
+    //                 <Typography
+    //                     sx={{ px: drawerWidth === 60 ? 1 : 0 }}
+    //                     level={drawerWidth === 60 ? 'inherit' : 'body-md'}
+    //                 >Dashboard</Typography>
+    //             </ListItemButton>
+    //         </ListItem>
+    //     )
+    // }
 
 
 
@@ -62,7 +67,7 @@ const DrawerWindow = ({ drawerWidth }) => {
                 outlineColor: baseColor.primarylight,
                 position: 'relative',
                 height: '100%',
-                overflow: 'auto',
+                // overflow: 'auto',
                 transition: 'all 0.2s ease-in-out',
             }}
         >
@@ -89,23 +94,122 @@ const DrawerWindow = ({ drawerWidth }) => {
                                     color: baseColor.primaryfont
                                 }
                             },
-                            // alignItems: 'end'
                         }}
                     >
                         <ListItemDecorator >
                             <Tooltip placement='right'
-                                title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg" arrow
+                                title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg"
                                 sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
-                                <DashboardIcon sx={{ color: baseColor.primaryfont }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+                                <DashboardCustomizeSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
                             </Tooltip>
                         </ListItemDecorator>
                         <Typography
-                            sx={{ px: drawerWidth === 60 ? 1 : 0 }}
+                            sx={{
+                                display: drawerWidth === 60 ? 'none' : 'flex',
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
+                            }}
+                            noWrap
                             level={drawerWidth === 60 ? 'inherit' : 'body-md'}
                         >Dashboard</Typography>
                     </ListItemButton>
                 </ListItem>
 
+                <ListItem>
+                    <ListItemButton
+                        sx={{
+                            display: 'flex',
+                            '&.MuiListItemButton-root': {
+                                bgcolor: 'transparent',
+                                color: baseColor.primaryfont,
+                                '&:hover': {
+                                    bgcolor: baseColor.primarylight,
+                                    color: baseColor.primaryfont
+                                }
+                            },
+                        }}
+                    >
+                        <ListItemDecorator >
+                            <Tooltip placement='right'
+                                title={drawerWidth === 60 ? ' Search' : null} color='success' size="lg"
+                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                <FindInPageSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+                            </Tooltip>
+                        </ListItemDecorator>
+                        <Typography
+                            sx={{
+                                display: drawerWidth === 60 ? 'none' : 'flex',
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
+                            }}
+                            noWrap
+                            level={drawerWidth === 60 ? 'inherit' : 'body-md'}
+                        >Search</Typography>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                        sx={{
+                            display: 'flex',
+                            '&.MuiListItemButton-root': {
+                                bgcolor: 'transparent',
+                                color: baseColor.primaryfont,
+                                '&:hover': {
+                                    bgcolor: baseColor.primarylight,
+                                    color: baseColor.primaryfont
+                                }
+                            },
+                            // alignItems: 'end',
+                        }}
+                    >
+                        <ListItemDecorator >
+                            <Tooltip placement='right'
+                                title={drawerWidth === 60 ? ' File Upload' : null} color='success' size="lg"
+                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                <UploadFileSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+                            </Tooltip>
+                        </ListItemDecorator>
+                        <Typography
+                            sx={{
+                                display: drawerWidth === 60 ? 'none' : 'flex',
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white',
+                            }}
+                            noWrap
+                            level={drawerWidth === 60 ? 'inherit' : 'body-md'}
+                        >File Upload</Typography>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                        sx={{
+                            display: 'flex',
+                            '&.MuiListItemButton-root': {
+                                bgcolor: 'transparent',
+                                color: baseColor.primaryfont,
+                                '&:hover': {
+                                    bgcolor: baseColor.primarylight,
+                                    color: baseColor.primaryfont
+                                }
+                            },
+                        }}
+                    >
+                        <ListItemDecorator >
+                            <Tooltip placement='right'
+                                title={drawerWidth === 60 ? 'Settings' : null} color='success' size="lg"
+                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                <SettingsSuggestSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+                            </Tooltip>
+                        </ListItemDecorator>
+                        <Typography
+                            sx={{
+                                display: drawerWidth === 60 ? 'none' : 'flex',
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
+                            }}
+                            noWrap
+                            level={drawerWidth === 60 ? 'inherit' : 'body-md'}
+                        >Settings</Typography>
+                    </ListItemButton>
+                </ListItem>
 
             </List>
         </Paper>

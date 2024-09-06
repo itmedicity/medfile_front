@@ -8,6 +8,7 @@ import { baseColor } from '../Constant/Constant';
 import LogoutMoidal from './LogoutMoidal';
 import forward from '../assets/Forward.gif'
 import backward from '../assets/Back.gif'
+import ScreenCheck from '../Components/ScreenCheck';
 
 const Header = ({ toggleDrawer, drawerWidth }) => {
 
@@ -35,7 +36,7 @@ const Header = ({ toggleDrawer, drawerWidth }) => {
                     }
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: baseColor.backGroundFont }}>
-                    News
+                    <ScreenCheck />
                 </Typography>
 
                 {/* <Avatar
@@ -46,7 +47,6 @@ const Header = ({ toggleDrawer, drawerWidth }) => {
                     sx={{ bgcolor: baseColor.primarylight, cursor: 'pointer' }}
                     onClick={() => alert('hai')}
                 /> */}
-
                 <LogoutMoidal />
             </Toolbar>
         </AppBar>
