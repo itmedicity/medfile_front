@@ -35,13 +35,14 @@ const Home = () => {
           // bgcolor: baseColor.backGroundColor,
           bgcolor: '#eeeeee',
           flexGrow: 1,
-          flexDirection: "column"
+          flexDirection: "column",
+          // overflow: 'scroll',
         }}>
         <Box sx={{ display: 'flex' }} >
           <Header toggleDrawer={toggleDrawer} drawerWidth={drawerWidth} />
         </Box>
         {/* inner contents start here */}
-        <Box sx={{ display: 'flex', flexGrow: 1 }} >
+        <Box className="h-full w-full" sx={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }} >
           <Outlet />
         </Box>
         {/* inner content end here */}
