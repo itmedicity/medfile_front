@@ -17,43 +17,11 @@ import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeS
 import FindInPageSharpIcon from '@mui/icons-material/FindInPageSharp';
 import UploadFileSharpIcon from '@mui/icons-material/UploadFileSharp';
 import SettingsSuggestSharpIcon from '@mui/icons-material/SettingsSuggestSharp';
+import { useNavigate } from 'react-router-dom'
 
 const DrawerWindow = ({ drawerWidth }) => {
 
-
-    // const listComp = ({ icon, title }) => {
-    //     return (
-    //         <ListItem>
-    //             <ListItemButton
-    //                 sx={{
-    //                     display: 'flex',
-    //                     '&.MuiListItemButton-root': {
-    //                         bgcolor: 'transparent',
-    //                         color: baseColor.primaryfont,
-    //                         '&:hover': {
-    //                             bgcolor: baseColor.primarylight,
-    //                             color: baseColor.primaryfont
-    //                         }
-    //                     },
-    //                 }}
-    //             >
-    //                 <ListItemDecorator >
-    //                     <Tooltip placement='right'
-    //                         title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg" arrow
-    //                         sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
-    //                         <DashboardIcon sx={{ color: 'white' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
-    //                     </Tooltip>
-    //                 </ListItemDecorator>
-    //                 <Typography
-    //                     sx={{ px: drawerWidth === 60 ? 1 : 0 }}
-    //                     level={drawerWidth === 60 ? 'inherit' : 'body-md'}
-    //                 >Dashboard</Typography>
-    //             </ListItemButton>
-    //         </ListItem>
-    //     )
-    // }
-
-
+    const navigation = useNavigate()
 
     return (
         <Paper
@@ -95,11 +63,12 @@ const DrawerWindow = ({ drawerWidth }) => {
                                 }
                             },
                         }}
+                        onClick={() => navigation('/Home/Dashboard')}
                     >
                         <ListItemDecorator >
-                            <Tooltip placement='right'
+                            <Tooltip placement='right-end'
                                 title={drawerWidth === 60 ? 'Dashboard' : null} color='success' size="lg"
-                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                sx={{ bgcolor: baseColor.primarylight, px: 6 }} >
                                 <DashboardCustomizeSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
                             </Tooltip>
                         </ListItemDecorator>
@@ -126,45 +95,14 @@ const DrawerWindow = ({ drawerWidth }) => {
                                     color: baseColor.primaryfont
                                 }
                             },
-                        }}
-                    >
-                        <ListItemDecorator >
-                            <Tooltip placement='right'
-                                title={drawerWidth === 60 ? ' Search' : null} color='success' size="lg"
-                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
-                                <FindInPageSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
-                            </Tooltip>
-                        </ListItemDecorator>
-                        <Typography
-                            sx={{
-                                display: drawerWidth === 60 ? 'none' : 'flex',
-                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
-                            }}
-                            noWrap
-                            level={drawerWidth === 60 ? 'inherit' : 'body-md'}
-                        >Search</Typography>
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem>
-                    <ListItemButton
-                        sx={{
-                            display: 'flex',
-                            '&.MuiListItemButton-root': {
-                                bgcolor: 'transparent',
-                                color: baseColor.primaryfont,
-                                '&:hover': {
-                                    bgcolor: baseColor.primarylight,
-                                    color: baseColor.primaryfont
-                                }
-                            },
                             // alignItems: 'end',
                         }}
+                        onClick={() => navigation('/Home/FileUpload')}
                     >
                         <ListItemDecorator >
                             <Tooltip placement='right'
                                 title={drawerWidth === 60 ? ' File Upload' : null} color='success' size="lg"
-                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                sx={{ bgcolor: baseColor.primarylight, px: 6 }} >
                                 <UploadFileSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
                             </Tooltip>
                         </ListItemDecorator>
@@ -192,11 +130,45 @@ const DrawerWindow = ({ drawerWidth }) => {
                                 }
                             },
                         }}
+                        onClick={() => navigation('/Home/AdvancedSearch')}
+                    >
+                        <ListItemDecorator >
+                            <Tooltip placement='right'
+                                title={drawerWidth === 60 ? ' Search' : null} color='success' size="lg"
+                                sx={{ bgcolor: baseColor.primarylight, px: 6 }} >
+                                <FindInPageSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
+                            </Tooltip>
+                        </ListItemDecorator>
+                        <Typography
+                            sx={{
+                                display: drawerWidth === 60 ? 'none' : 'flex',
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
+                            }}
+                            noWrap
+                            level={drawerWidth === 60 ? 'inherit' : 'body-md'}
+                        >Search</Typography>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                        sx={{
+                            display: 'flex',
+                            '&.MuiListItemButton-root': {
+                                bgcolor: 'transparent',
+                                color: baseColor.primaryfont,
+                                '&:hover': {
+                                    bgcolor: baseColor.primarylight,
+                                    color: baseColor.primaryfont
+                                }
+                            },
+                        }}
+                        onClick={() => navigation('/Home/Settings')}
                     >
                         <ListItemDecorator >
                             <Tooltip placement='right'
                                 title={drawerWidth === 60 ? 'Settings' : null} color='success' size="lg"
-                                sx={{ bgcolor: baseColor.primarylight, px: 5 }} >
+                                sx={{ bgcolor: baseColor.primarylight, px: 6 }} >
                                 <SettingsSuggestSharpIcon sx={{ color: 'white', transition: 'all 0.5s ease-in-out' }} fontSize={drawerWidth === 60 ? 'large' : 'small'} />
                             </Tooltip>
                         </ListItemDecorator>

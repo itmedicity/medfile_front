@@ -1,4 +1,5 @@
 export const screenHeight = window.innerHeight;
+export const screenWidth = window.innerWidth;
 
 export const baseColor = {
     primary: "#1A5319",

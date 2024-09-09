@@ -1,13 +1,13 @@
-import { Box, Button, Divider, Input, Sheet, Typography, styled } from '@mui/joy'
+import { Box, Button, Divider, Input, Sheet, Tooltip, Typography, styled } from '@mui/joy'
 import Grid from '@mui/material/Grid2';
 import React, { memo, useMemo } from 'react'
-import { baseColor, screenHeight } from '../../Constant/Constant'
+import { baseColor, screenHeight, screenWidth } from '../../Constant/Constant'
 import fileIcon1 from '../../assets/Project.gif'
 import ScreenCheck from '../../Components/ScreenCheck'
 import AutocompletedMainSearch from '../../Components/AutocompletedMainSearch'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSearchOutlined';
-import { Virtuoso } from 'react-virtuoso'
+import { TableVirtuoso, Virtuoso } from 'react-virtuoso'
 import AssuredWorkloadRoundedIcon from '@mui/icons-material/AssuredWorkloadRounded';
 import HttpsOutlinedIcon from '@mui/icons-material/HttpsOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
@@ -17,17 +17,7 @@ import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
 import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined';
 import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
-// const Item = styled(Sheet)(({ theme }) => ({
-//     backgroundColor: '#fff',
-//     ...theme.typography['body-sm'],
-//     padding: theme.spacing(1),
-//     textAlign: 'center',
-//     borderRadius: 4,
-//     color: theme.vars.palette.text.secondary,
-//     ...theme.applyStyles('dark', {
-//         backgroundColor: theme.palette.background.level1,
-//     }),
-// }));
+import GppGoodIcon from '@mui/icons-material/GppGood';
 
 const Dashboard = () => {
 
@@ -54,8 +44,8 @@ const Dashboard = () => {
     ]
 
     return (
-        <Box className="flex flex-col border-2 m-2 rounded-xl p-2 pb-5 overflow-scroll w-full" >
-            <Typography level='h2' textAlign='center' sx={{ p: 1 }} >Mediwalt</Typography>
+        <Box className="flex flex-col border-2 m-2 rounded-xl p-2 pb-2 overflow-scroll w-full" >
+            <Typography level='h2' textAlign='center' sx={{ p: 0.5 }} >Mediwalt</Typography>
             <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                 {a.map((val, idx) => (
                     <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3, xl: 3 }}>
@@ -90,7 +80,7 @@ const Dashboard = () => {
                 ))}
             </Grid>
 
-            <Box className="flex mt-12 justify-center" >
+            <Box className="flex mt-6 justify-center" >
                 {/* <AutocompletedMainSearch /> */}
                 <Input
                     startDecorator={<SearchOutlinedIcon />}
@@ -111,52 +101,135 @@ const Dashboard = () => {
                 />
             </Box>
             <Box
-                className="flex justify-center items-center rounded"
+                className="flex  justify-center items-center rounded"
                 sx={{
                     height: 700, // Set explicit height for the Box
                     width: '100%',
-                    mt: 1,
+                    mt: 0.5,
                     padding: '0.1em',
                     border: '1px solid #ccc',
                 }}
             >
-                <Virtuoso
-                    style={{ height: '100%', width: '100%' }}
-                    className="border-2 rounded-md"
+                <TableVirtuoso
+                    style={{ height: '100%', width: '100%', border: '1px solid #ccc', }}
+                    className="flex flex-1 rounded-md"
                     data={users}
-                    itemContent={(_, user) => (
-                        <Box className="flex flex-1 h-14 flex-col overflow-y-hidden " >
-                            <Box className='flex flex-auto items-center'>
-                                <Box className="flex w-16 h-full justify-center items-center" >
+                    fixedHeaderContent={() => (
+                        <tr style={{ backgroundColor: baseColor.primarylight }} className='border border-1 border-[#80AF81] rounded-md -m-4' >
+                            <th><Box className="flex justify-center w-16"  ><GppGoodIcon sx={{ fontSize: { sm: '1.1rem', lg: '1.1rem' } }} color='success' /></Box></th>
+                            <th><Box className="flex justify-center w-16"  ><PanoramaOutlinedIcon sx={{ fontSize: { sm: '1.1rem', lg: '1.1rem' } }} color='success' /></Box></th>
+                            <th><Box className="flex justify-center w-16"  ><EditCalendarOutlinedIcon sx={{ fontSize: { sm: '1.1rem', lg: '1.1rem' } }} color='success' /></Box></th>
+                            <th><Box className="flex justify-center w-16"  ><LocalPrintshopOutlinedIcon sx={{ fontSize: { sm: '1.1rem', lg: '1.1rem' } }} color='success' /></Box></th>
+                            <th><Box className="flex justify-center w-28" sx={{ fontSize: { lg: '0.8rem' }, color: baseColor.primary }} >Version</Box></th>
+                            <th><Box className="flex justify-center w-40" sx={{ fontSize: { lg: '0.8rem' }, color: baseColor.primary }} >Doc number</Box></th>
+                            <th><Box className="flex justify-center w-16" sx={{ fontSize: { lg: '0.8rem' }, color: baseColor.primary }} >Type</Box></th>
+                            <th><Box className="flex justify-start flex-1" sx={{ fontSize: { lg: '0.8rem' }, color: baseColor.primary }}  >Document Name</Box></th>
+                        </tr>
+                    )}
+                    itemContent={(index, user) => (
+                        <>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex flex-1 w-16 h-full justify-center items-center" >
                                     {
-                                        user.iconStat ? <LockOpenOutlinedIcon fontSize='large' /> : <HttpsOutlinedIcon fontSize='large' />
+                                        user.iconStat ?
+                                            <Tooltip title="Secured open file" placement="left" sx={{ fontSize: '0.8rem', }} color='success' >
+                                                <LockOpenOutlinedIcon
+                                                    sx={{
+                                                        color: '#6fb872',
+                                                        fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                        cursor: 'pointer'
+                                                    }}
+                                                /></Tooltip> :
+                                            <Tooltip title="Secured Locked file" placement="left" sx={{ fontSize: '0.8rem', }} color='warning' >
+                                                <HttpsOutlinedIcon
+                                                    sx={{
+                                                        color: '#e55185',
+                                                        fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                        cursor: 'wait'
+                                                    }}
+                                                />
+                                            </Tooltip>
                                     }
                                 </Box>
-                                <Box className="flex w-40 justify-center items-center px-2" >
-                                    <Typography level='body-xs' fontWeight={500} variant='solid' color='neutral' textAlign={'center'} className="w-full" sx={{ borderRadius: 10 }} >{user.id}</Typography>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="View File" placement='top' >
+                                        <PanoramaOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
                                 </Box>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="Update File" placement='top' >
+                                        <EditCalendarOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </Box>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="Print File" placement='top' >
+                                        <LocalPrintshopOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </Box>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex w-28 justify-center items-center px-2" >
+                                    <Typography level='body-xs' fontWeight={500} variant='outlined' color='neutral' textAlign={'center'} className="w-full" sx={{ borderRadius: 10 }} >{user.id}</Typography>
+                                </Box>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
                                 <Box className="flex w-40 h-full justify-center items-center">
                                     <Typography level='body-md'>{user.docNo}</Typography>
                                 </Box>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
                                 <Box className="flex w-16 h-full justify-center items-center" >
-                                    {user.trstIcon ? <AccountBalanceOutlinedIcon fontSize='large' /> : <ApartmentOutlinedIcon fontSize='large' />}
+                                    {
+                                        user.trstIcon ?
+                                            <AccountBalanceOutlinedIcon
+                                                sx={{
+                                                    color: '#0655A3',
+                                                    fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                    // cursor: 'pointer'
+                                                }}
+                                            /> :
+                                            <ApartmentOutlinedIcon
+                                                sx={{
+                                                    color: '#823F45',
+                                                    fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.7rem', xl: '2rem' },
+                                                    // cursor: 'pointer'
+                                                }}
+                                            />
+                                    }
                                 </Box>
-                                <Box className="flex flex-1 h-full flex-col" >
-                                    <Typography level='body-md' sx={{ textTransform: 'capitalize' }}>{user.docHead.toLocaleLowerCase()}</Typography>
-                                    <Typography level='body-sm' sx={{ textTransform: 'capitalize' }}>{user.docCat.toLocaleLowerCase()}</Typography>
+                            </td>
+                            <td className='border border-1 border-[#CFD5D1]'>
+                                <Box className="flex h-full flex-col" >
+                                    <Typography level='body-md' sx={{ textTransform: 'capitalize', width: screenWidth * 80 / 100 }} noWrap >{user.docHead.toLocaleLowerCase()}</Typography>
+                                    <Typography level='body-sm' textColor='primary.700' sx={{ textTransform: 'capitalize' }}>{user.docCat.toLocaleLowerCase()}</Typography>
                                 </Box>
-                                <Box className="flex w-16 h-full justify-center items-center" >
-                                    <PanoramaOutlinedIcon fontSize='large' />
-                                </Box>
-                                <Box className="flex w-16 h-full justify-center items-center" >
-                                    <EditCalendarOutlinedIcon fontSize='large' />
-                                </Box>
-                                <Box className="flex w-16 h-full justify-center items-center" >
-                                    <LocalPrintshopOutlinedIcon fontSize='large' />
-                                </Box>
-                            </Box>
-                            <Divider sx={{}} />
-                        </Box>
+                            </td>
+
+                        </>
                     )}
                 />
             </Box>
@@ -165,3 +238,96 @@ const Dashboard = () => {
 }
 
 export default memo(Dashboard)
+
+
+
+
+{/* <Box className="flex flex-1 h-13 flex-col overflow-y-hidden " key={index} >
+                            <Box className='flex flex-auto items-center'>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    {
+                                        user.iconStat ?
+                                            <Tooltip title="Secured open file" placement="left" sx={{ fontSize: '0.8rem', }} color='success' >
+                                                <LockOpenOutlinedIcon
+                                                    sx={{
+                                                        color: '#6fb872',
+                                                        fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                        cursor: 'pointer'
+                                                    }}
+                                                /></Tooltip> :
+                                            <Tooltip title="Secured Locked file" placement="left" sx={{ fontSize: '0.8rem', }} color='warning' >
+                                                <HttpsOutlinedIcon
+                                                    sx={{
+                                                        color: '#e55185',
+                                                        fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: 'rem', xl: '2rem' },
+                                                        cursor: 'wait'
+                                                    }}
+                                                />
+                                            </Tooltip>
+                                    }
+                                </Box>
+                                <Box className="flex w-40 justify-center items-center px-2" >
+                                    <Typography level='body-xs' fontWeight={500} variant='outlined' color='neutral' textAlign={'center'} className="w-full" sx={{ borderRadius: 10 }} >{user.id}</Typography>
+                                </Box>
+                                <Box className="flex w-40 h-full justify-center items-center">
+                                    <Typography level='body-md'>{user.docNo}</Typography>
+                                </Box>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    {
+                                        user.trstIcon ?
+                                            <AccountBalanceOutlinedIcon
+                                                sx={{
+                                                    color: '#0655A3',
+                                                    fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                    // cursor: 'pointer'
+                                                }}
+                                            /> :
+                                            <ApartmentOutlinedIcon
+                                                sx={{
+                                                    color: '#823F45',
+                                                    fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                    // cursor: 'pointer'
+                                                }}
+                                            />
+                                    }
+                                </Box>
+                                <Box className="flex h-full flex-col " >
+                                    <Typography level='body-md' sx={{ textTransform: 'capitalize', width: screenWidth * 50 / 100 }} noWrap >{user.docHead.toLocaleLowerCase()}</Typography>
+                                    <Typography level='body-sm' sx={{ textTransform: 'capitalize' }}>{user.docCat.toLocaleLowerCase()}</Typography>
+                                </Box>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="View File" placement='top' >
+                                        <PanoramaOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </Box>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="Update File" placement='top' >
+                                        <EditCalendarOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </Box>
+                                <Box className="flex w-16 h-full justify-center items-center" >
+                                    <Tooltip title="Print File" placement='top' >
+                                        <LocalPrintshopOutlinedIcon
+                                            sx={{
+                                                color: baseColor.primary,
+                                                fontSize: { xs: '2rem', sm: '2rem', md: '2rem', lg: '1.9rem', xl: '2rem' },
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                </Box>
+                            </Box>
+                            <Divider sx={{}} />
+                        </Box> */}

@@ -33,7 +33,7 @@ const RoootLayouts = () => {
   // VERIFY OTP FUNCTION
   const verifyOTPFunction = useCallback(() => {
     // after verify OTP page redirected to dashboard
-    navigate('/Home')
+    navigate('/Home/Dashboard')
 
 
   }, [])

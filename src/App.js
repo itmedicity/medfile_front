@@ -1,6 +1,5 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 import {
-  BrowserRouter,
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
@@ -10,6 +9,9 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Colors from "./Pages/Colors";
 
 const Dashboard = lazy(() => import('./Modules/Dashboard/Dashboard.jsx'))
+const AdvancedSearch = lazy(() => import('./Modules/Search/AdvancedSearch.jsx'))
+const FileUpload = lazy(() => import('./Modules/FileUpload/FileUpload.jsx'))
+const Settings = lazy(() => import('./Modules/Settings/Settings.jsx'))
 
 // Rotes
 
@@ -26,6 +28,9 @@ const routes = createBrowserRouter([
         path: '/Home', element: <Home />,
         children: [
           { path: 'Dashboard', element: <Dashboard /> },
+          { path: 'AdvancedSearch', element: <AdvancedSearch /> },
+          { path: 'FileUpload', element: <FileUpload /> },
+          { path: 'Settings', element: <Settings /> },
           { path: 'Color', element: <Colors /> },
         ],
       },
@@ -35,7 +40,9 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={routes} />;
+  return <Suspense fallback={<div>Loading...</div>} >
+    <RouterProvider router={routes} />;
+  </Suspense>
 }
 
 export default App;
