@@ -36,10 +36,10 @@ const DrawerWindow = ({ drawerWidth }) => {
                 position: 'relative',
                 height: '100%',
                 // overflow: 'auto',
-                transition: 'all 0.2s ease-in-out',
+                transition: 'all 0.4s ease-in-out',
             }}
         >
-            <Toolbar variant='dense' sx={{ bgcolor: baseColor.secondary, }} >
+            <Toolbar variant='dense' sx={{ bgcolor: baseColor.secondary, transition: 'all 0.2s ease-in-out' }} >
                 {
                     drawerWidth === 60 ?
                         null :
@@ -48,8 +48,7 @@ const DrawerWindow = ({ drawerWidth }) => {
             </Toolbar>
             <Divider sx={{ bgcolor: baseColor.primarylight }} />
             {/* List Start */}
-            <List>
-
+            <List sx={{ transition: 'all 0.5s ease-in-out' }} >
                 <ListItem>
                     <ListItemButton
                         sx={{
@@ -75,7 +74,8 @@ const DrawerWindow = ({ drawerWidth }) => {
                         <Typography
                             sx={{
                                 display: drawerWidth === 60 ? 'none' : 'flex',
-                                px: drawerWidth === 60 ? 1 : 0, color: 'white'
+                                px: drawerWidth === 60 ? 1 : 0, color: 'white',
+                                transition: 'all 0.5s ease-in-out',
                             }}
                             noWrap
                             level={drawerWidth === 60 ? 'inherit' : 'body-md'}

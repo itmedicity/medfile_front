@@ -16,3 +16,27 @@ export const baseColor = {
     yellowfont: '#bbc20a',
     headerBgColor: '#0E2C0D'
 }
+
+export const customFontSize = {
+    xs: '1rem',
+    sm: '1rem',
+    md: '1rem',
+    lg: '1rem',
+    xl: '1.1rem'
+}
+
+export const customInputHeight = {
+    "--Input-minHeight": {
+        xs: "30px",
+        sm: "30px",
+        md: "32px",
+        lg: "30px",
+        xl: "33px",
+    },
+    "&.MuiInput-root": {
+        "--Input-focusedHighlight": baseColor.primarylight,
+        "--Input-focusedShadow": 'none',
+        "--Input-focusedThickness": '1.1px',
+    },
+    boxShadow: 'none',
+}
