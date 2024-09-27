@@ -17,7 +17,7 @@ const CustomInput = ({
             variant='outlined'
             sx={{
                 ...customInputHeight,
-                ...sx
+                ...sx,
             }}
         />
     )

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Box, Divider, Input, Textarea, Typography, colors } from '@mui/joy'
+import { Box, Button, Divider, Input, Textarea, Typography, colors } from '@mui/joy'
 import Grid from '@mui/material/Grid2';
 import React, { memo, useState } from 'react'
 import { baseColor, customFontSize, customInputHeight } from '../../Constant/Constant';
@@ -7,7 +7,7 @@ import CustomInput from '../../Components/CustomInput';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import CustomSelect from '../../Components/CustomSelect';
-import { DocSubTypeMaster, DocumentTypeMainMaster } from '../../Constant/Data';
+import { DocSubTypeMaster, DocumentTypeMainMaster, IntituteMaster, categorymaster, courseMaster } from '../../Constant/Data';
 
 const FileUpload = () => {
 
@@ -49,6 +49,7 @@ const FileUpload = () => {
                                         "--Textarea-focusedShadow": 'none',
                                         "--Textarea-focusedThickness": '1.1px',
                                     },
+                                    boxShadow: 'none'
                                 }}
                             />
                         </Grid>
@@ -68,7 +69,12 @@ const FileUpload = () => {
                 <Box className="flex flex-1 flex-col px-4" >
                     <Box className="flex flex-1 flex-col" >
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Document Type Master</Typography>
-                        <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Document Type Master here..." />
+                        <CustomSelect
+                            data={DocumentTypeMainMaster}
+                            placeholder="Select Document Type Master here..."
+                            value={0}
+                            icons={<StickyNote2Icon />}
+                        />
                     </Box>
                     <Box className="flex flex-1 flex-col" >
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Document Sub Type Master</Typography>
@@ -77,6 +83,7 @@ const FileUpload = () => {
                             placeholder="Select Document Sub Type Master here..."
                             onChangeSelect={handleChangeSelect}
                             value={docType}
+                            icons={<StickyNote2Icon />}
                         />
                     </Box>
                     {
@@ -84,29 +91,60 @@ const FileUpload = () => {
                             <>
                                 <Box className="flex flex-1 flex-col" >
                                     <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Institute Master</Typography>
-                                    <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Institute Master here..." />
+                                    <CustomSelect
+                                        data={IntituteMaster}
+                                        placeholder="Select Institute Master here..."
+                                        value={0}
+                                        icons={<StickyNote2Icon />}
+                                    />
                                 </Box>
                                 <Box className="flex flex-1 flex-col" >
                                     <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Course Name Master</Typography>
-                                    <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Course NameMaster here..." />
+                                    <CustomSelect
+                                        data={courseMaster}
+                                        placeholder="Select Course NameMaster here..."
+                                        value={0}
+                                        icons={<StickyNote2Icon />}
+                                    />
                                 </Box>
                             </>
                         ) : null
                     }
                     <Box className="flex flex-1 flex-col" >
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Category Master</Typography>
-                        <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Category Master here..." />
+                        <CustomSelect
+                            data={categorymaster}
+                            placeholder="Select Category Master here..."
+                            value={0}
+                            icons={<StickyNote2Icon />}
+                        />
                     </Box>
                     <Box className="flex flex-1 flex-col" >
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Sub Category Master</Typography>
-                        <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Sub Category here..." />
+                        <CustomSelect
+                            data={DocumentTypeMainMaster}
+                            placeholder="Select Sub Category here..."
+                            value={0}
+                            icons={<StickyNote2Icon />}
+                        />
                     </Box>
                     <Box className="flex flex-1 flex-col" >
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Group Master</Typography>
-                        <CustomSelect data={DocumentTypeMainMaster} placeholder="Select Group Master here..." />
+                        <CustomSelect
+                            data={DocumentTypeMainMaster}
+                            placeholder="Select Group Master here..."
+                            value={0}
+                            icons={<StickyNote2Icon />}
+                        />
+                    </Box>
+                    <Box className="flex flex-1 flex-row py-2 justify-end" >
+                        <Button variant='outlined' size='sm' color='success' sx={{ mx: 0.5, width: "100%" }} >Save Doc Information</Button>
+                        <Button variant='outlined' size='sm' color='success' sx={{ mx: 0.5, width: "100%" }} >Cancel</Button>
                     </Box>
                 </Box>
-                <Box className="flex flex-1 bg-red-300" >dssdf</Box>
+                <Box className="flex flex-1 bg-red-300" >
+                    s
+                </Box>
                 {/* <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
                         <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >Document Type Master</Typography>

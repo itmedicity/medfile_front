@@ -13,6 +13,8 @@ import OTPInput, { ResendOTP } from "otp-input-react"
 
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import axios from "axios";
+import { axiosApi } from "../Axios/Axios";
 
 const RoootLayouts = () => {
 
@@ -26,7 +28,31 @@ const RoootLayouts = () => {
 
   // GENERATE OTP FUNCTION
   const generateOtp = useCallback(() => {
-    setonclickGenerateOTPbtn(true)
+    axiosApi.get('/generateOTP')
+
+    // axios.get('https://sapteleservices.com/SMS_API/sendsms.php', {
+    //   params: {
+    //     username: 'Tmc_medicity',
+    //     password: 'c9e780',
+    //     sendername: 'TMDCTY',
+    //     mobile: '919846009616',
+    //     template_id: '1407162012178109509',
+    //     message: 'Your Medicity App OTP code: 821250 DuHTEah22dE.Travancore Medicity.',
+    //     routetype: 1
+    //   },
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    //     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    //     "Access-Control-Allow-Credentials": "true",
+    //     "Content-Type": "application/json"
+    //   }
+    // }).then((response) => {
+    //   console.log(response.data)
+    // }).catch((error) => {
+    //   console.log(error)
+    // })
+
   }, [])
 
 
@@ -205,9 +231,10 @@ const RoootLayouts = () => {
               }}
             >
               <Box className="flex justify-center w-[60%] flex-col" >
-                <Typography sx={{ color: baseColor.primary, fontSize: 12, fontWeight: 600 }} >User ID</Typography>
+                <Typography sx={{ color: baseColor.primary, fontSize: 12, fontWeight: 600, pl: 0.5 }} >Mobile Number</Typography>
                 <Input
                   fullWidth
+                  type="number"
                   sx={{
                     '&::before': {
                       border: '1.5px solid var(--Input-focusedHighlight)',
@@ -228,7 +255,7 @@ const RoootLayouts = () => {
                 />
               </Box>
               <Box className="flex flex-col justify-center w-[60%]">
-                <Typography sx={{ color: baseColor.primary, fontSize: 12, fontWeight: 600 }} >Password</Typography>
+                <Typography sx={{ color: baseColor.primary, fontSize: 12, fontWeight: 600, pl: 0.5 }} >Password</Typography>
                 <Input
                   type="password"
                   fullWidth
