@@ -1,7 +1,8 @@
+// @ts-nocheck
 import React, { useCallback, useState, memo } from "react";
-import { Box, Button, Input, Typography } from "@mui/joy";
+import { Box, Button, CircularProgress, Input, Typography } from "@mui/joy";
 import { Outlet, useNavigate } from "react-router-dom";
-import { baseColor, screenHeight } from "../Constant/Constant";
+import { baseColor, errorNofity, isValidMobileNumber, isValidOTPMobileNumber, sanitizeInput, screenHeight, succesNofity, warningNofity } from "../Constant/Constant";
 import icons from "../assets/icons.webp";
 import icon1 from "../assets/medivault01.png"
 import icon2 from "../assets/medivault02.png"
@@ -15,6 +16,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import axios from "axios";
 import { axiosApi } from "../Axios/Axios";
+import { ToastContainer } from "react-toastify";
 
 const RoootLayouts = () => {
 
@@ -22,38 +24,46 @@ const RoootLayouts = () => {
   const navigate = useNavigate()
 
   // state mangement
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [loading, setLoading] = useState(false);
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false)
   const [loginwithUserCred, setloginwithUserCred] = useState(false)
 
+  console.log(mobileNumber)
+
   // GENERATE OTP FUNCTION
   const generateOtp = useCallback(() => {
-    axiosApi.get('/generateOTP')
 
-    // axios.get('https://sapteleservices.com/SMS_API/sendsms.php', {
-    //   params: {
-    //     username: 'Tmc_medicity',
-    //     password: 'c9e780',
-    //     sendername: 'TMDCTY',
-    //     mobile: '919846009616',
-    //     template_id: '1407162012178109509',
-    //     message: 'Your Medicity App OTP code: 821250 DuHTEah22dE.Travancore Medicity.',
-    //     routetype: 1
-    //   },
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    //     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    //     "Access-Control-Allow-Credentials": "true",
-    //     "Content-Type": "application/json"
-    //   }
-    // }).then((response) => {
-    //   console.log(response.data)
-    // }).catch((error) => {
-    //   console.log(error)
-    // })
+    if (mobileNumber === '') {
+      warningNofity('Mobile Number cannot be empty')
+      return
+    }
 
-  }, [])
+    if (!isValidOTPMobileNumber(mobileNumber)) { //validity checking for 12 digit mobile number
+      warningNofity('Invalid Mobile Number')
+      return
+    }
+    setLoading(true)
+    const sanitizedMobileNumber = sanitizeInput(mobileNumber)
+    axiosApi.get('/generateOTP/' + sanitizedMobileNumber).then((res) => {
+      const { message, success } = res.data;
+      if (success === 0) {
+        errorNofity(message)
+      } else if (success === 1) {
+        warningNofity(message)
+        setLoading(false)
+      } else if (success === 2) {
+        succesNofity(message)
+        setonclickGenerateOTPbtn(true)
+        setLoading(false)
+      } else {
+        errorNofity(message)
+        setLoading(false)
+      }
+    })
+
+  }, [mobileNumber])
 
 
   // VERIFY OTP FUNCTION
@@ -113,6 +123,7 @@ const RoootLayouts = () => {
       className="flex flex-grow flex-grow-1 flex-col justify-center items-center bg-gradient-to-r from-[#80AF81] to-[#D6EFD8]"
       sx={{ height: screenHeight, }}
     >
+      <ToastContainer />
       <Box
         className="flex border w-[85%]  sm:w-[75%] md:w-[60%] lg:w-[34rem] xl:[30%] 2xl:[30%] h-96 drop-shadow-lg shadow-lg bg-[#edede9] flex-col p-4 gap-2"
         sx={{
@@ -164,7 +175,7 @@ const RoootLayouts = () => {
                     onResendClick={function () { }}
                     className="flex"
                     style={{ color: baseColor.primary, fontSize: "1rem", fontWeight: "500", display: "flex", justifyContent: "center" }}
-                    maxTime={5}
+                    maxTime={120}
                     onTimerComplete={() => setonclickGenerateOTPbtn(false)}
                     timeInterval={1000}
                     renderButton={renderButton}
@@ -187,8 +198,8 @@ const RoootLayouts = () => {
                       // containerStyle={{ height: 50 }}
                       inputStyle={{ height: 50, width: 300, borderColor: baseColor.primary, borderRadius: 10 }}
                       buttonStyle={{ borderRadius: 10, height: 50, overflow: 'hidden', borderColor: baseColor.primary, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                    // value={this.state.phone}
-                    // onChange={phone => this.setState({ phone })}
+                      value={mobileNumber}
+                      onChange={phone => setMobileNumber(phone)}
                     />
                   </Box>
                   <Box className="flex mt-2 border border-[#507a4f] drop-shadow-lg justify-center items-center"
@@ -204,7 +215,22 @@ const RoootLayouts = () => {
                     Generate OTP
                   </Box>
                 </Box>
-
+                {
+                  loading &&
+                  <>
+                    <Box className="flex flex-1 justify-center items-center" >
+                      <CircularProgress
+                        sx={{
+                          paddingX: "0.8rem",
+                          "--CircularProgress-size": "18px",
+                          "--CircularProgress-trackThickness": "1px",
+                          "--CircularProgress-progressThickness": "2px"
+                        }}
+                      />
+                      <div className="text-center font-semibold text-sm" >validating login credential</div>
+                    </Box>
+                  </>
+                }
                 <Box
                   className="flex flex-1 justify-end items-end"
                   sx={{ fontSize: "0.9rem", }}
