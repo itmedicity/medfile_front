@@ -60,6 +60,11 @@ export const isValidMobileNumber = (mobile) => {
     return regex.test(mobile);
 };
 
+export const isValidOTPMobileNumber = (mobile) => {
+    const regex = /^\d{12}$/;
+    return regex.test(mobile);
+};
+
 export const succesNofity = (message) => toast.success(message, {
     position: "top-right",
     autoClose: 2000,
