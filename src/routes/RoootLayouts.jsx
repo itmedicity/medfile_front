@@ -17,6 +17,7 @@ import 'react-phone-input-2/lib/style.css'
 import axios from "axios";
 import { axiosApi } from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
+import { getTime } from "date-fns";
 
 const RoootLayouts = () => {
 
@@ -29,8 +30,6 @@ const RoootLayouts = () => {
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false)
   const [loginwithUserCred, setloginwithUserCred] = useState(false)
-
-  console.log(mobileNumber)
 
   // GENERATE OTP FUNCTION
   const generateOtp = useCallback(() => {
@@ -68,12 +67,44 @@ const RoootLayouts = () => {
 
   // VERIFY OTP FUNCTION
   const verifyOTPFunction = useCallback(() => {
+    const sanitizedOTP = sanitizeInput(OTP)
+    const mobNumber = sanitizeInput(mobileNumber)
+
+    const slicedMobileNMumber = mobNumber.slice(2)
+
+    const postDataToVerifyOTP = {
+      otp: sanitizedOTP,
+      mobile: slicedMobileNMumber
+    }
+
     // after verify OTP page redirected to dashboard
-    navigate('/Home/Dashboard')
 
+    axiosApi.post('/user/verifyOTP', postDataToVerifyOTP).then((res) => {
+      const { message, success, userInfo } = res.data;
 
-  }, [])
+      // after verify OTP page redirected to dashboard 
+      if (success === 0) {
+        errorNofity(message) // database error
+      } else if (success === 1) {
+        warningNofity(message) // incorrected OTP
+      } else if (success === 2) {
+        succesNofity(message)  // OTP Verified
+        const { user_slno, name, token, login_type, tokenValidity } = JSON.parse(userInfo)
+        const authData = {
+          authNo: user_slno,
+          authName: btoa(name),
+          authToken: token,
+          authType: login_type,
+          authTimeStamp: getTime(new Date(tokenValidity))
+        }
+        localStorage.setItem('app_auth', JSON.stringify(authData))
+      } else {
+        errorNofity(message)
+      }
 
+    })
+
+  }, [OTP, mobileNumber])
 
 
   // RESEND OTP FUNCTION
@@ -175,7 +206,7 @@ const RoootLayouts = () => {
                     onResendClick={function () { }}
                     className="flex"
                     style={{ color: baseColor.primary, fontSize: "1rem", fontWeight: "500", display: "flex", justifyContent: "center" }}
-                    maxTime={120}
+                    maxTime={120000}
                     onTimerComplete={() => setonclickGenerateOTPbtn(false)}
                     timeInterval={1000}
                     renderButton={renderButton}
