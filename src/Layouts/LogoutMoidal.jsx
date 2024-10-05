@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { memo } from 'react'
 import Menu from '@mui/joy/Menu';
 import MenuItem from '@mui/joy/MenuItem';
@@ -10,9 +10,16 @@ import { baseColor } from '../Constant/Constant';
 import person from '../assets/Individual.gif'
 import settings from '../assets/setting.gif'
 import exit from '../assets/exit.gif'
+import { useNavigate } from 'react-router-dom';
 
 
 const LogoutMoidal = () => {
+
+    const navigate = useNavigate()
+    const handleLogout = useCallback(() => {
+        localStorage.removeItem('app_auth')
+        navigate('/')
+    }, [])
 
     return (
         <Dropdown >
@@ -61,7 +68,7 @@ const LogoutMoidal = () => {
                     Settings
                 </MenuItem>
                 <Divider sx={{ mx: 1 }} />
-                <MenuItem >
+                <MenuItem onClick={handleLogout}  >
                     <ListItemDecorator sx={{ color: 'inherit' }}>
                         <Box component={'img'} src={exit} alt='settings' sx={{ width: 30, height: 30 }} />
                     </ListItemDecorator>{' '}

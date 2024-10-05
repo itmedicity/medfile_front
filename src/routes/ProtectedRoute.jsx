@@ -3,10 +3,8 @@ import React from 'react'
 import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 
 const ProtectedRoute = () => {
-    // const token = useSelector(state => state.login.isLoggedIn.token)
-    // const isAuthenticated = token !== null
-    const isAuthenticated = true
-    return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />
+    const auth_token = localStorage.getItem("app_auth")
+    return (auth_token !== null && auth_token !== undefined) ? <Outlet /> : <Navigate to="/" replace />
 }
 
 export default ProtectedRoute

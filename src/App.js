@@ -11,6 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import CustomBackDropWithOutState from "./Components/CustomBackDropWithOutState";
 
 // Main Modules
 const Dashboard = lazy(() => import('./Modules/Dashboard/Dashboard.jsx'))
@@ -20,6 +21,9 @@ const Settings = lazy(() => import('./Modules/Settings/Settings.jsx'))
 
 // Sub Modules
 const UserManagement = lazy(() => import('./Modules/Settings/UserMangement/UserCreation.jsx'))
+const DocTypeMaster = lazy(() => import('./Modules/Settings/DocumentTypeMaster/DoctypeMaster.jsx'))
+const SubTypeMaster = lazy(() => import('./Modules/Settings/SubTypeMaster/SubTypeMaster.jsx'))
+const DocCategory = lazy(() => import('./Modules/Settings/DocumentCategory/DocCategoryMaster.jsx'))
 
 const routes = createBrowserRouter([
   {
@@ -38,6 +42,9 @@ const routes = createBrowserRouter([
           { path: 'FileUpload', element: <FileUpload /> },
           { path: 'Settings', element: <Settings /> },
           { path: 'UserManagement', element: <UserManagement /> },
+          { path: 'DocTypeMaster', element: <DocTypeMaster /> },
+          { path: 'SubTypeMaster', element: <SubTypeMaster /> },
+          { path: 'DocCategory', element: <DocCategory /> },
           { path: 'Color', element: <Colors /> },
         ],
       },
@@ -49,7 +56,7 @@ const routes = createBrowserRouter([
 const queryClient = new QueryClient()
 
 function App() {
-  return <Suspense fallback={<div>Loading...</div>} >
+  return <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={routes} />
     </QueryClientProvider>

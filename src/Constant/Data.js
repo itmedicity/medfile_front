@@ -66,3 +66,9 @@ export const categorymaster = [
     { value: 2, label: 'Category 2' },
     { value: 3, label: 'Category 3' },
 ]
+
+
+export const commonStatus = [
+    { value: 1, label: 'Active' },
+    { value: 2, label: 'Inactive' }
+]

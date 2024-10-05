@@ -15,9 +15,10 @@ import OTPInput, { ResendOTP } from "otp-input-react"
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import axios from "axios";
-import { axiosApi } from "../Axios/Axios";
+import axiosApi from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
+import CustomBackDrop from "../Components/CustomBackDrop";
 
 const RoootLayouts = () => {
 
@@ -27,6 +28,7 @@ const RoootLayouts = () => {
   // state mangement
   const [mobileNumber, setMobileNumber] = useState('');
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false)
   const [loginwithUserCred, setloginwithUserCred] = useState(false)
@@ -98,6 +100,11 @@ const RoootLayouts = () => {
           authTimeStamp: getTime(new Date(tokenValidity))
         }
         localStorage.setItem('app_auth', JSON.stringify(authData))
+        setOpen(true)
+        setTimeout(() => {
+          setOpen(false)
+          navigate('/Home', { replace: true })
+        }, 2000)
       } else {
         errorNofity(message)
       }
@@ -155,6 +162,7 @@ const RoootLayouts = () => {
       sx={{ height: screenHeight, }}
     >
       <ToastContainer />
+      <CustomBackDrop setOpen={setOpen} open={open} />
       <Box
         className="flex border w-[85%]  sm:w-[75%] md:w-[60%] lg:w-[34rem] xl:[30%] 2xl:[30%] h-96 drop-shadow-lg shadow-lg bg-[#edede9] flex-col p-4 gap-2"
         sx={{
@@ -206,7 +214,7 @@ const RoootLayouts = () => {
                     onResendClick={function () { }}
                     className="flex"
                     style={{ color: baseColor.primary, fontSize: "1rem", fontWeight: "500", display: "flex", justifyContent: "center" }}
-                    maxTime={120000}
+                    maxTime={12000}
                     onTimerComplete={() => setonclickGenerateOTPbtn(false)}
                     timeInterval={1000}
                     renderButton={renderButton}
