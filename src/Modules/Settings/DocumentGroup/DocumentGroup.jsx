@@ -3,58 +3,56 @@ import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel'
 import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
-import CommonMenuList from '../../../Components/CommonMenuList'
 import { commonStatus } from '../../../Constant/Data'
-import { errorNofity, sanitizeInput, succesNofity, warningNofity } from '../../../Constant/Constant'
+import CommonMenuList from '../../../Components/CommonMenuList'
 import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState'
-import { getCategoryMasterList } from '../../../api/commonAPI'
+import { errorNofity, sanitizeInput, succesNofity, warningNofity } from '../../../Constant/Constant'
+import { getGroupList } from '../../../api/commonAPI'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axiosApi from '../../../Axios/Axios'
 
-const CategoryNameList = lazy(() => import('../../../Components/CustomTable'));
+const DocGroupMasterList = lazy(() => import('../../../Components/CustomTable'));
 
-const DocCategoryMaster = () => {
-
+const DocumentGroup = () => {
     const queryClient = useQueryClient();
-
-    const [categoryStates, setCategoryStates] = useState({
-        categoryName: '',
-        categoryStatus: 0
+    const [docGroupState, setDocGroupState] = useState({
+        groupName: '',
+        groupStatus: 0
     })
 
     const handleChange = (e) => {
-        setCategoryStates({ ...categoryStates, [e.target.name]: sanitizeInput(e.target.value) })
+        setDocGroupState({ ...docGroupState, [e.target.name]: sanitizeInput(e.target.value) })
     }
 
-    const { categoryName, categoryStatus } = categoryStates
+    const { groupName, groupStatus } = docGroupState
 
     const handleSubmitButtonFun = useCallback(async (e) => {
         e.preventDefault()
 
-        if (categoryStates.categoryName === '') {
-            warningNofity('Category Name cannot be empty' || 'An error has occurred')
+        if (groupName === '') {
+            warningNofity('Group Name cannot be empty' || 'An error has occurred')
             return
         }
 
-        if (categoryStates.categoryStatus === 0) {
-            warningNofity('Category Status cannot be empty' || 'An error has occurred')
+        if (groupStatus === 0) {
+            warningNofity('Group Status cannot be empty' || 'An error has occurred')
             return
         }
 
         const FormData = {
-            category_name: categoryStates.categoryName?.trim(),
-            cat_status: categoryStates.categoryStatus
+            group_name: groupName?.trim(),
+            group_status: groupStatus
         }
 
         try {
-            const res = await axiosApi.post('/documentCategory/insertDocCategory', FormData)
+            const res = await axiosApi.post('/docGroupMaster/insertDocGroup', FormData)
             const { success, message } = res.data
             if (success === 1) {
                 succesNofity(message)
-                queryClient.invalidateQueries({ queryKey: ['catNameMast'] })
-                setCategoryStates({
-                    categoryName: '',
-                    categoryStatus: 0
+                queryClient.invalidateQueries({ queryKey: ['docGroupMaster'] })
+                setDocGroupState({
+                    groupName: '',
+                    groupStatus: 0
                 })
             } else if (success === 0) {
                 errorNofity(message)
@@ -66,12 +64,12 @@ const DocCategoryMaster = () => {
             errorNofity(error.message || 'An error has occurred')
         }
 
+    }, [docGroupState])
 
-    }, [categoryStates])
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ['catNameMast'],
-        queryFn: getCategoryMasterList
+        queryKey: ['docGroupMaster'],
+        queryFn: getGroupList
     })
 
     if (isLoading) return <CustomBackDropWithOutState message="Loading..." />
@@ -79,21 +77,21 @@ const DocCategoryMaster = () => {
     if (error) return errorNofity('An error has occurred: ' + error.message)
 
     return (
-        <DefaultPageLayout label="Document Category Master" >
+        <DefaultPageLayout label="Document Group" >
             <MasterPageLayout>
                 <CustomInputWithLabel
-                    handleInputChange={(e) => handleChange({ target: { name: 'categoryName', value: e.target.value } })}
-                    values={categoryName}
+                    handleInputChange={(e) => handleChange({ target: { name: 'groupName', value: e.target.value } })}
+                    values={groupName}
                     placeholder="Type here ..."
                     sx={{}}
-                    labelName='Category Name'
+                    labelName='Group Name'
                     type="text"
                 />
                 <CustomSelectWithLabel
-                    labelName='Status'
+                    labelName='Group Status'
                     dataCollection={commonStatus}
-                    values={Number(categoryStatus)}
-                    handleChangeSelect={(e, val) => handleChange({ target: { name: 'categoryStatus', value: val } })}
+                    values={Number(groupStatus)}
+                    handleChangeSelect={(e, val) => handleChange({ target: { name: 'groupStatus', value: val } })}
                     placeholder={"Select here ..."}
                 />
                 <CommonMenuList
@@ -102,20 +100,20 @@ const DocCategoryMaster = () => {
                 />
             </MasterPageLayout>
             <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                <CategoryNameList tableHeaderCol={['Action', 'Category Name', ' Status']} >
+                <DocGroupMasterList tableHeaderCol={['Action', 'Group Name', 'Group Status']} >
                     {
                         data?.map((item, idx) => (
                             <tr key={idx}>
-                                <td>{item.cat_slno}</td>
-                                <td>{item.category_name?.toUpperCase()}</td>
+                                <td>{item.group_slno}</td>
+                                <td>{item.group_name?.toUpperCase()}</td>
                                 <td>{item.status}</td>
                             </tr>
                         ))
                     }
-                </CategoryNameList>
+                </DocGroupMasterList>
             </Suspense>
         </DefaultPageLayout>
     )
 }
 
-export default memo(DocCategoryMaster)
+export default memo(DocumentGroup)

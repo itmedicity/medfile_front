@@ -24,6 +24,13 @@ const UserManagement = lazy(() => import('./Modules/Settings/UserMangement/UserC
 const DocTypeMaster = lazy(() => import('./Modules/Settings/DocumentTypeMaster/DoctypeMaster.jsx'))
 const SubTypeMaster = lazy(() => import('./Modules/Settings/SubTypeMaster/SubTypeMaster.jsx'))
 const DocCategory = lazy(() => import('./Modules/Settings/DocumentCategory/DocCategoryMaster.jsx'))
+const DocSubCategory = lazy(() => import('./Modules/Settings/DocumentSubCategory/DocumentSubCategory.jsx'))
+const DocGroup = lazy(() => import('./Modules/Settings/DocumentGroup/DocumentGroup.jsx'))
+const InstituteTypeMaster = lazy(() => import('./Modules/Settings/InstituteTypeMaster/InstituteTypeMaster.jsx'))
+const InstitutionMaster = lazy(() => import('./Modules/Settings/InstitutionMaster/InstitutionMaster.jsx'))
+const CourseType = lazy(() => import('./Modules/Settings/CourseType/CourseType.jsx'))
+const CourseMaster = lazy(() => import('./Modules/Settings/CourseMaster/CourseMaster.jsx'))
+
 
 const routes = createBrowserRouter([
   {
@@ -45,6 +52,12 @@ const routes = createBrowserRouter([
           { path: 'DocTypeMaster', element: <DocTypeMaster /> },
           { path: 'SubTypeMaster', element: <SubTypeMaster /> },
           { path: 'DocCategory', element: <DocCategory /> },
+          { path: 'DocSubCategory', element: <DocSubCategory /> },
+          { path: 'DocGroup', element: <DocGroup /> },
+          { path: 'InstituteTypeMaster', element: <InstituteTypeMaster /> },
+          { path: 'InstitutionMaster', element: <InstitutionMaster /> },
+          { path: 'CourseType', element: <CourseType /> },
+          { path: 'CourseMaster', element: <CourseMaster /> },
           { path: 'Color', element: <Colors /> },
         ],
       },

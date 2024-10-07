@@ -3,58 +3,57 @@ import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel'
 import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
-import CommonMenuList from '../../../Components/CommonMenuList'
 import { commonStatus } from '../../../Constant/Data'
-import { errorNofity, sanitizeInput, succesNofity, warningNofity } from '../../../Constant/Constant'
+import CommonMenuList from '../../../Components/CommonMenuList'
 import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState'
-import { getCategoryMasterList } from '../../../api/commonAPI'
+import { errorNofity, sanitizeInput, succesNofity, warningNofity } from '../../../Constant/Constant'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getIntitutionTypeList } from '../../../api/commonAPI'
 import axiosApi from '../../../Axios/Axios'
 
-const CategoryNameList = lazy(() => import('../../../Components/CustomTable'));
+const InstitutionTypeList = lazy(() => import('../../../Components/CustomTable'));
 
-const DocCategoryMaster = () => {
+const InstituteTypeMaster = () => {
 
     const queryClient = useQueryClient();
-
-    const [categoryStates, setCategoryStates] = useState({
-        categoryName: '',
-        categoryStatus: 0
+    const [institutionTypeState, setInstitutionTypeState] = useState({
+        institutionTypeName: '',
+        institutionTypeStatus: 0
     })
 
-    const handleChange = (e) => {
-        setCategoryStates({ ...categoryStates, [e.target.name]: sanitizeInput(e.target.value) })
-    }
+    const { institutionTypeName, institutionTypeStatus } = institutionTypeState
 
-    const { categoryName, categoryStatus } = categoryStates
+    const handleChange = (e) => {
+        setInstitutionTypeState({ ...institutionTypeState, [e.target.name]: sanitizeInput(e.target.value) })
+    }
 
     const handleSubmitButtonFun = useCallback(async (e) => {
         e.preventDefault()
 
-        if (categoryStates.categoryName === '') {
-            warningNofity('Category Name cannot be empty' || 'An error has occurred')
+        if (institutionTypeState.institutionTypeName === '') {
+            warningNofity('Institution Type Name cannot be empty' || 'An error has occurred')
             return
         }
 
-        if (categoryStates.categoryStatus === 0) {
-            warningNofity('Category Status cannot be empty' || 'An error has occurred')
+        if (institutionTypeState.institutionTypeStatus === 0) {
+            warningNofity('Institution Type Status cannot be empty' || 'An error has occurred')
             return
         }
 
         const FormData = {
-            category_name: categoryStates.categoryName?.trim(),
-            cat_status: categoryStates.categoryStatus
+            institute_type_name: institutionTypeState.institutionTypeName?.trim(),
+            institute_type_status: institutionTypeState.institutionTypeStatus
         }
 
         try {
-            const res = await axiosApi.post('/documentCategory/insertDocCategory', FormData)
+            const res = await axiosApi.post('/instituteType/insertInstituteType', FormData)
             const { success, message } = res.data
             if (success === 1) {
                 succesNofity(message)
-                queryClient.invalidateQueries({ queryKey: ['catNameMast'] })
-                setCategoryStates({
-                    categoryName: '',
-                    categoryStatus: 0
+                queryClient.invalidateQueries({ queryKey: ['institutionType'] })
+                setInstitutionTypeState({
+                    institutionTypeName: '',
+                    institutionTypeStatus: 0
                 })
             } else if (success === 0) {
                 errorNofity(message)
@@ -66,12 +65,11 @@ const DocCategoryMaster = () => {
             errorNofity(error.message || 'An error has occurred')
         }
 
-
-    }, [categoryStates])
+    }, [institutionTypeState])
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ['catNameMast'],
-        queryFn: getCategoryMasterList
+        queryKey: ['institutionType'],
+        queryFn: getIntitutionTypeList
     })
 
     if (isLoading) return <CustomBackDropWithOutState message="Loading..." />
@@ -79,21 +77,21 @@ const DocCategoryMaster = () => {
     if (error) return errorNofity('An error has occurred: ' + error.message)
 
     return (
-        <DefaultPageLayout label="Document Category Master" >
+        <DefaultPageLayout label={'Institute Type Master'}>
             <MasterPageLayout>
                 <CustomInputWithLabel
-                    handleInputChange={(e) => handleChange({ target: { name: 'categoryName', value: e.target.value } })}
-                    values={categoryName}
+                    handleInputChange={(e) => handleChange({ target: { name: 'institutionTypeName', value: e.target.value } })}
+                    values={institutionTypeName}
                     placeholder="Type here ..."
                     sx={{}}
-                    labelName='Category Name'
+                    labelName='Institution Type Name'
                     type="text"
                 />
                 <CustomSelectWithLabel
-                    labelName='Status'
+                    labelName='Institution Type Status'
                     dataCollection={commonStatus}
-                    values={Number(categoryStatus)}
-                    handleChangeSelect={(e, val) => handleChange({ target: { name: 'categoryStatus', value: val } })}
+                    values={Number(institutionTypeStatus)}
+                    handleChangeSelect={(e, val) => handleChange({ target: { name: 'institutionTypeStatus', value: val } })}
                     placeholder={"Select here ..."}
                 />
                 <CommonMenuList
@@ -102,20 +100,20 @@ const DocCategoryMaster = () => {
                 />
             </MasterPageLayout>
             <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                <CategoryNameList tableHeaderCol={['Action', 'Category Name', ' Status']} >
+                <InstitutionTypeList tableHeaderCol={['Action', 'Institution Type Name', 'Institution Type Status']} >
                     {
                         data?.map((item, idx) => (
                             <tr key={idx}>
-                                <td>{item.cat_slno}</td>
-                                <td>{item.category_name?.toUpperCase()}</td>
+                                <td>{item.institute_type_slno}</td>
+                                <td>{item.institute_type_name?.toUpperCase()}</td>
                                 <td>{item.status}</td>
                             </tr>
                         ))
                     }
-                </CategoryNameList>
+                </InstitutionTypeList>
             </Suspense>
         </DefaultPageLayout>
     )
 }
 
-export default memo(DocCategoryMaster)
+export default memo(InstituteTypeMaster)

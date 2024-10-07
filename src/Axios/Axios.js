@@ -25,7 +25,7 @@ axiosApi.interceptors.request.use(function (config) {
 })
 
 axiosApi.interceptors.response.use(function (response) {
-    if (response.data.status === 102) {
+    if (response.data.status === 102 || response.data.status === 101) {
         localStorage.removeItem('app_auth');
         toast.error(
             <div className='flex h-20 flex-col' >
