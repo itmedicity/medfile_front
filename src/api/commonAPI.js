@@ -113,3 +113,12 @@ export const getCourseList = async () => {
         }
     })
 }
+
+export const getDocNumber = async () => {
+    return axiosApi.get('/selectComponets/getDocNumber').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data[0]?.number
+        }
+    })
+}

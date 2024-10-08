@@ -7,11 +7,29 @@ import CustomInput from '../../Components/CustomInput';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import CustomSelect from '../../Components/CustomSelect';
+import Clock from 'react-live-clock'
 import { DocSubTypeMaster, DocumentTypeMainMaster, IntituteMaster, categorymaster, courseMaster } from '../../Constant/Data';
+import { getDocNumber } from '../../api/commonAPI';
+import { useQuery } from '@tanstack/react-query';
+import CustomBackDropWithOutState from '../../Components/CustomBackDropWithOutState';
+import { customDocNumber } from '../../Function/CommonFunction';
+
 
 const FileUpload = () => {
 
     const [docType, setDocType] = useState(0)
+
+    // GET UNIQUE DOCUMENT NUMBER
+    const { isLoading: documentNumberLoading, data: documentNumber, error: docError } = useQuery({
+        queryKey: ['getDocumentNumber'],
+        queryFn: getDocNumber
+    })
+
+    // CUSTOM DOC NUMBER
+    const custDocNumber = customDocNumber(documentNumber)
+
+
+
     const handleChangeSelect = (e, val) => {
         setDocType(val)
         // console.log(val)
@@ -29,9 +47,17 @@ const FileUpload = () => {
                     <Grid container spacing={0.3} size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }} className="border border-red-100 rounded-md" >
                         <Box className="flex flex-1 flex-col" >
                             <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-extrabold" >Doc Nubmer</Box>
-                            <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold " >4526-5268-5854-2024</Box>
+                            <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold " >
+                                {documentNumberLoading ? 'Loading...' : docError ? 0 : custDocNumber}
+                            </Box>
                             <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-extrabold " >Doc Date</Box>
-                            <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold " >12/12/2022 10:00 AM</Box>
+                            <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold " >
+                                <Clock
+                                    date={new Date()}
+                                    format={'DD/MM/YYYY h:mm:ss A'}
+                                    ticking={true}
+                                    timezone={'Asia/Calcutta'} />
+                            </Box>
                         </Box>
                     </Grid>
                     <Grid container spacing={0.5} size={{ xs: 12, sm: 12, md: 12, lg: 8, xl: 8 }}  >
