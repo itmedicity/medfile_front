@@ -10,8 +10,8 @@ const CustomInput = ({
 }) => {
     return (
         <Input
-            startDecorator={<StickyNote2Icon sx={{ color: '#5b6b79', opacity: 0.6 }} />}
-            endDecorator={<IconButton variant='soft' ><RefreshIcon sx={{ color: '#5b6b79', opacity: 0.6 }} /></IconButton>}
+            startDecorator={<StickyNote2Icon sx={{ color: baseColor.primarylight, }} />}
+            endDecorator={<IconButton variant='soft' ><RefreshIcon sx={{ color: baseColor.primarylight, }} /></IconButton>}
             placeholder={placeholder}
             size='sm'
             variant='outlined'

@@ -122,3 +122,69 @@ export const getDocNumber = async () => {
         }
     })
 }
+
+export const getSelectDocTypeMasterList = async () => {
+    return axiosApi.get('/documentTypeMaster/selectDocTypeMaster').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.doc_type_slno, label: item.doc_type_master_name.toUpperCase() }
+            })
+        }
+    })
+}
+
+export const getSelectSubTypeMasterList = async () => {
+    return axiosApi.get('/subTypeMaster/selectSubTypeMaster').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.sub_type_slno, label: item.doc_sub_type_name.toUpperCase() }
+            })
+        }
+    })
+}
+
+export const getSelectInstitutionMasterList = async () => {
+    return axiosApi.get('/institutionMaster/selectInstituteMaster').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.institution_slno, label: item.institution_name.toUpperCase() }
+            })
+        }
+    })
+}
+
+export const getSelectCourseMasterList = async () => {
+    return axiosApi.get('/courseMaster/getSelectCourseMaster').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.course_slno, label: item.course_name.toUpperCase() }
+            })
+        }
+    })
+}
+
+export const getSeelctSubCategoryList = async () => {
+    return axiosApi.get('/docSubCategoryName/getSubCategoryList').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.subcat_slno, label: item.subcat_name.toUpperCase(), catSlno: item.cat_slno }
+            })
+        }
+    })
+}
+
+export const getSelectGroupList = async () => {
+    return axiosApi.get('/docGroupMaster/getSelectGroupList').then((res) => {
+        const { success, data } = res.data
+        if (success === 1) {
+            return data?.map((item) => {
+                return { value: item.group_slno, label: item.group_name.toUpperCase() }
+            })
+        }
+    })
+}
