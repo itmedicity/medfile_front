@@ -9,6 +9,7 @@
     "@fontsource/roboto": "^5.0.14",
     "@mui/icons-material": "^6.0.1",
     "@mui/joy": "^5.0.0-beta.48",
+    "@mui/lab": "^6.0.0-beta.11",
     "@mui/material": "^6.0.1",
     "@mui/x-date-pickers": "^7.19.0",
     "@tanstack/react-query": "^5.56.2",
