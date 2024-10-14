@@ -1,6 +1,6 @@
 import { Box } from "@mui/joy";
 import React, { memo } from "react";
-import { baseColor, screenHeight } from "../Constant/Constant";
+import { baseColor, screenHeight, screenWidth } from "../Constant/Constant";
 import Header from "../Layouts/Header";
 import DrawerWindow from "../Layouts/DrawerWindow";
 import { useState } from "react";
@@ -34,7 +34,8 @@ const Home = () => {
           display: 'flex',
           // bgcolor: baseColor.backGroundColor,
           bgcolor: '#eeeeee',
-          flexGrow: 1,
+          width: screenWidth - drawerWidth,
+          // flexGrow: 1,
           flexDirection: "column",
           // overflow: 'scroll',
         }}>

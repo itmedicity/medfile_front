@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/joy'
 import React, { memo } from 'react'
 import CustomSelect from './CustomSelect'
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import { baseColor } from '../Constant/Constant';
 
 const CustomSelectWithLabel = ({
   values,
@@ -18,7 +19,7 @@ const CustomSelectWithLabel = ({
         placeholder={placeholder}
         onChangeSelect={handleChangeSelect}
         value={values}
-        icons={<StickyNote2Icon />}
+        icons={<StickyNote2Icon sx={{ color: baseColor.primarylight }} />}
       />
     </Box>
   )

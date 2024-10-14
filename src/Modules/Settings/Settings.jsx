@@ -12,13 +12,15 @@ const Settings = () => {
 
     const menuName = [
         { menuSlno: 100, menuName: 'User Management', menuCodeName: 'UserManagement' },
-        { menuSlno: 200, menuName: 'Menu 2', menuCodeName: '' },
-        { menuSlno: 300, menuName: 'Menu 3', menuCodeName: '' },
-        { menuSlno: 400, menuName: 'Menu 4', menuCodeName: '' },
-        { menuSlno: 500, menuName: 'Menu 5', menuCodeName: '' },
-        { menuSlno: 600, menuName: 'Menu 6', menuCodeName: '' },
-        { menuSlno: 700, menuName: 'Menu 7', menuCodeName: '' },
-        { menuSlno: 800, menuName: 'Menu 8', menuCodeName: '' },
+        { menuSlno: 200, menuName: 'Document Type Master', menuCodeName: 'DocTypeMaster' },
+        { menuSlno: 300, menuName: 'Sub Type', menuCodeName: 'SubTypeMaster' },
+        { menuSlno: 400, menuName: 'Document Category', menuCodeName: 'DocCategory' },
+        { menuSlno: 500, menuName: 'Document Sub Category', menuCodeName: 'DocSubCategory' },
+        { menuSlno: 600, menuName: 'Document Group', menuCodeName: 'DocGroup' },
+        { menuSlno: 700, menuName: 'Institute Type', menuCodeName: 'InstituteTypeMaster' },
+        { menuSlno: 800, menuName: 'Institution Master', menuCodeName: 'InstitutionMaster' },
+        { menuSlno: 700, menuName: 'Course Type', menuCodeName: 'CourseType' },
+        { menuSlno: 800, menuName: 'Course Name Master', menuCodeName: 'CourseMaster' },
     ]
 
     return (

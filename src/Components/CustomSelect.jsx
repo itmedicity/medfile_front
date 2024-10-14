@@ -20,7 +20,6 @@ const CustomSelect = ({ data, placeholder, onChangeSelect, value, icons }) => {
                     // borderColor: 'red',
                     // backgroundColor: 'red',
                     // outlineColor: 'red',
-
                 },
             }}
             onChange={onChangeSelect}

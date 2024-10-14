@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { loginType, passwordValidity, userStatus } from '../../../Constant/Data'
 import { useState } from 'react'
 import { useCallback } from 'react'
-import { axiosApi } from '../../../Axios/Axios'
+import axiosApi from '../../../Axios/Axios'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -118,8 +118,6 @@ const UserCreation = () => {
                 })
             }
         }
-
-
     }, [userManagemt])
 
     return (
@@ -189,8 +187,8 @@ const UserCreation = () => {
                 <IconButton
                     variant='outlined'
                     sx={{ mt: 1, mr: 1, fontWeight: 400 }}
-                    onClick={handleSubmitUserManagment}>
-                    <Tooltip title="Register User List" arrow variant='soft' color='danger'>
+                    onClick={() => { }}>
+                    <Tooltip title="User List" arrow variant='soft' color='danger'>
                         <PersonSearchIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
                     </Tooltip>
                 </IconButton>
