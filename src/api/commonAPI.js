@@ -224,12 +224,12 @@ export const getSelectGroupList = async () => {
 export const getDocumentList = async () => {
   return axiosApi.get("/docMaster/getDocMaster").then((res) => {
     const { success, data } = res.data;
-    console.log(data);
     if (success === 1) {
       return data?.map((item) => {
         return {
           id: item.doc_slno,
-          doc_date: format(new Date(item.doc_date, "dd-MM-yyyy HH:mm")),
+          docDate: format(new Date(item.doc_date), "dd-MM-yyyy HH:mm:ss"),
+          docVersion: format(new Date(item.doc_ver_date), "dd-MM-yyyy HH:mm:ss"),
           ...item,
         };
       });
