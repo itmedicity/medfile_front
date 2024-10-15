@@ -1,56 +1,77 @@
 // @ts-nocheck
-import React, { memo } from 'react'
-import { DataGrid } from '@mui/x-data-grid';
-import Paper from '@mui/material/Paper';
+import React, { memo } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
+import { getDocumentList } from "../../../api/commonAPI";
+import { useQuery } from "@tanstack/react-query";
+import { errorNofity } from "../../../Constant/Constant";
+import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
+import { ToastContainer } from "react-toastify";
 
 const DocuementList = () => {
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["getDocList"],
+    queryFn: getDocumentList,
+  });
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
-        {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 90,
-        },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-        },
-    ];
+  if (isLoading) <CustomBackDropWithOutState message={"Loading..."} />;
+  if (error) errorNofity(error);
+  console.log(data);
+  const columns = [
+    { field: "doc_slno", headerName: "Slno", width: 70 },
+    { field: "doc_id", headerName: "Doc ID", width: 70, type: "number" },
+    { field: "doc_number", headerName: "Doc Number", width: 160 },
+    { field: "doc_name", headerName: "Doc Name", width: 200 },
+    { field: "doc_desc", headerName: "Doc Description", width: 200 },
+    { field: "doc_type_master_name", headerName: "Do Type", width: 300 },
+    { field: "doc_sub_type_name", headerName: "Doc Sub Type", width: 250 },
+    { field: "institution_name", headerName: "Institution", width: 100 },
+    { field: "course_name", headerName: "Course", width: 100 },
+    { field: "category_name", headerName: "Category", width: 200 },
+    { field: "subcat_name", headerName: "Sub Category", width: 300 },
+    { field: "group_name", headerName: "Group", width: 200 },
+    { field: "doc_date", headerName: "Doc Date", width: 170, type: "Date" },
+    { field: "doc_ver_date", headerName: "Doc Version", width: 170 },
+  ];
 
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
+  //   const columns = [
+  //     { field: "id", headerName: "ID", width: 70 },
+  //     { field: "firstName", headerName: "First name", width: 130 },
+  //     { field: "lastName", headerName: "Last name", width: 130 },
+  //     {
+  //       field: "age",
+  //       headerName: "Age",
+  //       type: "number",
+  //       width: 90,
+  //     },
+  //     {
+  //       field: "fullName",
+  //       headerName: "Full name",
+  //       description: "This column has a value getter and is not sortable.",
+  //       sortable: false,
+  //       width: 160,
+  //       valueGetter: (value, row) =>
+  //         `${row.firstName || ""} ${row.lastName || ""}`,
+  //     },
+  //   ];
 
-    const paginationModel = { page: 0, pageSize: 10 };
+  const rows = data;
 
-    return (
-        <Paper sx={{ height: 800, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{ pagination: { paginationModel } }}
-                pageSizeOptions={[5, 10]}
-                // checkboxSelection
-                sx={{ border: 0 }}
-            />
-        </Paper>
-    )
-}
+  const paginationModel = { page: 0, pageSize: 10 };
 
-export default memo(DocuementList) 
+  return (
+    <Paper sx={{ height: 400, overflow: "scroll", mx: 2 }}>
+      <ToastContainer />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        // checkboxSelection
+        sx={{ border: 0 }}
+      />
+    </Paper>
+  );
+};
+
+export default memo(DocuementList);
