@@ -229,10 +229,31 @@ export const getDocumentList = async () => {
         return {
           id: item.doc_slno,
           docDate: format(new Date(item.doc_date), "dd-MM-yyyy HH:mm:ss"),
-          docVersion: format(new Date(item.doc_ver_date), "dd-MM-yyyy HH:mm:ss"),
+          docVersion: format(
+            new Date(item.doc_ver_date),
+            "dd-MM-yyyy HH:mm:ss"
+          ),
           ...item,
         };
       });
+    }
+  });
+};
+
+export const getDocInforByID = async (id) => {
+  return axiosApi.get(`/docMaster/getDocMasterById/${id}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data[0];
+    }
+  });
+};
+
+export const getDocumentDetl = async (id) => {
+  return axiosApi.get(`/docMaster/getDocDetl/${id}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
     }
   });
 };
