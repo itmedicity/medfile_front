@@ -6,13 +6,17 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 const CustomInput = ({
     placeholder,
-    sx
+    sx,
+    value,
+    onChange,
 }) => {
     return (
         <Input
             startDecorator={<StickyNote2Icon sx={{ color: baseColor.primarylight, }} />}
             endDecorator={<IconButton variant='soft' ><RefreshIcon sx={{ color: baseColor.primarylight, }} /></IconButton>}
             placeholder={placeholder}
+            value={value}
+            onChange={onChange}
             size='sm'
             variant='outlined'
             sx={{

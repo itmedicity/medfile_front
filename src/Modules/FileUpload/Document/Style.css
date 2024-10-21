@@ -1,0 +1,24 @@
+.styled-image {
+  width: "1rem"; /* Adjust width as needed */
+  height: "1rem"; /* Maintains aspect ratio */
+  opacity: 0.8; /* Set overall opacity */
+  background-color: transparent; /* Ensure background is transparent */
+  border-radius: 15px; /* Optional: for rounded edges */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow */
+}
+
+/* Optional: To create a fade effect at the edges */
+.styled-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  pointer-events: none; /* Ensures image is still clickable */
+}
