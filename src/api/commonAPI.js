@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import axiosApi from "../Axios/Axios";
 
 export const getDocTypeMasterList = async () => {
-  return axiosApi.get("/documentTypeMaster/getDocTypeMaster").then((res) => {
+  return await axiosApi.get("/documentTypeMaster/getDocTypeMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -11,7 +11,7 @@ export const getDocTypeMasterList = async () => {
 };
 
 export const getSubTypeMasterList = async () => {
-  return axiosApi.get("/subTypeMaster/getAllSubTypeMaster").then((res) => {
+  return await axiosApi.get("/subTypeMaster/getAllSubTypeMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -20,7 +20,7 @@ export const getSubTypeMasterList = async () => {
 };
 
 export const getCategoryMasterList = async () => {
-  return axiosApi.get("/documentCategory/getAllDocCategory").then((res) => {
+  return await axiosApi.get("/documentCategory/getAllDocCategory").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -29,7 +29,7 @@ export const getCategoryMasterList = async () => {
 };
 
 export const getSelectCategoryNameList = async () => {
-  return axiosApi.get("/documentCategory/selectCategoryMaster").then((res) => {
+  return await axiosApi.get("/documentCategory/selectCategoryMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -43,7 +43,7 @@ export const getSelectCategoryNameList = async () => {
 };
 
 export const getSubCategoryList = async () => {
-  return axiosApi
+  return await axiosApi
     .get("/docSubCategoryName/getAllDocSubCategory")
     .then((res) => {
       const { success, data } = res.data;
@@ -54,7 +54,7 @@ export const getSubCategoryList = async () => {
 };
 
 export const getGroupList = async () => {
-  return axiosApi.get("/docGroupMaster/getAllDocGroup").then((res) => {
+  return await axiosApi.get("/docGroupMaster/getAllDocGroup").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -63,7 +63,7 @@ export const getGroupList = async () => {
 };
 
 export const getIntitutionTypeList = async () => {
-  return axiosApi.get("/instituteType/getAllInstituteType").then((res) => {
+  return await axiosApi.get("/instituteType/getAllInstituteType").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -72,7 +72,7 @@ export const getIntitutionTypeList = async () => {
 };
 
 export const getSelectInstitutionTypeList = async () => {
-  return axiosApi.get("/instituteType/getInstitutionTypeSelect").then((res) => {
+  return await axiosApi.get("/instituteType/getInstitutionTypeSelect").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -86,7 +86,7 @@ export const getSelectInstitutionTypeList = async () => {
 };
 
 export const getInstitutionList = async () => {
-  return axiosApi
+  return await axiosApi
     .get("/institutionMaster/getAllInstitutionMaster")
     .then((res) => {
       const { success, data } = res.data;
@@ -97,7 +97,7 @@ export const getInstitutionList = async () => {
 };
 
 export const getCourseTypeList = async () => {
-  return axiosApi.get("/courseType/getAllCourseType").then((res) => {
+  return await axiosApi.get("/courseType/getAllCourseType").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -106,7 +106,7 @@ export const getCourseTypeList = async () => {
 };
 
 export const getSelectCourseTypeList = async () => {
-  return axiosApi.get("/courseType/getCourseTypeSelect").then((res) => {
+  return await axiosApi.get("/courseType/getCourseTypeSelect").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -120,7 +120,7 @@ export const getSelectCourseTypeList = async () => {
 };
 
 export const getCourseList = async () => {
-  return axiosApi.get("/courseMaster/getAllCourseMaster").then((res) => {
+  return await axiosApi.get("/courseMaster/getAllCourseMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
@@ -129,7 +129,7 @@ export const getCourseList = async () => {
 };
 
 export const getDocNumber = async () => {
-  return axiosApi.get("/selectComponets/getDocNumber").then((res) => {
+  return await axiosApi.get("/selectComponets/getDocNumber").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data[0]?.number;
@@ -138,7 +138,7 @@ export const getDocNumber = async () => {
 };
 
 export const getSelectDocTypeMasterList = async () => {
-  return axiosApi.get("/documentTypeMaster/selectDocTypeMaster").then((res) => {
+  return await axiosApi.get("/documentTypeMaster/selectDocTypeMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -152,7 +152,7 @@ export const getSelectDocTypeMasterList = async () => {
 };
 
 export const getSelectSubTypeMasterList = async () => {
-  return axiosApi.get("/subTypeMaster/selectSubTypeMaster").then((res) => {
+  return await axiosApi.get("/subTypeMaster/selectSubTypeMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -166,7 +166,7 @@ export const getSelectSubTypeMasterList = async () => {
 };
 
 export const getSelectInstitutionMasterList = async () => {
-  return axiosApi
+  return await axiosApi
     .get("/institutionMaster/selectInstituteMaster")
     .then((res) => {
       const { success, data } = res.data;
@@ -182,7 +182,7 @@ export const getSelectInstitutionMasterList = async () => {
 };
 
 export const getSelectCourseMasterList = async () => {
-  return axiosApi.get("/courseMaster/getSelectCourseMaster").then((res) => {
+  return await axiosApi.get("/courseMaster/getSelectCourseMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -196,7 +196,7 @@ export const getSelectCourseMasterList = async () => {
 };
 
 export const getSeelctSubCategoryList = async () => {
-  return axiosApi.get("/docSubCategoryName/getSubCategoryList").then((res) => {
+  return await axiosApi.get("/docSubCategoryName/getSubCategoryList").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -211,7 +211,7 @@ export const getSeelctSubCategoryList = async () => {
 };
 
 export const getSelectGroupList = async () => {
-  return axiosApi.get("/docGroupMaster/getSelectGroupList").then((res) => {
+  return await axiosApi.get("/docGroupMaster/getSelectGroupList").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -222,7 +222,7 @@ export const getSelectGroupList = async () => {
 };
 
 export const getDocumentList = async () => {
-  return axiosApi.get("/docMaster/getDocMaster").then((res) => {
+  return await axiosApi.get("/docMaster/getDocMaster").then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data?.map((item) => {
@@ -241,7 +241,7 @@ export const getDocumentList = async () => {
 };
 
 export const getDocInforByID = async (id) => {
-  return axiosApi.get(`/docMaster/getDocMasterById/${id}`).then((res) => {
+  return await axiosApi.get(`/docMaster/getDocMasterById/${id}`).then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data[0];
@@ -250,7 +250,7 @@ export const getDocInforByID = async (id) => {
 };
 
 export const getDocumentDetl = async (id) => {
-  return axiosApi.get(`/docMaster/getDocDetl/${id}`).then((res) => {
+  return await axiosApi.get(`/docMaster/getDocDetl/${id}`).then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
