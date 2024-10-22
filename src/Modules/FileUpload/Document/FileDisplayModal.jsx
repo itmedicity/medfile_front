@@ -1,38 +1,43 @@
-import { Modal, Sheet, Typography } from '@mui/joy'
-import React from 'react'
-import { memo } from 'react'
-import ModalClose from '@mui/joy/ModalClose';
+import { Modal, Sheet, Typography } from "@mui/joy";
+import React from "react";
+import { memo } from "react";
+import ModalClose from "@mui/joy/ModalClose";
+import { Document, Page } from "react-pdf";
+import { pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  //   "pdfjs-dist/build/pdf.worker.min.mjs",
+  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 const FileDisplayModal = ({ openFile, setOpenFile, fileLink }) => {
-    return (
-        <Modal
-            aria-labelledby="modal-title"
-            aria-describedby="modal-desc"
-            open={openFile}
-            onClose={() => setOpenFile(false)}
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        >
-            <Sheet
-                variant="outlined"
-                sx={{ maxWidth: 500, borderRadius: 'md', p: 3, boxShadow: 'lg' }}
-            >
-                <ModalClose variant="plain" sx={{ m: 1 }} />
-                <Typography
-                    component="h2"
-                    id="modal-title"
-                    level="h4"
-                    textColor="inherit"
-                    sx={{ fontWeight: 'lg', mb: 1 }}
-                >
-                    This is the modal title
-                </Typography>
-                <Typography id="modal-desc" textColor="text.tertiary">
-                    Make sure to use <code>aria-labelledby</code> on the modal dialog with an
-                    optional <code>aria-describedby</code> attribute.
-                </Typography>
-            </Sheet>
-        </Modal>
-    )
-}
+  const links = "https://www.pdf995.com/samples/pdf.pdf";
 
-export default memo(FileDisplayModal) 
+  return (
+    <Modal
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      open={openFile}
+      onClose={() => setOpenFile(false)}
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <Sheet
+        variant="outlined"
+        sx={{
+          //   maxWidth: 500,
+          borderRadius: "md",
+          p: 3,
+          boxShadow: "lg",
+        }}
+      >
+        <ModalClose variant="plain" sx={{ m: 1 }} />
+        <Document file={links} />
+      </Sheet>
+    </Modal>
+  );
+};
+
+export default memo(FileDisplayModal);
