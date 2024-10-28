@@ -2,44 +2,52 @@ import { format } from "date-fns";
 import axiosApi from "../Axios/Axios";
 
 export const getDocTypeMasterList = async () => {
-  return await axiosApi.get("/documentTypeMaster/getDocTypeMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data;
-    }
-  });
+  return await axiosApi
+    .get("/documentTypeMaster/getDocTypeMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
 };
 
 export const getSubTypeMasterList = async () => {
-  return await axiosApi.get("/subTypeMaster/getAllSubTypeMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data;
-    }
-  });
+  return await axiosApi
+    .get("/subTypeMaster/getAllSubTypeMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
 };
 
 export const getCategoryMasterList = async () => {
-  return await axiosApi.get("/documentCategory/getAllDocCategory").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data;
-    }
-  });
+  return await axiosApi
+    .get("/documentCategory/getAllDocCategory")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
 };
 
 export const getSelectCategoryNameList = async () => {
-  return await axiosApi.get("/documentCategory/selectCategoryMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.cat_slno,
-          label: item.category_name.toUpperCase(),
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/documentCategory/selectCategoryMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.cat_slno,
+            label: item.category_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getSubCategoryList = async () => {
@@ -63,26 +71,30 @@ export const getGroupList = async () => {
 };
 
 export const getIntitutionTypeList = async () => {
-  return await axiosApi.get("/instituteType/getAllInstituteType").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data;
-    }
-  });
+  return await axiosApi
+    .get("/instituteType/getAllInstituteType")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
 };
 
 export const getSelectInstitutionTypeList = async () => {
-  return await axiosApi.get("/instituteType/getInstitutionTypeSelect").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.institute_type_slno,
-          label: item.institute_type_name.toUpperCase(),
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/instituteType/getInstitutionTypeSelect")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.institute_type_slno,
+            label: item.institute_type_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getInstitutionList = async () => {
@@ -138,31 +150,35 @@ export const getDocNumber = async () => {
 };
 
 export const getSelectDocTypeMasterList = async () => {
-  return await axiosApi.get("/documentTypeMaster/selectDocTypeMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.doc_type_slno,
-          label: item.doc_type_master_name.toUpperCase(),
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/documentTypeMaster/selectDocTypeMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.doc_type_slno,
+            label: item.doc_type_master_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getSelectSubTypeMasterList = async () => {
-  return await axiosApi.get("/subTypeMaster/selectSubTypeMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.sub_type_slno,
-          label: item.doc_sub_type_name.toUpperCase(),
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/subTypeMaster/selectSubTypeMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.sub_type_slno,
+            label: item.doc_sub_type_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getSelectInstitutionMasterList = async () => {
@@ -182,43 +198,52 @@ export const getSelectInstitutionMasterList = async () => {
 };
 
 export const getSelectCourseMasterList = async () => {
-  return await axiosApi.get("/courseMaster/getSelectCourseMaster").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.course_slno,
-          label: item.course_name.toUpperCase(),
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/courseMaster/getSelectCourseMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.course_slno,
+            label: item.course_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getSeelctSubCategoryList = async () => {
-  return await axiosApi.get("/docSubCategoryName/getSubCategoryList").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return {
-          value: item.subcat_slno,
-          label: item.subcat_name.toUpperCase(),
-          catSlno: item.cat_slno,
-        };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/docSubCategoryName/getSubCategoryList")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.subcat_slno,
+            label: item.subcat_name.toUpperCase(),
+            catSlno: item.cat_slno,
+          };
+        });
+      }
+    });
 };
 
 export const getSelectGroupList = async () => {
-  return await axiosApi.get("/docGroupMaster/getSelectGroupList").then((res) => {
-    const { success, data } = res.data;
-    if (success === 1) {
-      return data?.map((item) => {
-        return { value: item.group_slno, label: item.group_name.toUpperCase() };
-      });
-    }
-  });
+  return await axiosApi
+    .get("/docGroupMaster/getSelectGroupList")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.group_slno,
+            label: item.group_name.toUpperCase(),
+          };
+        });
+      }
+    });
 };
 
 export const getDocumentList = async () => {
@@ -251,6 +276,15 @@ export const getDocInforByID = async (id) => {
 
 export const getDocumentDetl = async (id) => {
   return await axiosApi.get(`/docMaster/getDocDetl/${id}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getDocTypeCount = async () => {
+  return await axiosApi.get(`/docMaster/getDocTypeCount`).then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;

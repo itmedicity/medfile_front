@@ -4,6 +4,7 @@ import {
   Divider,
   Input,
   Sheet,
+  Skeleton,
   Tooltip,
   Typography,
   styled,
@@ -27,8 +28,21 @@ import PanoramaOutlinedIcon from "@mui/icons-material/PanoramaOutlined";
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import GppGoodIcon from "@mui/icons-material/GppGood";
+import { useQuery } from "@tanstack/react-query";
+import { getDocTypeCount } from "../../api/commonAPI";
 
 const Dashboard = () => {
+  const {
+    isLoading: docTypeLoding,
+    data: docTypeData,
+    error: docTypeError,
+  } = useQuery({
+    queryKey: ["getDocTypeCount"],
+    queryFn: getDocTypeCount,
+  });
+
+  console.log(docTypeData);
+
   const users = [
     {
       id: "1-2024",
@@ -164,47 +178,51 @@ const Dashboard = () => {
       {/* <Typography level='h2' textAlign='center' sx={{ p: 0.5 }} >Mediwalt</Typography> */}
       <Grid container spacing={1} sx={{ flexGrow: 1 }}>
         {/* Dash board container start */}
-        {a.map((val, idx) => (
-          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3, xl: 3 }}>
-            <Box
-              key={idx}
-              className="flex flex-1 border-2 rounded-md p-1 flex-col overflow-y-hidden"
-              sx={{
-                bgcolor: "#ffffff",
-                color: "#55606e",
-                height: { xs: 150, sm: 150, md: 150, lg: 120, xl: 145 },
-                width: "100%",
-              }}
-            >
-              <Box className="flex" sx={{ height: 115 }}>
-                <Box
-                  className="flex  w-[34%] items-center justify-center text-5xl rounded-3xl drop-shadow-xl"
-                  sx={{
-                    bgcolor: val.bgColor,
-                    marginTop: "-25px",
-                    float: "left",
-                    marginBottom: 0.5,
-                    opacity: 0.8,
-                  }}
-                >
-                  <AssuredWorkloadRoundedIcon
-                    fontSize="large"
-                    sx={{ mt: 2, color: "white" }}
-                  />
+        {docTypeLoding === false ? (
+          <Skeleton sx={{ width: 150 }} />
+        ) : (
+          docTypeData?.map((val, idx) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3, xl: 3 }}>
+              <Box
+                key={idx}
+                className="flex flex-1 border-2 rounded-md p-1 flex-col overflow-y-hidden"
+                sx={{
+                  bgcolor: "#ffffff",
+                  color: "#55606e",
+                  height: { xs: 150, sm: 150, md: 150, lg: 120, xl: 145 },
+                  width: "100%",
+                }}
+              >
+                <Box className="flex" sx={{ height: 115 }}>
+                  <Box
+                    className="flex  w-[34%] items-center justify-center text-5xl rounded-3xl drop-shadow-xl"
+                    sx={{
+                      bgcolor: val.bgColor,
+                      marginTop: "-25px",
+                      float: "left",
+                      marginBottom: 0.5,
+                      opacity: 0.8,
+                    }}
+                  >
+                    <AssuredWorkloadRoundedIcon
+                      fontSize="large"
+                      sx={{ mt: 2, color: "white" }}
+                    />
+                  </Box>
+                  <Box className="flex flex-col flex-1 justify-center text-end pr-2">
+                    <Box className="font-extralight">{val.name}</Box>
+                  </Box>
                 </Box>
-                <Box className="flex flex-col flex-1 justify-center text-end pr-2">
-                  <Box className="font-extralight">{val.name}</Box>
+                <Box sx={{ height: 35, textAlign: "end" }}>
+                  <Divider />
+                  <Box className="font-normal text-xl text-opacity-100 pr-4">
+                    {val.id}
+                  </Box>
                 </Box>
               </Box>
-              <Box sx={{ height: 35, textAlign: "end" }}>
-                <Divider />
-                <Box className="font-normal text-xl text-opacity-100 pr-4">
-                  {val.id}
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-        ))}
+            </Grid>
+          ))
+        )}
         {/* Dash board container end here */}
       </Grid>
 
