@@ -28,6 +28,7 @@
     "react-files": "^3.0.3",
     "react-hot-toast": "^2.4.1",
     "react-live-clock": "^6.1.23-beta",
+    "react-pdf": "^9.1.1",
     "react-phone-input-2": "^2.15.1",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.26.1",

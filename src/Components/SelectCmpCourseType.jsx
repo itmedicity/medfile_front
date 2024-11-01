@@ -9,7 +9,8 @@ const SelectCmpCourseType = ({ handleChange, value, label }) => {
 
   const { isLoading, data, error } = useQuery({
     queryKey: ['selectCourseType'],
-    queryFn: getSelectCourseTypeList
+    queryFn: getSelectCourseTypeList,
+    staleTime: Infinity
   })
   if (error) return errorNofity('An error has occurred: ' + error)
 

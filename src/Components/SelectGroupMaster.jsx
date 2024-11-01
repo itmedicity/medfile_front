@@ -9,7 +9,8 @@ const SelectGroupMaster = ({ handleChange, value, label }) => {
 
     const { isLoading, data, error } = useQuery({
         queryKey: ['selectGroupMast'],
-        queryFn: getSelectGroupList
+        queryFn: getSelectGroupList,
+        staleTime: Infinity
     })
     if (error) return errorNofity('An error has occurred: ' + error)
 

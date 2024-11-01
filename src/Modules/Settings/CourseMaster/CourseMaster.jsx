@@ -93,7 +93,7 @@ const CourseMaster = () => {
 
     return (
         <DefaultPageLayout label='Course Master' >
-            <MasterPageLayout>
+            <MasterPageLayout style={{}}>
                 <CustomInputWithLabel
                     handleInputChange={(e) => handleChange({ target: { name: 'courseName', value: e.target.value } })}
                     values={courseName}
