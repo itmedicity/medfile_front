@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Modal, ModalDialog, Sheet, Typography, Box, IconButton } from "@mui/joy";
+import { Modal, ModalDialog, Box, IconButton } from "@mui/joy";
 import React from "react";
 import { memo } from "react";
 import ModalClose from "@mui/joy/ModalClose";

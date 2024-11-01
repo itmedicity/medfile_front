@@ -8,7 +8,7 @@ import { errorNofity } from '../Constant/Constant'
 const SelectSubCategoryMater = ({ handleChange, value, label, catSlno }) => {
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ['selectCourseMaster'],
+        queryKey: ['selectSubCategory'],
         queryFn: getSeelctSubCategoryList
     })
     if (error) return errorNofity('An error has occurred: ' + error)

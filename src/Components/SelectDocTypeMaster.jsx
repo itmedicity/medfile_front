@@ -9,7 +9,8 @@ const SelectDocTypeMaster = ({ handleChange, value, label }) => {
 
     const { isLoading, data, error } = useQuery({
         queryKey: ['selectDOcTypeMast'],
-        queryFn: getSelectDocTypeMasterList
+        queryFn: getSelectDocTypeMasterList,
+        staleTime: Infinity
     })
     if (error) return errorNofity('An error has occurred: ' + error)
 

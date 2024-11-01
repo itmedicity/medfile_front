@@ -88,7 +88,7 @@ const InstitutionMaster = () => {
 
     return (
         <DefaultPageLayout label='Institution Master' >
-            <MasterPageLayout>
+            <MasterPageLayout style={{}}>
                 <CustomInputWithLabel
                     handleInputChange={(e) => handleChange({ target: { name: 'institutionName', value: e.target.value } })}
                     values={institutionName}

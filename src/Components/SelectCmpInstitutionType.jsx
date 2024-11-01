@@ -7,7 +7,8 @@ import { getSelectInstitutionTypeList } from '../api/commonAPI'
 const SelectCmpInstitutionType = ({ handleChange, value, label }) => {
     const { isLoading, data, error } = useQuery({
         queryKey: ['selectInstiteType'],
-        queryFn: getSelectInstitutionTypeList
+        queryFn: getSelectInstitutionTypeList,
+        staleTime: Infinity
     })
     if (error) return errorNofity('An error has occurred: ' + error)
 

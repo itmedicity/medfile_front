@@ -291,3 +291,54 @@ export const getDocTypeCount = async () => {
     }
   });
 };
+
+export const getDocAll = async () => {
+  return await axiosApi.get(`/docMaster/getDocSecureOnly`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+
+export const getnonSecureDoconly = async () => {
+  return await axiosApi.get(`/docMaster/getDocNonSecure`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getDocMasterLikeName = async (name) => {
+  if (name !== '' || name !== undefined || name !== null) {
+    return await axiosApi.get(`/docMaster/getDocMasterLikeName/${name}`).then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data
+      } else {
+        return []
+      }
+    });
+  } else {
+    return []
+  }
+
+};
+
+
+export const getDocMasterLikeNameNonSecureOnly = async (name) => {
+  if (name !== '' || name !== undefined || name !== null) {
+    return await axiosApi.get(`/docMaster/getDocMasterLikeNameNonSecureOnly/${name}`).then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data
+      } else {
+        return []
+      }
+    })
+  } else {
+    return []
+  }
+};

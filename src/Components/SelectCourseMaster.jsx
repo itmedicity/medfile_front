@@ -9,7 +9,8 @@ const SelectCourseMaster = ({ handleChange, value, label }) => {
 
     const { isLoading, data, error } = useQuery({
         queryKey: ['selectCourseMaster'],
-        queryFn: getSelectCourseMasterList
+        queryFn: getSelectCourseMasterList,
+        staleTime: Infinity
     })
     if (error) return errorNofity('An error has occurred: ' + error)
 
