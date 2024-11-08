@@ -234,7 +234,7 @@ const RoootLayouts = () => {
               </Box>
               <Box>
                 <ResendOTP
-                  onResendClick={function () {}}
+                  onResendClick={function () { }}
                   className="flex"
                   style={{
                     color: baseColor.primary,
