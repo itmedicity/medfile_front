@@ -82,7 +82,7 @@ const Dashboard = () => {
   // console.log(allDocData)
 
   return (
-    <Box className="flex flex-col border-2 m-2 rounded-xl p-2 pb-2 overflow-scroll w-full">
+    <Box className="flex flex-col border-2 rounded-xl p-2 pb-2 overflow-scroll w-full">
       <ToastContainer />
       <Grid container spacing={1} sx={{ flexGrow: 1 }}>
         {/* Dash board container start */}

@@ -80,7 +80,7 @@ const DocCategoryMaster = () => {
 
     return (
         <DefaultPageLayout label="Document Category Master" >
-            <MasterPageLayout>
+            <MasterPageLayout style={{}}>
                 <CustomInputWithLabel
                     handleInputChange={(e) => handleChange({ target: { name: 'categoryName', value: e.target.value } })}
                     values={categoryName}

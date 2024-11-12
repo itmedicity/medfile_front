@@ -12,7 +12,7 @@ import { ToastContainer } from 'react-toastify'
 const DefaultPageLayout = ({ label, children }) => {
     const navigate = useNavigate()
     return (
-        <Box className="flex flex-col border-2 m-2 rounded-xl p-1 pb-2 overflow-scroll w-full" sx={{ backgroundColor: 'white' }} >
+        <Box className="flex flex-col border-2 m-0 rounded-xl p-1 pb-2 overflow-scroll w-full" sx={{ backgroundColor: 'white' }} >
             <ToastContainer />
             <Box className="flex flex-row items-center" >
                 <AirlinesIcon fontSize='medium' className='text-[#5b6b79]' />

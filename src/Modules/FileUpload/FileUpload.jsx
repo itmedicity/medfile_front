@@ -365,7 +365,7 @@ const FileUpload = () => {
 
     return (
         <Box
-            className="flex flex-col border-2 m-2 rounded-xl p-1 pb-2  w-full"
+            className="flex flex-col border-2 rounded-xl p-1 pb-2  w-full"
             sx={{ backgroundColor: "white" }}
         >
             <Snackbar

@@ -12,6 +12,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import CustomBackDropWithOutState from "./Components/CustomBackDropWithOutState";
+import './App.css'
 
 // Main Modules
 const Dashboard = lazy(() => import('./Modules/Dashboard/Dashboard.jsx'))

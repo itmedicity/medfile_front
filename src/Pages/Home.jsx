@@ -19,6 +19,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import ScreenCheck from "../Components/ScreenCheck";
 
 
 function Home(props) {
@@ -77,11 +78,12 @@ function Home(props) {
 
 
 
-
-
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', width: '100%' }}>
       <CssBaseline />
+
+      {/* TOP APPLICATION BAR START HERE  */}
+
       <AppBar
         position="fixed"
         sx={{
@@ -105,11 +107,20 @@ function Home(props) {
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
+          <ScreenCheck />
         </Toolbar>
       </AppBar>
+
+      {/* TOP APPLICATION BAR END HERE  */}
+
+      {/* NAVIGATION BAR LEFT SIDE */}
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, transition: 'width 0.5s', flexShrink: { sm: 0 } }}
+        sx={{
+          width: { sm: drawerWidth },
+          transition: 'width 0.5s',
+          // flexShrink: { sm: 0 }
+        }}
         aria-label="mailbox folders"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -137,18 +148,27 @@ function Home(props) {
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, transition: 'width 0.5s' },
           }}
           onClose={handleDrawerClose}
-          open={mobileOpen}
+        // open={mobileOpen}
         >
           {drawer}
         </Drawer>
       </Box>
+      {/* NAVIGATION BAR LEFT SIDE --- END HERE*/}
+
+      {/* MAIN CONTENT START  */}
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 0, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{
+          flexGrow: 1,
+          p: '0.15rem',
+          width: { sm: `calc(100% - ${drawerWidth}px)` }
+        }}
       >
         <Toolbar variant="dense" />
         <Outlet />
       </Box>
+      {/* MAIN CONTENT END  */}
+
     </Box>
   );
 };
