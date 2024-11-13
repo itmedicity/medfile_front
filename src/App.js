@@ -70,6 +70,7 @@ const routes = createBrowserRouter([
 const queryClient = new QueryClient()
 
 function App() {
+
   return <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={routes} />
