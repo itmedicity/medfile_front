@@ -2,12 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  @apply transition-colors duration-200
+  /* @apply transition-colors duration-200; */
 }
 
 ::-webkit-scrollbar {
@@ -21,8 +20,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color-scheme:  dark;
-  
+  /* color-scheme:  dark; */
 }
 
 code {

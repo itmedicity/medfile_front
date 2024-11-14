@@ -1,6 +1,13 @@
 // @ts-nocheck
 import React, { useCallback, useState, memo } from "react";
-import { AspectRatio, Box, Button, CircularProgress, Input, Typography } from "@mui/joy";
+import {
+  AspectRatio,
+  Box,
+  Button,
+  CircularProgress,
+  Input,
+  Typography,
+} from "@mui/joy";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   baseColor,
@@ -29,9 +36,9 @@ import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
 
-import bgImage1 from "../assets/images/Designer.png"
-import bgImage2 from "../assets/images/Designer1.png"
-import bgImage3 from "../assets/images/Designer2.png"
+import bgImage1 from "../assets/images/Designer.png";
+import bgImage2 from "../assets/images/Designer1.png";
+import bgImage3 from "../assets/images/Designer2.png";
 import ScreenCheck from "../Components/ScreenCheck";
 
 const RoootLayouts = () => {
@@ -143,7 +150,7 @@ const RoootLayouts = () => {
 
   const renderButton = (buttonProps) => {
     return buttonProps.remainingTime !== 0 ? (
-      <Typography level="body-xs" className="p-5 text-[#001C30]">
+      <Typography level="body-xs" className="p-5 text-[#d84b9a]">
         Resend Authorisation code in {buttonProps.remainingTime} sec
       </Typography>
     ) : (
@@ -164,30 +171,41 @@ const RoootLayouts = () => {
   };
 
   return (
-    <Box
-      className="flex flex-col justify-center items-center w-full  bg-neutral-100  h-screen bg-gradient-to-r from-[#9CD8F0] to-[#C8ADF0] opacity-95"
-    >
+    <Box className="flex flex-col justify-center items-center w-full  bg-neutral-100  h-screen bg-gradient-to-r from-[#c2e5f3] to-[#C8ADF0] opacity-95">
       <ToastContainer />
       <CustomBackDrop setOpen={setOpen} open={open} />
       <ScreenCheck />
       <Box
         className="flex drop-shadow-md shadow-md  absolute"
         sx={{
-          width: { xs: 'clamp(95vw , 50vw , 95vw)', sm: 'clamp(95vw , 50vw , 95vw)', md: 'clamp(80vw , 50vw , 70vw)', lg: 'clamp(80vw , 50vw , 70vw)', xl: 'clamp(80vw , 50vw , 70vw)' },
-          height: 'clamp(90vh , 80vh , 80vh)',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          flexDirection: { xs: 'column', sm: 'column', md: 'row' },
+          width: {
+            xs: "clamp(95vw , 50vw , 95vw)",
+            sm: "clamp(95vw , 50vw , 95vw)",
+            md: "clamp(80vw , 50vw , 70vw)",
+            lg: "clamp(80vw , 50vw , 70vw)",
+            xl: "clamp(80vw , 50vw , 70vw)",
+          },
+          height: "clamp(90vh , 80vh , 80vh)",
+          borderRadius: "10px",
+          overflow: "hidden",
+          flexDirection: { xs: "column", sm: "column", md: "row" },
         }}
       >
-        <Box className="flex flex-1 min-w-[60%] min-h-[60%] relative left-0 z-[1] justify-center items-center bg-slate-50"
+        <Box
+          className="flex flex-1 min-w-[60%] min-h-[60%] relative left-0 z-[1] justify-center items-center bg-slate-50"
           sx={{
             borderRadius: 30,
             borderBottomRightRadius: 30,
-            transform: { xs: 'scaleY(1.4)', sm: 'scaleY(1.4)', md: 'scaleX(1.15)', lg: 'scaleX(1.15)', xl: 'scaleX(1.15)' },
+            transform: {
+              xs: "scaleY(1.4)",
+              sm: "scaleY(1.4)",
+              md: "scaleX(1.15)",
+              lg: "scaleX(1.15)",
+              xl: "scaleX(1.15)",
+            },
           }}
         >
-          <Box className="flex flex-1 flex-col justify-center items-center bg-slate-50" >
+          <Box className="flex flex-1 flex-col justify-center items-center bg-slate-50">
             <Box className="flex h-auto mb-1 justify-center">
               <img
                 alt="icons"
@@ -196,14 +214,13 @@ const RoootLayouts = () => {
               />
             </Box>
 
-
             {loginwithUserCred === false ? (
               onclickGenerateOTPbtn ? (
                 // {/* OTP Verification form start here */}
                 <Box className="flex flex-col justify-center">
                   <Typography
                     level="body-sm text-[#001C30]"
-                  // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                    // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
                   >
                     Verify your Phone number
                   </Typography>
@@ -216,23 +233,25 @@ const RoootLayouts = () => {
                     disabled={false}
                     secure={false}
                     className="flex items-center justify-center gap-2"
-                    inputClassName="!mr-0 py-5 !w-[2.5rem] rounded-lg outline-1 outline-[#508D4E] text-[#001C30] text-xl"
+                    inputClassName="!mr-0 py-5 !w-[2.5rem] rounded-lg 
+                    outline-1 outline-[#53b6e7] text-[#001C30]  text-xl outline-dashed"
                   />
                   <Box className="flex pt-1 flex-1 justify-center mt-4">
                     <Button
                       onClick={verifyOTPFunction}
                       size="md"
                       variant="outlined"
-                      color="neutral"
+                      // color="neutral"
                       className="w-[17.5rem] h-10 "
                       sx={{
-                        color: baseColor.primary,
-                        borderColor: baseColor.primary,
+                        color: "#53b6e7",
+                        borderColor: "#53b6e7",
                         borderRadius: 12,
                         "&:hover": {
-                          borderColor: baseColor.primary,
-                          backgroundColor: baseColor.primarylight,
-                          transition: "all 0.5s ease-in-out",
+                          color: "#fff",
+                          borderColor: "#53b6e7",
+                          backgroundColor: "#53b6e7",
+                          transition: "all 0.3s ease-in-out",
                         },
                       }}
                     >
@@ -241,7 +260,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () { }}
+                      onResendClick={function () {}}
                       className="flex"
                       style={{
                         color: baseColor.primary,
@@ -261,14 +280,15 @@ const RoootLayouts = () => {
               ) : (
                 // {/* OTP verification form end here */}
                 // {/* Phone Input start here */}
-                <Box className="flex flex-1 flex-col ">
+                <Box className="flex flex-1 flex-col p-4">
                   <Box className="flex flex-1 items-center flex-col  ">
                     <Typography
                       level="body-md"
-                      className="text-[#363446] text-lg opacity-80"
-                    // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                      fontFamily="Roboto"
+                      className="text-[#4320cd] text-lg  py-2"
+                      // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
                     >
-                      Verify your Phone number
+                      Enter your credentials
                     </Typography>
                     <Box>
                       <PhoneInput
@@ -280,14 +300,16 @@ const RoootLayouts = () => {
                         inputStyle={{
                           height: 50,
                           width: 300,
-                          borderColor: '#363446',
+                          border: "2px solid #050310",
                           borderRadius: 10,
+                          opacity: 0.8,
                         }}
                         buttonStyle={{
                           borderRadius: 10,
                           height: 50,
+                          opacity: 0.8,
                           overflow: "hidden",
-                          borderColor: baseColor.primary,
+                          border: "2px solid #050310",
                           borderTopRightRadius: 0,
                           borderBottomRightRadius: 0,
                         }}
@@ -296,18 +318,19 @@ const RoootLayouts = () => {
                       />
                     </Box>
                     <Box
-                      className="flex mt-2 border border-[#507a4f] drop-shadow-lg justify-center items-center"
+                      className="flex mt-2 border border-[#53b6e7] drop-shadow-lg justify-center items-center"
                       sx={{
                         width: 300,
                         height: 50,
                         borderRadius: 10,
                         cursor: "pointer",
                         "&:hover": {
-                          backgroundColor: baseColor.ultralight,
+                          backgroundColor: "#53b6e7",
+                          opacity: 0.8,
                           transition: "all 0.5s ease-in-out",
                         },
-                        color: baseColor.primaryfont,
-                        backgroundColor: baseColor.primarylight,
+                        color: "white",
+                        backgroundColor: "#53b6e7",
                         fontWeight: 500,
                         fontSize: "0.9rem",
                       }}
@@ -341,10 +364,11 @@ const RoootLayouts = () => {
                       onClick={loginwithCredentials}
                       sx={{
                         cursor: "pointer",
-                        color: baseColor.primary,
+                        color: "#d84b9a",
                         fontWeight: 600,
                         ":hover": {
-                          color: baseColor.primarylight,
+                          color: "#d84b9a",
+                          opacity: 0.6,
                           transition: "all 0.5s ease-in-out",
                         },
                       }}
@@ -388,7 +412,8 @@ const RoootLayouts = () => {
                         right: "2.5px",
                         bottom: 0,
                         top: "unset",
-                        transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                        transition:
+                          "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
                         borderRadius: 0,
                         borderBottomLeftRadius: "64px 20px",
                         borderBottomRightRadius: "64px 20px",
@@ -421,7 +446,8 @@ const RoootLayouts = () => {
                         right: "2.5px",
                         bottom: 0,
                         top: "unset",
-                        transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                        transition:
+                          "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
                         borderRadius: 0,
                         borderBottomLeftRadius: "64px 20px",
                         borderBottomRightRadius: "64px 20px",
@@ -480,47 +506,43 @@ const RoootLayouts = () => {
               </Box>
             )}
           </Box>
-
-
-
         </Box>
         <Box
           className="flex flex-auto bg-transparent"
           sx={{
-            backgroundSize: 'cover',
+            backgroundSize: "cover",
             backgroundPosition: {
-              xs: 'center', sm: 'center', md: 'right 0% bottom 50%', lg: 'right 0% bottom 50%', xl: 'right 0% bottom 50%'
+              xs: "center",
+              sm: "center",
+              md: "right 0% bottom 50%",
+              lg: "right 0% bottom 50%",
+              xl: "right 0% bottom 50%",
             },
-            backgroundRepeat: 'no-repeat',
-            animation: 'slider 15s ease infinite',
-            '@keyframes slider': {
-              '0%': {
+            backgroundRepeat: "no-repeat",
+            animation: "slider 15s ease infinite",
+            "@keyframes slider": {
+              "0%": {
                 backgroundImage: `url(${bgImage3})`,
               },
-              '25%': {
+              "25%": {
                 backgroundImage: `url(${bgImage1})`,
               },
-              '50%': {
+              "50%": {
                 backgroundImage: `url(${bgImage2})`,
               },
-              '75%': {
+              "75%": {
                 backgroundImage: `url(${bgImage3})`,
               },
-              '100%': {
+              "100%": {
                 backgroundImage: `url(${bgImage1})`,
               },
-            }
-          }
-          }
-        > </Box>
+            },
+          }}
+        >
+          {" "}
+        </Box>
       </Box>
-    </Box >
+    </Box>
   );
 };
 export default memo(RoootLayouts);
-
-
-
-
-
-
