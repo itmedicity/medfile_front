@@ -171,7 +171,7 @@ const RoootLayouts = () => {
   };
 
   return (
-    <Box className="flex flex-col justify-center items-center w-full  bg-neutral-100  h-screen bg-gradient-to-r from-[#c2e5f3] to-[#C8ADF0] opacity-95">
+    <Box className="flex flex-col justify-center items-center w-full h-screen bg-baseBlue/10">
       <ToastContainer />
       <CustomBackDrop setOpen={setOpen} open={open} />
       <ScreenCheck />
@@ -220,7 +220,7 @@ const RoootLayouts = () => {
                 <Box className="flex flex-col justify-center">
                   <Typography
                     level="body-sm text-[#001C30]"
-                    // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                  // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
                   >
                     Verify your Phone number
                   </Typography>
@@ -260,7 +260,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () {}}
+                      onResendClick={function () { }}
                       className="flex"
                       style={{
                         color: baseColor.primary,
@@ -285,8 +285,8 @@ const RoootLayouts = () => {
                     <Typography
                       level="body-md"
                       fontFamily="Roboto"
-                      className="text-[#4320cd] text-lg  py-2"
-                      // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                      className="text-lg  py-2 font-bold"
+                      sx={{ color: 'rgba(var(--font-darkGrey), 0.8)' }}
                     >
                       Enter your credentials
                     </Typography>
@@ -295,12 +295,13 @@ const RoootLayouts = () => {
                         country={"in"}
                         onlyCountries={["in"]}
                         autoFormat
+                        disableDropdown
                         // alwaysDefaultMask={true}
                         // containerStyle={{ height: 50 }}
                         inputStyle={{
                           height: 50,
                           width: 300,
-                          border: "2px solid #050310",
+                          border: "2px solid rgba(var(--font-darkGrey), 0.8)",
                           borderRadius: 10,
                           opacity: 0.8,
                         }}
@@ -309,7 +310,7 @@ const RoootLayouts = () => {
                           height: 50,
                           opacity: 0.8,
                           overflow: "hidden",
-                          border: "2px solid #050310",
+                          border: "2px solid rgba(var(--font-darkGrey), 0.8)",
                           borderTopRightRadius: 0,
                           borderBottomRightRadius: 0,
                         }}

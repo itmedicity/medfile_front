@@ -1,3 +1,11 @@
-/* :root{
+:root{
+    --color-blue : 92,186,232;
+    --color-pink : 213,82,155;
+    --color-violet : 98,77,174;
 
-} */
+    --font-black : 78,78,78;
+    --font-blue : 35,86,225;
+    --font-darkGrey : 76,102,117;
+
+    --background-offwhite : 243,243,243;
+}
