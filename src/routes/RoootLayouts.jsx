@@ -217,10 +217,15 @@ const RoootLayouts = () => {
             {loginwithUserCred === false ? (
               onclickGenerateOTPbtn ? (
                 // {/* OTP Verification form start here */}
-                <Box className="flex flex-col justify-center">
+                <Box className="flex flex-col justify-center ">
                   <Typography
-                    level="body-sm text-[#001C30]"
-                  // sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                    level="body-sm"
+                    className="text-green-900"
+                    sx={{
+                      color: "rgba(var(--font-darkGrey), 0.8)",
+                      textAlign: "center",
+                      pb: 1,
+                    }}
                   >
                     Verify your Phone number
                   </Typography>
@@ -260,7 +265,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () { }}
+                      onResendClick={function () {}}
                       className="flex"
                       style={{
                         color: baseColor.primary,
@@ -285,8 +290,8 @@ const RoootLayouts = () => {
                     <Typography
                       level="body-md"
                       fontFamily="Roboto"
-                      className="text-lg  py-2 font-bold"
-                      sx={{ color: 'rgba(var(--font-darkGrey), 0.8)' }}
+                      className="text-lg  py-2 font-medium"
+                      sx={{ color: "rgba(var(--font-darkGrey), 0.8)" }}
                     >
                       Enter your credentials
                     </Typography>
