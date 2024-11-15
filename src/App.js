@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -70,6 +70,10 @@ const routes = createBrowserRouter([
 const queryClient = new QueryClient()
 
 function App() {
+
+  useEffect(() => {
+    document.body.classList.add('light')
+  })
 
   return <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
     <QueryClientProvider client={queryClient}>

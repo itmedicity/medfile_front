@@ -1,4 +1,5 @@
-import React, { memo } from "react";
+// @ts-nocheck
+import React, { memo, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -19,10 +20,15 @@ import Typography from "@mui/material/Typography";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ScreenCheck from "../Components/ScreenCheck";
+import { Container } from "@mui/material";
+import { Switch, switchClasses } from "@mui/joy";
+import BedtimeOutlinedIcon from '@mui/icons-material/BedtimeOutlined';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 
 function Home(props) {
   const navigation = useNavigate();
   const [drawerWidth, setDrawerWidth] = useState(240);
+  const [dark, setDark] = useState(false);
   // const drawerWidth = 240;
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -32,6 +38,19 @@ function Home(props) {
     setIsClosing(true);
     setMobileOpen(false);
   };
+
+
+  const handleChangeDarkMode = () => {
+    setDark(!dark)
+    if (dark === true) {
+      document.body.classList.remove('dark')
+      document.body.classList.add('light')
+    } else {
+      document.body.classList.remove('light')
+      document.body.classList.add('dark')
+    }
+  }
+
 
   const handleDrawerTransitionEnd = () => {
     setIsClosing(false);
@@ -55,13 +74,19 @@ function Home(props) {
           { menu: "Advance Search", text: "/Home/AdvancedSearch" },
           { menu: "Settings", text: "/Home/Settings" },
         ].map((val, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton onClick={() => navigation(val.text)}>
+          <ListItem
+            key={index}
+            disablePadding
+          >
+            <ListItemButton
+              onClick={() => navigation(val.text)}
+              sx={{ border: 1, borderColor: "green", mx: 0.5, borderRadius: 2, my: 0.2, height: 30 }}
+            >
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
               {/* <ListItemText primary={val.menu} sx={{}} /> */}
-              <Typography noWrap>{val.menu}</Typography>
+              <Typography noWrap className="text-bgoffwhite" >{val.menu}</Typography>
             </ListItemButton>
           </ListItem>
         ))}
@@ -79,30 +104,68 @@ function Home(props) {
       <AppBar
         position="fixed"
         style={{
-          backgroundColor: "rgba(var(--color-blue))",
+          backgroundColor: "rgba(var(--bg-nav))",
         }}
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          // width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
           // backgroundColor: "greenyellow",
         }}
       >
-        <Toolbar variant="dense">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "flex" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
-          <ScreenCheck />
-        </Toolbar>
+        <Box>
+          <Toolbar variant="dense" className="flex flex-row justify-between">
+            <Box className="flex flex-row items-center">
+              <IconButton
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { sm: "flex" }, color: "rgba(var(--font-light))" }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap component="div" className="text-fontLight" >
+                Travancore Medicity
+              </Typography>
+              {/* <ScreenCheck /> */}
+            </Box>
+            <Box className="flex flex-row items-center">
+              <Switch
+                checked={dark}
+                // onChange={() => setDark(!dark)}
+                onChange={handleChangeDarkMode}
+                slotProps={{
+                  track: {
+                    children: (
+                      <>
+                        <BedtimeOutlinedIcon sx={{ ml: '8px' }} fontSize="small" />
+                        <WbSunnyOutlinedIcon sx={{ mr: '7px' }} fontSize="small" />
+                      </>
+                    ),
+                  },
+                }}
+                sx={{
+                  '--Switch-thumbSize': '27px',
+                  '--Switch-trackWidth': '64px',
+                  '--Switch-trackHeight': '31px',
+                  '--Switch-thumbWidth': '32px',
+                  '--Switch-thumbBackground': 'rgb(216,75,154)',
+                  '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                  '&:hover': {
+                    '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                  },
+                  [`&.${switchClasses.checked}`]: {
+                    '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                    '--Switch-thumbBackground': 'rgb(216,75,154)',
+                    '&:hover': {
+                      '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                    },
+                  },
+                }}
+              />
+            </Box>
+
+          </Toolbar>
+        </Box>
       </AppBar>
 
       {/* TOP APPLICATION BAR END HERE  */}
@@ -123,11 +186,12 @@ function Home(props) {
               boxSizing: "border-box",
               width: drawerWidth,
               transition: "width 0.5s",
-              backgroundColor: "rgba(var(--color-blue))",
+              backgroundColor: "rgba(var(--bg-drawer))",
+              // backgroundColor: "rgba(var(--color-blue))",
             },
           }}
           onClose={handleDrawerClose}
-          // open={mobileOpen}
+        // open={mobileOpen}
         >
           {drawer}
         </Drawer>
@@ -152,3 +216,7 @@ function Home(props) {
 }
 
 export default memo(Home);
+
+
+
+

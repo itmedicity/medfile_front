@@ -1,11 +1,53 @@
-:root{
+.light{
+    /* --bg-nav : 76,102,117; */
+    --bg-nav : 76,102,117;
+    --bg-drawer : 92,186,232; 
+    --bg-common : 243,243,243;
+    --bg-card : 242,245,248;
+
+    --bg-offwhite : 243,243,243;
+
+    --border-primary : 85,183,231;
+    --border-secondary : 85,183,231;
+
+    --icon-primary : 241,113,5,0.7;
+    --icon-secondary : 4,150,255,0.7;
+
     --color-blue : 92,186,232;
     --color-pink : 213,82,155;
     --color-violet : 98,77,174;
+    --color-white : 255,255,255;
 
     --font-black : 78,78,78;
     --font-blue : 35,86,225;
     --font-darkGrey : 76,102,117;
+    --font-light : 255,255,255;
 
-    --background-offwhite : 243,243,243;
+}
+
+
+.dark{
+    --bg-nav : 49,52,52;
+    --bg-drawer : 49,52,52; 
+    --bg-common : 65,77,85;
+    --bg-card : 65,77,85;
+
+    --bg-offwhite : 243,243,243;
+
+    --border-primary : 85,183,231;
+    --border-secondary : 85,183,231;
+
+    --icon-primary : 241,113,5;
+    --icon-secondary : 4,150,255;
+
+    --color-blue : 92,186,232;
+    --color-pink : 213,82,155;
+    --color-violet : 98,77,174;
+    --color-white : 255,255,255;
+
+    --font-black : 78,78,78;
+    --font-blue : 35,86,225;
+    --font-darkGrey : 76,102,117;
+    --font-light : 4,150,255;
+
 }
