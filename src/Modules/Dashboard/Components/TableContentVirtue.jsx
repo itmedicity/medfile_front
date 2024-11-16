@@ -30,7 +30,7 @@ const TableContentVirtue = ({ data }) => {
                 data={data}
                 files={files}
             />
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px] h-10">
                 <Box className="flex flex-1 w-16 h-full justify-center items-center">
                     {data.isSecure === 0 ? (
                         <Tooltip
@@ -63,7 +63,7 @@ const TableContentVirtue = ({ data }) => {
                     )}
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-16 h-full justify-center items-center">
                     <Tooltip title="View File" placement="top">
                         <IconButton
@@ -81,7 +81,7 @@ const TableContentVirtue = ({ data }) => {
                     </Tooltip>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-16 h-full justify-center items-center">
                     <Tooltip title="Print File" placement="top">
                         <IconButton
@@ -99,70 +99,88 @@ const TableContentVirtue = ({ data }) => {
                     </Tooltip>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-[10.5rem] h-full items-center pl-2">
-                    <Typography level="title-md" fontSize={13.5} fontWeight={600} sx={{ opacity: 0.6, fontSmooth: 'antialiased' }}  >{data.doc_number}</Typography>
+                    <Typography level="title-md" fontSize={13.5} fontWeight={600}
+                        sx={{
+                            fontSmooth: 'antialiased',
+                            fontFamily: 'var(--font-varient)',
+                            color: 'rgba(var(--font-primary-white),0.7)'
+                        }}  >{data.doc_number}</Typography>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-[12rem] justify-center items-center px-2">
                     <Typography
-                        level="body-md"
+                        // level="body-md"
                         fontSize={13.5}
-                        fontWeight={600}
-                        color="neutral"
+                        // fontWeight={600}
                         textAlign={"center"}
                         className="w-full"
-                        sx={{ fontSmooth: 'antialiased' }}
+                        sx={{
+                            fontSmooth: 'antialiased',
+                            fontFamily: 'var(--font-varient)',
+                            color: 'rgba(var(--font-primary-white),0.7)'
+                        }}
                     >
                         {data.category_name}
                     </Typography>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-[18rem] justify-center items-center px-2">
                     <Typography
                         level="body-md"
                         fontSize={13.5}
-                        fontWeight={600}
+                        // fontWeight={600}
                         noWrap
                         color="neutral"
                         textAlign={"center"}
                         className="w-full"
-                        sx={{ fontSmooth: 'antialiased' }}
+                        sx={{
+                            fontSmooth: 'antialiased',
+                            fontFamily: 'var(--font-varient)',
+                            color: 'rgba(var(--font-primary-white),0.7)'
+                        }}
                     >
                         {data.doc_type_master_name}
                     </Typography>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex w-[12rem] justify-center items-center px-2">
                     <Typography
                         level="body-md"
                         fontSize={13.5}
-                        fontWeight={600}
+                        // fontWeight={600}
                         noWrap
-                        color="neutral"
+                        // color="neutral"
                         textAlign={"center"}
                         className="w-full"
-                        sx={{ fontSmooth: 'antialiased' }}
+                        sx={{
+                            fontSmooth: 'antialiased',
+                            fontFamily: 'var(--font-varient)',
+                            color: 'rgba(var(--font-primary-white),0.7)'
+                        }}
                     >
                         {data.group_name}
                     </Typography>
                 </Box>
             </td>
-            <td className="border border-1 border-[#CFD5D1]">
+            <td className="border-baseBlue border-dashed border-t-[0.20px]">
                 <Box className="flex h-full w-[38rem] flex-col">
                     <Typography
-                        level="body-md"
+                        // level="body-md"
                         fontSize={13.5}
-                        fontWeight={600}
+                        // fontWeight={600}
                         noWrap
-                        color="neutral"
+                        // color="neutral"
                         textAlign={"left"}
                         sx={{
                             textTransform: "capitalize",
-                            pl: 1
+                            pl: 1,
+                            fontFamily: 'var(--font-varient)',
+                            color: 'rgba(var(--font-primary-white),0.7)'
                         }}
                     >
                         {data?.doc_desc.toLocaleLowerCase()}

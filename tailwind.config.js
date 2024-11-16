@@ -32,6 +32,9 @@ module.exports = {
         fontprimarywhite: "rgba(var(--font-primary-white))",
         fontsecondarywhite: "rgba(var(--font-secondary-white))",
 
+        tablehead: "rgba(var(--table-head))",
+        tablebody: "rgba(var(--table-body))",
+
         fontvarient: "var(--font-varient)",
       },
     },

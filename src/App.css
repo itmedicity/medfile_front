@@ -42,7 +42,7 @@
   --bg-offwhite: 243, 243, 243;
 
   --border-primary: 80, 83, 86; /*set*/
-  --border-secondary: 85, 183, 231;
+  --border-secondary: 126, 131, 136; /*set*/
 
   --icon-primary: 238, 239, 241; /*set*/
   --icon-secondary: 82, 83, 99; /*set*/
@@ -59,6 +59,9 @@
 
   --font-primary-white: 249, 249, 249; /*set*/
   --font-secondary-white: 126, 131, 136, 1; /*set*/
+
+  --table-head : 74,76,79;
+  --table-body : 74,76,79;
 
   --font-varient: Montserrat, sans-serif; /*set*/
 }

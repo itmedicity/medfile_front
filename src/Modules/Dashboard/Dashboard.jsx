@@ -119,7 +119,7 @@ const Dashboard = () => {
   // console.log(allDocData)
 
   return (
-    <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon">
+    <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
       <ToastContainer />
       <Grid container spacing={1} sx={{ flexGrow: 1 }}>
         {/* Dash board container start */}
@@ -143,75 +143,94 @@ const Dashboard = () => {
           ))
         )}
         {/* Dash board container end here */}
-      </Grid>
 
-      {/* SEARCH ENGINE HERE */}
-      <Box className="flex mt-6 justify-center">
-        {/* <AutocompletedMainSearch /> */}
-        <Input
-          startDecorator={<SearchOutlinedIcon />}
-          onChange={(e) => setSearchParm(e.target.value)}
-          endDecorator={
-            <Button
-              startDecorator={<ContentPasteSearchOutlinedIcon />}
-              onClick={handleSearchFun}
+
+        {/* SEARCH ENGINE HERE */}
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+          <Box className="flex mt-0 justify-center">
+            {/* <AutocompletedMainSearch /> */}
+            <Input
+              startDecorator={<SearchOutlinedIcon sx={{ color: "rgba(var(--icon-primary))" }} />}
+              onChange={(e) => setSearchParm(e.target.value)}
+              endDecorator={
+                <Button
+                  startDecorator={<ContentPasteSearchOutlinedIcon />}
+                  onClick={handleSearchFun}
+                  sx={{
+                    backgroundColor: "rgba(var(--color-pink),0.8)",
+                    ':hover': {
+                      backgroundColor: "rgba(var(--color-pink))",
+                    }
+                  }}
+                >
+                  Search
+                </Button>
+              }
+              sx={{
+                width: { xs: "90%", sm: "80%", md: "60%", lg: "50%", xl: "40%" },
+                "--Input-radius": "40px",
+                "--Input-gap": "10px",
+                "--Input-placeholderOpacity": 1,
+                "--Input-focusedThickness": "1px",
+                "--Input-minHeight": "53px",
+                "--Input-paddingInline": "27px",
+                "--Input-decoratorChildHeight": "42px",
+                "&.MuiInput-root": {
+                  "--Input-focusedHighlight": "rgba(var(--border-secondary))",
+                },
+                backgroundColor: 'rgba(var(--bg-card))',
+                border: "1px solid rgba(var(--border-primary))",
+                transition: "Input-focusedHighlight 0.5s ease-in-out",
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                ml: 2,
+                "--Button-radius": "40px",
+              }}
             >
-              Search
-            </Button>
-          }
-          sx={{
-            width: { xs: "90%", sm: "80%", md: "60%", lg: "50%", xl: "40%" },
-            "--Input-radius": "40px",
-            "--Input-gap": "10px",
-            "--Input-placeholderOpacity": 1,
-            "--Input-focusedThickness": "1.5px",
-            "--Input-minHeight": "53px",
-            "--Input-paddingInline": "27px",
-            "--Input-decoratorChildHeight": "42px",
-            "&.MuiInput-root": {
-              "--Input-focusedHighlight": baseColor.primarylight,
-            },
-          }}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            ml: 2,
-            "--Button-radius": "40px",
-          }}
-        >
-          <Button
-            startDecorator={<RefreshIcon />}
-            onClick={handleClearTable}
+              <Button
+                startDecorator={<RefreshIcon />}
+                onClick={handleClearTable}
+                sx={{
+                  height: "45px",
+                  backgroundColor: "rgba(var(--color-pink),0.8)",
+                  ':hover': {
+                    backgroundColor: "rgba(var(--color-pink))",
+                  }
+                }}
+              >
+                Clear
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+          <Box
+            className="flex justify-center items-center"
             sx={{
-              height: "45px",
+              height: 'calc(100vh - 290px)',
+              backgroundColor: 'rgba(var(--bg-card))',
+              width: "100%",
+              // mt: 0.5,
+              // padding: "0.1rem",
+              // border: "1px solid rgba(var(--border-primary))",
             }}
           >
-            Clear
-          </Button>
-        </Box>
-      </Box>
-
-      <Box
-        className="flex  justify-center items-center rounded-md"
-        sx={{
-          height: 700,
-          width: "100%",
-          mt: 0.5,
-          padding: "0.1em",
-          border: "1px solid #ccc",
-        }}
-      >
-        <TableVirtuoso
-          style={{ height: "100%", width: "100%", border: "1px solid #ccc" }}
-          className="flex flex-1 rounded-md"
-          data={tableData}
-          fixedHeaderContent={() => <TableHeaderVirtue />}
-          itemContent={(index, data) => <TableContentVirtue data={data} />}
-        />
-      </Box>
+            <TableVirtuoso
+              style={{ height: "100%", width: "100%", }}
+              className="flex flex-1 bg-tablebody/40"
+              data={tableData}
+              fixedHeaderContent={() => <TableHeaderVirtue />}
+              itemContent={(index, data) => <TableContentVirtue data={data} />}
+            />
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -84,13 +84,13 @@ function Home(props) {
                 my: 0.5,
                 height: 30,
                 alignItems: "center",
-                transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                transition: "transform 0.3s ease, color 0.3s ease",
                 transform: "translateX(0)",
                 ":hover": {
                   bgcolor: "rgba(var(--active-bg))",
                   "& .hoverClass": {
                     transform: "translateX(2px)",
-                    color: "rgba(var(--font-primary-white))", // Change color for both icon and typography
+                    color: "rgba(var(--font-primary-white))",
                   },
                 },
               }}
@@ -101,11 +101,8 @@ function Home(props) {
                   display: "flex",
                   justifyContent: "center",
                   color: "rgba(var(--font-secondary-white))",
-                  transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                  transition: "transform 0.3s ease, color 0.3s ease",
                   transform: "translateX(0)",
-                  // ":hover": {
-                  //   color: "rgba(var(--font-primary-white))",
-                  // },
                 }}
               >
                 <HomeOutlinedIcon
@@ -121,11 +118,8 @@ function Home(props) {
                   fontFamily: "var(--font-varient)",
                   fontSize: "14px",
                   fontWeight: 600,
-                  transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                  transition: "transform 0.3s ease, color 0.3s ease",
                   transform: "translateX(0)",
-                  // ":hover": {
-                  //   color: "rgba(var(--font-primary-white))",
-                  // },
                 }}
               >
                 {val.menu}
@@ -139,7 +133,7 @@ function Home(props) {
   );
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box sx={{ display: "flex", width: "100%", bgcolor: "green" }}>
       <CssBaseline />
 
       {/* TOP APPLICATION BAR START HERE  */}
@@ -152,10 +146,9 @@ function Home(props) {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
           ml: { sm: `${drawerWidth}px` },
-          // backgroundColor: "greenyellow",
         }}
       >
-        <Box>
+        <Box >
           <Toolbar variant="dense" className="flex flex-row justify-between">
             <Box className="flex flex-row items-center">
               <IconButton
@@ -165,7 +158,7 @@ function Home(props) {
                 sx={{
                   mr: 2,
                   display: { sm: "flex" },
-                  color: "rgba(60, 32, 219)",
+                  color: "rgba(var(--color-white))",
                 }}
               >
                 <MenuIcon />
@@ -178,7 +171,7 @@ function Home(props) {
               >
                 Travancore Medicity
               </Typography>
-              {/* <ScreenCheck /> */}
+              <ScreenCheck />
             </Box>
             <Box className="flex flex-row items-center">
               <Switch
@@ -248,7 +241,7 @@ function Home(props) {
             },
           }}
           onClose={handleDrawerClose}
-          // open={mobileOpen}
+        // open={mobileOpen}
         >
           {drawer}
         </Drawer>
@@ -263,6 +256,7 @@ function Home(props) {
           flexGrow: 1,
           p: "0.15rem",
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          height: "100%",
         }}
       >
         <Toolbar variant="dense" />
