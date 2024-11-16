@@ -15,6 +15,7 @@ module.exports = {
 
         iconprimary: "rgba(var(--icon-primary))",
         iconsecondary: "rgba(var(--icon-secondary))",
+        icongreen: "rgba(var(--icon-green))",
 
         borderprimary: "rgba(var(--border-primary))",
         bordersecondary: "rgba(var(--border-secondary))",

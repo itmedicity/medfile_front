@@ -46,6 +46,7 @@
 
   --icon-primary: 238, 239, 241; /*set*/
   --icon-secondary: 82, 83, 99; /*set*/
+  --icon-green: 25, 86, 27;
 
   --color-blue: 92, 186, 232;
   --color-pink: 213, 82, 155;
@@ -60,8 +61,8 @@
   --font-primary-white: 249, 249, 249; /*set*/
   --font-secondary-white: 126, 131, 136, 1; /*set*/
 
-  --table-head : 74,76,79;
-  --table-body : 74,76,79;
+  --table-head: 74, 76, 79;
+  --table-body: 74, 76, 79;
 
   --font-varient: Montserrat, sans-serif; /*set*/
 }

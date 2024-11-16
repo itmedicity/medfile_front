@@ -144,13 +144,16 @@ const Dashboard = () => {
         )}
         {/* Dash board container end here */}
 
-
         {/* SEARCH ENGINE HERE */}
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
           <Box className="flex mt-0 justify-center">
             {/* <AutocompletedMainSearch /> */}
             <Input
-              startDecorator={<SearchOutlinedIcon sx={{ color: "rgba(var(--icon-primary))" }} />}
+              startDecorator={
+                <SearchOutlinedIcon
+                  sx={{ color: "rgba(var(--icon-primary))" }}
+                />
+              }
               onChange={(e) => setSearchParm(e.target.value)}
               endDecorator={
                 <Button
@@ -158,16 +161,22 @@ const Dashboard = () => {
                   onClick={handleSearchFun}
                   sx={{
                     backgroundColor: "rgba(var(--color-pink),0.8)",
-                    ':hover': {
+                    ":hover": {
                       backgroundColor: "rgba(var(--color-pink))",
-                    }
+                    },
                   }}
                 >
                   Search
                 </Button>
               }
               sx={{
-                width: { xs: "90%", sm: "80%", md: "60%", lg: "50%", xl: "40%" },
+                width: {
+                  xs: "90%",
+                  sm: "80%",
+                  md: "60%",
+                  lg: "50%",
+                  xl: "40%",
+                },
                 "--Input-radius": "40px",
                 "--Input-gap": "10px",
                 "--Input-placeholderOpacity": 1,
@@ -178,7 +187,7 @@ const Dashboard = () => {
                 "&.MuiInput-root": {
                   "--Input-focusedHighlight": "rgba(var(--border-secondary))",
                 },
-                backgroundColor: 'rgba(var(--bg-card))',
+                backgroundColor: "rgba(var(--bg-card))",
                 border: "1px solid rgba(var(--border-primary))",
                 transition: "Input-focusedHighlight 0.5s ease-in-out",
               }}
@@ -198,9 +207,9 @@ const Dashboard = () => {
                 sx={{
                   height: "45px",
                   backgroundColor: "rgba(var(--color-pink),0.8)",
-                  ':hover': {
+                  ":hover": {
                     backgroundColor: "rgba(var(--color-pink))",
-                  }
+                  },
                 }}
               >
                 Clear
@@ -213,8 +222,8 @@ const Dashboard = () => {
           <Box
             className="flex justify-center items-center"
             sx={{
-              height: 'calc(100vh - 290px)',
-              backgroundColor: 'rgba(var(--bg-card))',
+              height: "calc(100vh - 290px)",
+              backgroundColor: "rgba(var(--bg-card))",
               width: "100%",
               // mt: 0.5,
               // padding: "0.1rem",
@@ -222,7 +231,7 @@ const Dashboard = () => {
             }}
           >
             <TableVirtuoso
-              style={{ height: "100%", width: "100%", }}
+              style={{ height: "100%", width: "100%" }}
               className="flex flex-1 bg-tablebody/40"
               data={tableData}
               fixedHeaderContent={() => <TableHeaderVirtue />}
