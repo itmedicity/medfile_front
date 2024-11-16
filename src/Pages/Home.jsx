@@ -22,8 +22,10 @@ import { useState } from "react";
 import ScreenCheck from "../Components/ScreenCheck";
 import { Container } from "@mui/material";
 import { Switch, switchClasses } from "@mui/joy";
-import BedtimeOutlinedIcon from '@mui/icons-material/BedtimeOutlined';
-import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
+import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import "./Style.css";
 
 function Home(props) {
   const navigation = useNavigate();
@@ -39,18 +41,16 @@ function Home(props) {
     setMobileOpen(false);
   };
 
-
   const handleChangeDarkMode = () => {
-    setDark(!dark)
+    setDark(!dark);
     if (dark === true) {
-      document.body.classList.remove('dark')
-      document.body.classList.add('light')
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
     } else {
-      document.body.classList.remove('light')
-      document.body.classList.add('dark')
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
     }
-  }
-
+  };
 
   const handleDrawerTransitionEnd = () => {
     setIsClosing(false);
@@ -74,19 +74,62 @@ function Home(props) {
           { menu: "Advance Search", text: "/Home/AdvancedSearch" },
           { menu: "Settings", text: "/Home/Settings" },
         ].map((val, index) => (
-          <ListItem
-            key={index}
-            disablePadding
-          >
+          <ListItem key={index} disablePadding sx={{ display: "flex" }}>
             <ListItemButton
               onClick={() => navigation(val.text)}
-              sx={{ border: 1, borderColor: "green", mx: 0.5, borderRadius: 2, my: 0.2, height: 30 }}
+              sx={{
+                display: "flex",
+                mx: 1,
+                borderRadius: 2.5,
+                my: 0.5,
+                height: 30,
+                alignItems: "center",
+                transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                transform: "translateX(0)",
+                ":hover": {
+                  bgcolor: "rgba(var(--active-bg))",
+                  "& .hoverClass": {
+                    transform: "translateX(2px)",
+                    color: "rgba(var(--font-primary-white))", // Change color for both icon and typography
+                  },
+                },
+              }}
             >
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              <ListItemIcon
+                className="hoverClass"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  color: "rgba(var(--font-secondary-white))",
+                  transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                  transform: "translateX(0)",
+                  // ":hover": {
+                  //   color: "rgba(var(--font-primary-white))",
+                  // },
+                }}
+              >
+                <HomeOutlinedIcon
+                  className="hoverClass"
+                  sx={{ fontSize: "1.3rem", lineHeight: "1.4rem" }}
+                />
               </ListItemIcon>
-              {/* <ListItemText primary={val.menu} sx={{}} /> */}
-              <Typography noWrap className="text-bgoffwhite" >{val.menu}</Typography>
+              <Typography
+                noWrap
+                className="hoverClass text-fontsecondarywhite "
+                sx={{
+                  display: "flex",
+                  fontFamily: "var(--font-varient)",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  transition: "transform 0.3s ease, color 0.3s ease", // Smooth transition
+                  transform: "translateX(0)",
+                  // ":hover": {
+                  //   color: "rgba(var(--font-primary-white))",
+                  // },
+                }}
+              >
+                {val.menu}
+              </Typography>
             </ListItemButton>
           </ListItem>
         ))}
@@ -119,11 +162,20 @@ function Home(props) {
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "flex" }, color: "rgba(var(--font-light))" }}
+                sx={{
+                  mr: 2,
+                  display: { sm: "flex" },
+                  color: "rgba(60, 32, 219)",
+                }}
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" noWrap component="div" className="text-fontLight" >
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                className="text-fontprimarywhite"
+              >
                 Travancore Medicity
               </Typography>
               {/* <ScreenCheck /> */}
@@ -137,33 +189,38 @@ function Home(props) {
                   track: {
                     children: (
                       <>
-                        <BedtimeOutlinedIcon sx={{ ml: '8px' }} fontSize="small" />
-                        <WbSunnyOutlinedIcon sx={{ mr: '7px' }} fontSize="small" />
+                        <BedtimeOutlinedIcon
+                          sx={{ ml: "8px" }}
+                          fontSize="small"
+                        />
+                        <WbSunnyOutlinedIcon
+                          sx={{ mr: "7px" }}
+                          fontSize="small"
+                        />
                       </>
                     ),
                   },
                 }}
                 sx={{
-                  '--Switch-thumbSize': '27px',
-                  '--Switch-trackWidth': '64px',
-                  '--Switch-trackHeight': '31px',
-                  '--Switch-thumbWidth': '32px',
-                  '--Switch-thumbBackground': 'rgb(216,75,154)',
-                  '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
-                  '&:hover': {
-                    '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                  "--Switch-thumbSize": "27px",
+                  "--Switch-trackWidth": "64px",
+                  "--Switch-trackHeight": "31px",
+                  "--Switch-thumbWidth": "32px",
+                  "--Switch-thumbBackground": "rgb(216,75,154)",
+                  "--Switch-trackBackground": "rgba(15,18,20,0.5)",
+                  "&:hover": {
+                    "--Switch-trackBackground": "rgba(15,18,20,0.5)",
                   },
                   [`&.${switchClasses.checked}`]: {
-                    '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
-                    '--Switch-thumbBackground': 'rgb(216,75,154)',
-                    '&:hover': {
-                      '--Switch-trackBackground': 'rgba(15,18,20,0.5)',
+                    "--Switch-trackBackground": "rgba(15,18,20,0.5)",
+                    "--Switch-thumbBackground": "rgb(216,75,154)",
+                    "&:hover": {
+                      "--Switch-trackBackground": "rgba(15,18,20,0.5)",
                     },
                   },
                 }}
               />
             </Box>
-
           </Toolbar>
         </Box>
       </AppBar>
@@ -191,7 +248,7 @@ function Home(props) {
             },
           }}
           onClose={handleDrawerClose}
-        // open={mobileOpen}
+          // open={mobileOpen}
         >
           {drawer}
         </Drawer>
@@ -201,6 +258,7 @@ function Home(props) {
       {/* MAIN CONTENT START  */}
       <Box
         component="main"
+        className="bg-bgcommon"
         sx={{
           flexGrow: 1,
           p: "0.15rem",
@@ -216,7 +274,3 @@ function Home(props) {
 }
 
 export default memo(Home);
-
-
-
-

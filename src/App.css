@@ -1,53 +1,64 @@
-.light{
-    /* --bg-nav : 76,102,117; */
-    --bg-nav : 76,102,117;
-    --bg-drawer : 92,186,232; 
-    --bg-common : 243,243,243;
-    --bg-card : 242,245,248;
+.light {
+  /* --bg-nav : 76,102,117; */
+  --bg-nav: 76, 102, 117;
+  --bg-drawer: 92, 186, 232;
+  --bg-common: 243, 243, 243;
+  --bg-card: 242, 245, 248;
 
-    --bg-offwhite : 243,243,243;
+  --active-bg: 48, 52, 58;
 
-    --border-primary : 85,183,231;
-    --border-secondary : 85,183,231;
+  --bg-offwhite: 243, 243, 243;
 
-    --icon-primary : 241,113,5,0.7;
-    --icon-secondary : 4,150,255,0.7;
+  --border-primary: 85, 183, 231;
+  --border-secondary: 85, 183, 231;
 
-    --color-blue : 92,186,232;
-    --color-pink : 213,82,155;
-    --color-violet : 98,77,174;
-    --color-white : 255,255,255;
+  --icon-primary: 241, 113, 5, 0.7;
+  --icon-secondary: 4, 150, 255, 0.7;
 
-    --font-black : 78,78,78;
-    --font-blue : 35,86,225;
-    --font-darkGrey : 76,102,117;
-    --font-light : 255,255,255;
+  --color-blue: 92, 186, 232;
+  --color-pink: 213, 82, 155;
+  --color-violet: 98, 77, 174;
+  --color-white: 255, 255, 255;
 
+  --font-black: 78, 78, 78;
+  --font-blue: 35, 86, 225;
+  --font-darkGrey: 76, 102, 117;
+  --font-light: 255, 255, 255;
+
+  --font-primary-white: 249, 249, 249;
+  --font-secondary-white: 126, 131, 136, 1;
+
+  --font-varient: Montserrat, sans-serif;
 }
 
+.dark {
+  --bg-nav: 31, 34, 36; /*set*/
+  --bg-drawer: 31, 34, 36; /*set*/
+  --bg-common: 19, 21, 22; /*set*/
+  --bg-card: 31, 34, 36; /*set*/
 
-.dark{
-    --bg-nav : 49,52,52;
-    --bg-drawer : 49,52,52; 
-    --bg-common : 65,77,85;
-    --bg-card : 65,77,85;
+  --active-bg: 48, 52, 58; /*set*/
 
-    --bg-offwhite : 243,243,243;
+  --bg-offwhite: 243, 243, 243;
 
-    --border-primary : 85,183,231;
-    --border-secondary : 85,183,231;
+  --border-primary: 80, 83, 86; /*set*/
+  --border-secondary: 85, 183, 231;
 
-    --icon-primary : 241,113,5;
-    --icon-secondary : 4,150,255;
+  --icon-primary: 238, 239, 241; /*set*/
+  --icon-secondary: 82, 83, 99; /*set*/
 
-    --color-blue : 92,186,232;
-    --color-pink : 213,82,155;
-    --color-violet : 98,77,174;
-    --color-white : 255,255,255;
+  --color-blue: 92, 186, 232;
+  --color-pink: 213, 82, 155;
+  --color-violet: 98, 77, 174;
+  --color-white: 255, 255, 255;
 
-    --font-black : 78,78,78;
-    --font-blue : 35,86,225;
-    --font-darkGrey : 76,102,117;
-    --font-light : 4,150,255;
+  --font-black: 78, 78, 78;
+  --font-blue: 35, 86, 225;
+  --font-darkGrey: 76, 102, 117;
+  --font-light: 238, 239, 241; /*set*/
 
+  --font-primary-white: 249, 249, 249; /*set*/
+  --font-secondary-white: 126, 131, 136, 1; /*set*/
+
+  --font-varient: Montserrat, sans-serif; /*set*/
 }
