@@ -1,36 +1,44 @@
 .light {
-  /* --bg-nav : 76,102,117; */
-  --bg-nav: 76, 102, 117;
-  --bg-drawer: 92, 186, 232;
-  --bg-common: 243, 243, 243;
-  --bg-card: 242, 245, 248;
-
-  --active-bg: 48, 52, 58;
-
-  --bg-offwhite: 243, 243, 243;
-
-  --border-primary: 85, 183, 231;
-  --border-secondary: 85, 183, 231;
-
-  --icon-primary: 241, 113, 5, 0.7;
-  --icon-secondary: 4, 150, 255, 0.7;
-
-  --color-blue: 92, 186, 232;
-  --color-pink: 213, 82, 155;
-  --color-violet: 98, 77, 174;
-  --color-white: 255, 255, 255;
-
-  --font-black: 78, 78, 78;
-  --font-blue: 35, 86, 225;
-  --font-darkGrey: 76, 102, 117;
-  --font-light: 255, 255, 255;
-
-  --font-primary-white: 249, 249, 249;
-  --font-secondary-white: 126, 131, 136, 1;
-
-  --font-varient: Montserrat, sans-serif;
-}
-
+    --bg-nav: 76,102,117; /* Brightened for --bg-nav */
+    --bg-drawer: 92, 186, 232; /* Lightened for --bg-drawer */
+    --bg-common: 245, 246, 250; /* Brighter counterpart for --bg-common */
+    --bg-card: 255, 255, 255; /* Slightly brighter than --bg-nav */
+  
+    --active-bg: 48, 52, 58; /* Lighter and softer active background */
+  
+    --bg-offwhite: 243, 243, 243; /* Pure white for off-white */
+  
+    --border-primary: 138,152,172,0.4; /* Lightened version of --border-primary */
+    --border-secondary: 85, 183, 231; /* Brighter secondary border */
+  
+    --icon-primary: 241, 113, 5, 0.7; /* Dark grey for primary icons in light mode */
+    --icon-secondary: 4, 150, 255, 0.7; /* Slightly lighter secondary icons */
+    --icon-green: 50, 150, 55; /* More vibrant green */
+  
+    --logo-light-blue: 130, 210, 255; /* Brightened blue */
+    --logo-dark-blue: 90, 180, 230; /* Softer blue */
+    --logo-violet: 150, 120, 190; /* Softer violet */
+    --logo-pink: 240, 140, 190; /* Soft pink */
+  
+    --color-blue: 120, 200, 250; /* Softer blue color */
+    --color-pink: 240, 140, 200; /* Brighter pink */
+    --color-violet: 160, 140, 220; /* Gentle violet */
+    --color-white: 255, 255, 255; /* Unchanged white */
+  
+    --font-black: 40, 40, 40; /* Darker grey for font */
+    --font-blue: 50, 120, 240; /* Vibrant blue for fonts */
+    --font-darkGrey: 100, 110, 120; /* Softened dark grey */
+    --font-light: 240, 240, 240; /* Slightly lighter for light mode fonts */
+  
+    --font-primary-white: 255, 255, 255; /* Pure white for primary font */
+    --font-secondary-white: 200, 200, 200; /* Muted white for secondary font */
+  
+    --table-head: 210, 210, 210; /* Brightened table head */
+    --table-body: 230, 230, 230; /* Brighter table body */
+  
+    --font-varient: Montserrat, sans-serif; /* Unchanged font variant */
+  }
+  
 .dark {
   --bg-nav: 31, 34, 36; /*set*/
   --bg-drawer: 31, 34, 36; /*set*/
@@ -47,6 +55,11 @@
   --icon-primary: 238, 239, 241; /*set*/
   --icon-secondary: 82, 83, 99; /*set*/
   --icon-green: 25, 86, 27; /*set*/
+
+  --logo-light-blue : 83,182,231;
+  --logo-dark-blue : 0,125,196;
+  --logo-violet : 124,81,160;
+  --logo-pink :216,75,154;
 
   --color-blue: 92, 186, 232;
   --color-pink: 213, 82, 155;
@@ -66,3 +79,38 @@
 
   --font-varient: Montserrat, sans-serif; /*set*/
 }
+
+
+/* .light {
+    --bg-nav : 76,102,117;
+
+    --bg-drawer: 92, 186, 232;
+    --bg-common: 245, 246, 250;
+    --bg-card: 255, 255, 255;
+  
+    --active-bg: 48, 52, 58;
+  
+    --bg-offwhite: 243, 243, 243;
+  
+    --border-primary: 138,152,172,0.4;
+
+    --border-secondary: 85, 183, 231;
+  
+    --icon-primary: 241, 113, 5, 0.7;
+    --icon-secondary: 4, 150, 255, 0.7;
+  
+    --color-blue: 92, 186, 232;
+    --color-pink: 213, 82, 155;
+    --color-violet: 98, 77, 174;
+    --color-white: 255, 255, 255;
+  
+    --font-black: 78, 78, 78;
+    --font-blue: 35, 86, 225;
+    --font-darkGrey: 76, 102, 117;
+    --font-light: 255, 255, 255;
+  
+    --font-primary-white: 31, 34, 36;
+    --font-secondary-white: 126, 131, 136, 1;
+  
+    --font-varient: Montserrat, sans-serif;
+  } */

@@ -57,6 +57,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import FileListComponent from "./Document/FileListComponent";
 import Snackbar from "@mui/joy/Snackbar";
 import MarkUnreadChatAltOutlinedIcon from "@mui/icons-material/MarkUnreadChatAltOutlined";
+import { PageStar, TaskList, PageEdit } from 'iconoir-react'
 
 const DocuementList = lazy(() => import("./Document/DocuementList"));
 
@@ -153,18 +154,31 @@ const FileUpload = () => {
   };
   // console.log(files);
 
+  // const handleError = (error, file) => {
+  //   const { code } = error;
+  //   if (code === 1) {
+  //     warningNofity("Upload failed. Invalid file type");
+  //   } else if (code === 2) {
+  //     warningNofity("Upload failed. File too large");
+  //   } else if (code === 3) {
+  //     warningNofity("Upload failed. File too small");
+  //   } else {
+  //     warningNofity("Upload failed. Maximum file count reached");
+  //   }
+  // };
+
   const handleError = (error, file) => {
-    const { code } = error;
-    if (code === 1) {
-      warningNofity("Upload failed. Invalid file type");
-    } else if (code === 2) {
-      warningNofity("Upload failed. File too large");
-    } else if (code === 3) {
-      warningNofity("Upload failed. File too small");
-    } else {
-      warningNofity("Upload failed. Maximum file count reached");
-    }
+    const errorMessages = {
+      1: () => `Upload failed. Invalid file type: ${file?.name || "unknown file"}`,
+      2: () => `Upload failed. File too large: ${file?.size || "unknown size"} bytes`,
+      3: () => `Upload failed. File too small: ${file?.size || "unknown size"} bytes`,
+      default: () => "Upload failed. Maximum file count reached",
+    };
+
+    const message = (errorMessages[error.code] || errorMessages.default)();
+    warningNofity(message);
   };
+
 
   /***********
    * FILE UPLOAD SECTION END
@@ -175,95 +189,132 @@ const FileUpload = () => {
     async (e) => {
       e.preventDefault();
 
-      if (documentState.docName === "") {
-        warningNofity("Document Name cannot be empty");
-        return;
-      }
+      // if (documentState.docName === "") {
+      //   warningNofity("Document Name cannot be empty");
+      //   return;
+      // }
 
-      if (documentState.docDes === "") {
-        warningNofity("Document Description cannot be empty");
-        return;
-      }
+      // if (documentState.docDes === "") {
+      //   warningNofity("Document Description cannot be empty");
+      //   return;
+      // }
 
-      if (Number(documentState.docType) === 0) {
-        warningNofity("Document Type cannot be empty");
-        return;
-      }
+      // if (Number(documentState.docType) === 0) {
+      //   warningNofity("Document Type cannot be empty");
+      //   return;
+      // }
 
-      if (Number(documentState.docSubType) === 0) {
-        warningNofity("Document Sub Type cannot be empty");
-        return;
-      }
+      // if (Number(documentState.docSubType) === 0) {
+      //   warningNofity("Document Sub Type cannot be empty");
+      //   return;
+      // }
 
-      if (
-        Number(documentState.institute) === 2 &&
-        Number(documentState.institute) === 0
-      ) {
-        warningNofity("Institute cannot be empty");
-        return;
-      }
+      // if (
+      //   Number(documentState.institute) === 2 &&
+      //   Number(documentState.institute) === 0
+      // ) {
+      //   warningNofity("Institute cannot be empty");
+      //   return;
+      // }
 
-      if (
-        Number(documentState.institute) === 2 &&
-        Number(documentState.course) === 0
-      ) {
-        warningNofity("Course cannot be empty");
-        return;
-      }
+      // if (
+      //   Number(documentState.institute) === 2 &&
+      //   Number(documentState.course) === 0
+      // ) {
+      //   warningNofity("Course cannot be empty");
+      //   return;
+      // }
 
-      if (Number(documentState.category) === 0) {
-        warningNofity("Category cannot be empty");
-        return;
-      }
+      // if (Number(documentState.category) === 0) {
+      //   warningNofity("Category cannot be empty");
+      //   return;
+      // }
 
-      if (Number(documentState.subCategory) === 0) {
-        warningNofity("Sub Category cannot be empty");
-        return;
-      }
+      // if (Number(documentState.subCategory) === 0) {
+      //   warningNofity("Sub Category cannot be empty");
+      //   return;
+      // }
 
-      if (Number(documentState.group) === 0) {
-        warningNofity("Group cannot be empty");
-        return;
-      }
+      // if (Number(documentState.group) === 0) {
+      //   warningNofity("Group cannot be empty");
+      //   return;
+      // }
 
-      if (isValid(new Date(documentState.docDate)) === false) {
-        warningNofity("Document Date cannot be empty");
-        return;
-      }
+      // if (isValid(new Date(documentState.docDate)) === false) {
+      //   warningNofity("Document Date cannot be empty");
+      //   return;
+      // }
 
-      if (isValid(new Date(documentState.docVersionDate)) === false) {
-        warningNofity("Document Version Date cannot be empty");
-        return;
-      }
+      // if (isValid(new Date(documentState.docVersionDate)) === false) {
+      //   warningNofity("Document Version Date cannot be empty");
+      //   return;
+      // }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        isValid(new Date(documentState.docExpStart)) === false
-      ) {
-        warningNofity(
-          "Document Expiry Start Date cannot be empty || Valid Date is required"
-        );
-        return;
-      }
+      // if (
+      //   Boolean(documentState.isRequiredExp) === true &&
+      //   isValid(new Date(documentState.docExpStart)) === false
+      // ) {
+      //   warningNofity(
+      //     "Document Expiry Start Date cannot be empty || Valid Date is required"
+      //   );
+      //   return;
+      // }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        isValid(new Date(documentState.docExpEnd)) === false
-      ) {
-        warningNofity(
-          "Document Expiry End Date cannot be empty || Valid Date is required"
-        );
-        return;
-      }
+      // if (
+      //   Boolean(documentState.isRequiredExp) === true &&
+      //   isValid(new Date(documentState.docExpEnd)) === false
+      // ) {
+      //   warningNofity(
+      //     "Document Expiry End Date cannot be empty || Valid Date is required"
+      //   );
+      //   return;
+      // }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
-      ) {
-        warningNofity(
-          "Document Expiry Start Date cannot be greater than Expiry End Date"
-        );
-        return;
+      // if (
+      //   Boolean(documentState.isRequiredExp) === true &&
+      //   new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
+      // ) {
+      //   warningNofity(
+      //     "Document Expiry Start Date cannot be greater than Expiry End Date"
+      //   );
+      //   return;
+      // }
+
+
+      const validations = [
+        { condition: !documentState.docName.trim(), message: "Document Name cannot be empty" },
+        { condition: !documentState.docDes.trim(), message: "Document Description cannot be empty" },
+        { condition: Number(documentState.docType) === 0, message: "Document Type cannot be empty" },
+        { condition: Number(documentState.docSubType) === 0, message: "Document Sub Type cannot be empty" },
+        { condition: Number(documentState.institute) === 0, message: "Institute cannot be empty" },
+        { condition: Number(documentState.institute) === 2 && Number(documentState.course) === 0, message: "Course cannot be empty" },
+        { condition: Number(documentState.category) === 0, message: "Category cannot be empty" },
+        { condition: Number(documentState.subCategory) === 0, message: "Sub Category cannot be empty" },
+        { condition: Number(documentState.group) === 0, message: "Group cannot be empty" },
+        { condition: !isValid(new Date(documentState.docDate)), message: "Document Date cannot be empty" },
+        { condition: !isValid(new Date(documentState.docVersionDate)), message: "Document Version Date cannot be empty" },
+        {
+          condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpStart)),
+          message: "Document Expiry Start Date cannot be empty || Valid Date is required",
+        },
+        {
+          condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpEnd)),
+          message: "Document Expiry End Date cannot be empty || Valid Date is required",
+        },
+        {
+          condition:
+            Boolean(documentState.isRequiredExp) &&
+            new Date(documentState.docExpStart) > new Date(documentState.docExpEnd),
+          message: "Document Expiry Start Date cannot be greater than Expiry End Date",
+        },
+      ];
+
+      // Run validations
+      for (const { condition, message } of validations) {
+        if (condition) {
+          warningNofity(message);
+          return;
+        }
       }
 
       const FormPostData = {
@@ -328,25 +379,7 @@ const FileUpload = () => {
           setOpen(true);
           // succesNofity(message);
           queryClient.invalidateQueries(["getDocumentNumber", "getDocList"]);
-          setDocumentState({
-            docNumber: 0,
-            docName: "",
-            docDes: "",
-            docType: 0,
-            docSubType: 0,
-            institute: 0,
-            course: 0,
-            category: 0,
-            subCategory: 0,
-            group: 0,
-            docDate: new Date(),
-            docVersionDate: new Date(),
-            docExpStart: new Date(),
-            docExpEnd: new Date(),
-            isRequiredExp: false,
-            isSecure: false,
-          });
-          setFiles([]);
+          resetForm()
         } else {
           setMessage(message);
           setOpen(true);
@@ -359,18 +392,40 @@ const FileUpload = () => {
         // setFiles([]);
       }
     },
-    [documentState, documentNumber, custDocNumber, files]
+    [documentState, documentNumber, custDocNumber, files, warningNofity, setMessage, setOpen, queryClient]
   );
+
+  const resetForm = () => {
+    setDocumentState({
+      docNumber: 0,
+      docName: "",
+      docDes: "",
+      docType: 0,
+      docSubType: 0,
+      institute: 0,
+      course: 0,
+      category: 0,
+      subCategory: 0,
+      group: 0,
+      docDate: new Date(),
+      docVersionDate: new Date(),
+      docExpStart: new Date(),
+      docExpEnd: new Date(),
+      isRequiredExp: false,
+      isSecure: false,
+    });
+    setFiles([]);
+  };
 
   return (
     <Box className="h-dvh p-2">
       <Box
         className="flex flex-col rounded-xl p-1 w-full"
         sx={{
-          backgroundColor: "black",
+          backgroundColor: "rgba(var(--bg-card))",
           height: "calc(100% - 50px)",
           border: 0.03,
-          borderColor: "white",
+          borderColor: "rgba(var(--border-primary))",
         }}
       >
         <Snackbar
@@ -392,7 +447,7 @@ const FileUpload = () => {
         </Snackbar>
         {/* <ToastContainer /> */}
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1.5, borderColor: "divider" }}>
+          <Box sx={{ borderBottom: 1.5, borderColor: "divider", borderWidth: 2 }}>
             <TabList
               onChange={handleChange}
               aria-label="lab API tabs example"
@@ -400,7 +455,7 @@ const FileUpload = () => {
               className="flex justify-end items-center"
             >
               <Tab
-                icon={<SnippetFolderIcon fontSize="small" />}
+                icon={<PageStar color='rgba(var(--color-white))' />}
                 label="Create New Document"
                 value="1"
                 iconPosition="start"
@@ -408,18 +463,20 @@ const FileUpload = () => {
                   display: "flex",
                   minHeight: 0,
                   textTransform: "none",
-                  color: baseColor.secondaryfont,
-                  opacity: 0.6,
-                  bgcolor: "white",
-                  border: 0,
-                  borderColor: baseColor.primarylight,
-                  borderRadius: 2,
+                  color: 'rgba(var(--color-white),0.9)',
+                  bgcolor: "rgba(var(--logo-dark-blue),0.8)",
+                  borderRadius: 1,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
+                  minWidth: '15%',
+                  '&.Mui-selected': {
+                    color: 'rgba(var(--color-white))',
+                    bgcolor: 'rgba(var(--logo-dark-blue))',
+                  },
                 }}
               />
               <Tab
-                icon={<FeaturedPlayListIcon fontSize="small" />}
+                icon={<TaskList color='rgba(var(--color-white))' />}
                 color="secondary"
                 iconPosition="start"
                 label="Document List"
@@ -428,14 +485,17 @@ const FileUpload = () => {
                   display: "flex",
                   minHeight: 0,
                   textTransform: "none",
-                  color: baseColor.secondaryfont,
-                  opacity: 0.6,
-                  bgcolor: "white",
+                  color: 'rgba(var(--color-white),0.9)',
+                  bgcolor: "rgba(var(--logo-dark-blue),0.8)",
                   border: 0,
-                  borderColor: baseColor.primarylight,
-                  borderRadius: 2,
+                  borderRadius: 1,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
+                  minWidth: '15%',
+                  '&.Mui-selected': {
+                    color: 'rgba(var(--color-white))',
+                    bgcolor: 'rgba(var(--logo-dark-blue))',
+                  },
                 }}
               />
             </TabList>
@@ -444,8 +504,7 @@ const FileUpload = () => {
             <Box className="">
               {/* Top Section start here */}
               <Box
-                className="flex flex-col pt-5 py-6 px-5 border-[0.1rem] rounded w-full"
-                sx={{ borderColor: baseColor.secondarylight }}
+                className="flex flex-col pt-2 py-2 px-2 border-[0.3px] rounded w-full border-borderprimary"
               >
                 <Grid
                   container
@@ -460,20 +519,28 @@ const FileUpload = () => {
                     className="border border-red-100 rounded-md"
                   >
                     <Box className="flex flex-1 flex-col">
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-extrabold">
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-white"
+                        sx={{ fontFamily: 'var(--font-varient)' }}
+                      >
                         Doc Nubmer
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold ">
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-white "
+                        sx={{ fontFamily: 'var(--font-varient)' }}
+                      >
                         {documentNumberLoading
                           ? "Loading..."
                           : docError
-                          ? 0
-                          : custDocNumber}
+                            ? 0
+                            : custDocNumber}
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-extrabold ">
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-extrabold text-white"
+                        sx={{ fontFamily: 'var(--font-varient)' }}
+                      >
                         Doc Date
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold ">
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold  text-white"
+                        sx={{ fontFamily: 'var(--font-varient)' }}
+                      >
                         <Clock
                           date={format(new Date(), "yyyy-MM-dd HH:mm:ss")}
                           format={"DD/MM/YYYY h:mm:ss A"}
@@ -490,7 +557,7 @@ const FileUpload = () => {
                   >
                     <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
                       <CustomInput
-                        placeholder="Doc name here..."
+                        placeholder="Document Name Type here..."
                         value={docName}
                         onChange={(e) =>
                           handleDocumentState({
@@ -501,7 +568,8 @@ const FileUpload = () => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
                       <Textarea
-                        placeholder="Doc Descriptions here..."
+                        placeholder="Doccument Descriptions Type here..."
+                        // startDecorator={<PageEdit width={25} height={25} color='rgba(var(--icon-primary))' className='iconColor' style={{ transition: 'none' }} />}
                         minRows={1}
                         value={docDes}
                         onChange={(e) =>
@@ -510,14 +578,28 @@ const FileUpload = () => {
                           })
                         }
                         sx={{
-                          fontSize: 15,
+                          transition: 'none',
                           "&.MuiTextarea-root": {
-                            "--Textarea-focusedHighlight":
-                              baseColor.primarylight,
+                            "--Textarea-focusedHighlight": 'none',
                             "--Textarea-focusedShadow": "none",
                             "--Textarea-focusedThickness": "1.1px",
                           },
+                          fontSize: 15,
+                          fontFamily: "var(--font-varient)",
+                          borderWidth: "2.8px",
+                          borderRadius: "0px",
+                          backgroundColor: 'rgba(var(--border-primary))',
+                          borderColor: 'rgba(var(--border-secondary))',
+                          color: 'rgba(var(--font-light))',
                           boxShadow: "none",
+                          ':hover': {
+                            backgroundColor: 'rgba(var(--bg-offwhite))',
+                            borderColor: 'rgba(var(--logo-dark-blue))',
+                            color: 'rgba(var(--font-black))',
+                            '.iconColor': {
+                              color: 'rgba(var(--icon-green))',
+                            }
+                          },
                         }}
                       />
                     </Grid>
@@ -530,15 +612,19 @@ const FileUpload = () => {
               <Typography
                 level="title-md"
                 textAlign="left"
-                textColor="neutral.900"
-                sx={{ p: 0.5, opacity: 0.4 }}
+                textColor="white"
+                sx={{
+                  p: 0.5,
+                  color: 'rgba(var(--font-primary-white),0.9)',
+                  fontFamily: "var(--font-varient)",
+                }}
               >
                 Document Category Updation
               </Typography>
 
               <Box
-                className="flex flex-col border-[0.1rem] rounded w-full p-1 sm:flex-col md:flex-col lg:flex-row xl:flex-row"
-                sx={{ borderColor: baseColor.secondarylight }}
+                className="flex flex-col border-[0.1rem] rounded w-full py-1 sm:flex-col md:flex-col lg:flex-row xl:flex-row"
+                sx={{ borderColor: "rgba(var(--border-primary))" }}
               >
                 <Box className="flex flex-1 flex-col px-4">
                   <Box className="flex flex-1 flex-col">

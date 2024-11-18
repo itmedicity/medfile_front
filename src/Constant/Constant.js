@@ -39,7 +39,7 @@ export const customInputHeight = {
         xl: "33px",
     },
     "&.MuiInput-root": {
-        "--Input-focusedHighlight": baseColor.primarylight,
+        "--Input-focusedHighlight": 'none',
         "--Input-focusedShadow": 'none',
         "--Input-focusedThickness": '1.1px',
     },

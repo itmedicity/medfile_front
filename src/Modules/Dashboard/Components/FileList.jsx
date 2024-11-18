@@ -1,7 +1,7 @@
-import { Box } from "@mui/joy";
+import { Box, Typography } from "@mui/joy";
 import React, { memo, useCallback } from "react";
 import CustomTypo from "../../../Components/CustomTypo";
-import FileLink from "../../../assets/pdf.png";
+import FileLink from "../../../assets/images/pdfSvg2.svg";
 import { NAS_FOLDER } from "../../../Constant/Static";
 // import FileDisplayModal from "./FileDisplayModal";
 
@@ -14,35 +14,36 @@ const FileList = ({ data, setLink }) => {
   }, [setLink, NasFileLink]);
 
   return (
-    <Box className="p-1 border rounded-md h-24 flex gap-1 flex-1 flex-row mb-1 bg-bgcard">
+    <Box className="p-1 border-[0.5px] rounded-md h-16 flex flex-1 flex-row mb-1 bg-bgcard border-borderprimary">
       {/* <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} fileLink={NasFileLink} /> */}
       <Box
-        className="flex w-20 border rounded-md items-center justify-center cursor-pointer hover:bg-slate-100 drop-shadow-md transition-all"
+        className="flex  
+        w-12 rounded-md items-center justify-center cursor-pointer 
+        hover:bg-baseWhite/85 
+        bg-baseWhite/60
+        drop-shadow-md "
         onClick={handleSetPdfImage}
       >
         <img
           alt="upload image"
-          src={mimetype === "application/pdf" ? FileLink : NasFileLink}
-          width={60}
-          height={60}
-          className="p-1 rounded-md object-contain"
+          src={mimetype === "application/pdf" ? FileLink : FileLink}
+          width={50}
+          height={50}
+          className="p-[0.290rem] rounded-md object-contain"
         />
       </Box>
-      <Box className="flex flex-1 border rounded-md flex-col items-center justify-center">
+      <Box className="flex flex-auto rounded-md flex-col pl-2" >
+        {/* <Typography color="primary" className="line-clamp-1" >sdfsdfsdfffffffffffffffffffffffffffffffffsdasdasdasffffffffffsssssssssssssss ddddddddddddddd</Typography> */}
         <CustomTypo
           label={filename}
-          style={{ fontSize: "1rem", paddingY: 0, textTransform: "uppercase" }}
+          style={{ fontSize: 'clamp(0.75rem, 0.9vw, 0.9rem)', paddingY: 0, }}
         />
-        {/* <CustomTypo
-                    label={originalname}
-                    style={{ fontSize: "0.8rem", paddingY: 0, overFlow: 'hidden' }}
-                /> */}
         <CustomTypo
           label={doc_number}
           style={{
-            fontSize: "0.8rem",
+            fontSize: 'clamp(0.75rem, 0.9vw, 0.9rem)',
             paddingY: 0,
-            textTransform: "uppercase",
+            // textTransform: "uppercase",
             fontWight: 900,
           }}
         />

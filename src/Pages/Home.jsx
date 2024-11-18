@@ -133,7 +133,7 @@ function Home(props) {
   );
 
   return (
-    <Box sx={{ display: "flex", width: "100%", bgcolor: "green" }}>
+    <Box sx={{ display: "flex", width: "100%", }}>
       <CssBaseline />
 
       {/* TOP APPLICATION BAR START HERE  */}
@@ -195,6 +195,8 @@ function Home(props) {
                   },
                 }}
                 sx={{
+                  border: '0.005rem solid rgba(var(--border-primary))',
+                  borderRadius: '16px',
                   "--Switch-thumbSize": "27px",
                   "--Switch-trackWidth": "64px",
                   "--Switch-trackHeight": "31px",

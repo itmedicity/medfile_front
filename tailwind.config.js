@@ -20,6 +20,11 @@ module.exports = {
         borderprimary: "rgba(var(--border-primary))",
         bordersecondary: "rgba(var(--border-secondary))",
 
+        logolightblue: "rgba(var(--logo-light-blue))",
+        logodarkblue: "rgba(var(--logo-dark-blue))",
+        logoviolet: "rgba(var(--logo-violet))",
+        logopink: "rgba(var(--logo-pink))",
+
         baseBlue: "rgba(var(--color-blue))",
         basePink: "rgba(var(--color-pink))",
         baseViolet: "rgba(var(--color-violet))",
