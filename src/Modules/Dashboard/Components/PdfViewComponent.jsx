@@ -74,6 +74,7 @@ const PdfViewComponent = ({ fileLink }) => {
             display: "flex",
             overflow: "scroll",
             justifyContent: "center",
+            // backgroundColor: "rgba(var(--bg-card))",
           }}
         >
           {fileLink === "" ? (
