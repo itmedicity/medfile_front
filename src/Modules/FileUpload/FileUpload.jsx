@@ -154,30 +154,30 @@ const FileUpload = () => {
   };
   // console.log(files);
 
-  // const handleError = (error, file) => {
-  //   const { code } = error;
-  //   if (code === 1) {
-  //     warningNofity("Upload failed. Invalid file type");
-  //   } else if (code === 2) {
-  //     warningNofity("Upload failed. File too large");
-  //   } else if (code === 3) {
-  //     warningNofity("Upload failed. File too small");
-  //   } else {
-  //     warningNofity("Upload failed. Maximum file count reached");
-  //   }
-  // };
-
   const handleError = (error, file) => {
-    const errorMessages = {
-      1: () => `Upload failed. Invalid file type: ${file?.name || "unknown file"}`,
-      2: () => `Upload failed. File too large: ${file?.size || "unknown size"} bytes`,
-      3: () => `Upload failed. File too small: ${file?.size || "unknown size"} bytes`,
-      default: () => "Upload failed. Maximum file count reached",
-    };
-
-    const message = (errorMessages[error.code] || errorMessages.default)();
-    warningNofity(message);
+    const { code } = error;
+    if (code === 1) {
+      warningNofity("Upload failed. Invalid file type");
+    } else if (code === 2) {
+      warningNofity("Upload failed. File too large");
+    } else if (code === 3) {
+      warningNofity("Upload failed. File too small");
+    } else {
+      warningNofity("Upload failed. Maximum file count reached");
+    }
   };
+
+  // const handleError = (error, file) => {
+  //   const errorMessages = {
+  //     1: () => `Upload failed. Invalid file type: ${file?.name || "unknown file"}`,
+  //     2: () => `Upload failed. File too large: ${file?.size || "unknown size"} bytes`,
+  //     3: () => `Upload failed. File too small: ${file?.size || "unknown size"} bytes`,
+  //     default: () => "Upload failed. Maximum file count reached",
+  //   };
+
+  //   const message = (errorMessages[error.code] || errorMessages.default)();
+  //   warningNofity(message);
+  // };
 
 
   /***********
@@ -189,133 +189,133 @@ const FileUpload = () => {
     async (e) => {
       e.preventDefault();
 
-      // if (documentState.docName === "") {
-      //   warningNofity("Document Name cannot be empty");
-      //   return;
-      // }
-
-      // if (documentState.docDes === "") {
-      //   warningNofity("Document Description cannot be empty");
-      //   return;
-      // }
-
-      // if (Number(documentState.docType) === 0) {
-      //   warningNofity("Document Type cannot be empty");
-      //   return;
-      // }
-
-      // if (Number(documentState.docSubType) === 0) {
-      //   warningNofity("Document Sub Type cannot be empty");
-      //   return;
-      // }
-
-      // if (
-      //   Number(documentState.institute) === 2 &&
-      //   Number(documentState.institute) === 0
-      // ) {
-      //   warningNofity("Institute cannot be empty");
-      //   return;
-      // }
-
-      // if (
-      //   Number(documentState.institute) === 2 &&
-      //   Number(documentState.course) === 0
-      // ) {
-      //   warningNofity("Course cannot be empty");
-      //   return;
-      // }
-
-      // if (Number(documentState.category) === 0) {
-      //   warningNofity("Category cannot be empty");
-      //   return;
-      // }
-
-      // if (Number(documentState.subCategory) === 0) {
-      //   warningNofity("Sub Category cannot be empty");
-      //   return;
-      // }
-
-      // if (Number(documentState.group) === 0) {
-      //   warningNofity("Group cannot be empty");
-      //   return;
-      // }
-
-      // if (isValid(new Date(documentState.docDate)) === false) {
-      //   warningNofity("Document Date cannot be empty");
-      //   return;
-      // }
-
-      // if (isValid(new Date(documentState.docVersionDate)) === false) {
-      //   warningNofity("Document Version Date cannot be empty");
-      //   return;
-      // }
-
-      // if (
-      //   Boolean(documentState.isRequiredExp) === true &&
-      //   isValid(new Date(documentState.docExpStart)) === false
-      // ) {
-      //   warningNofity(
-      //     "Document Expiry Start Date cannot be empty || Valid Date is required"
-      //   );
-      //   return;
-      // }
-
-      // if (
-      //   Boolean(documentState.isRequiredExp) === true &&
-      //   isValid(new Date(documentState.docExpEnd)) === false
-      // ) {
-      //   warningNofity(
-      //     "Document Expiry End Date cannot be empty || Valid Date is required"
-      //   );
-      //   return;
-      // }
-
-      // if (
-      //   Boolean(documentState.isRequiredExp) === true &&
-      //   new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
-      // ) {
-      //   warningNofity(
-      //     "Document Expiry Start Date cannot be greater than Expiry End Date"
-      //   );
-      //   return;
-      // }
-
-
-      const validations = [
-        { condition: !documentState.docName.trim(), message: "Document Name cannot be empty" },
-        { condition: !documentState.docDes.trim(), message: "Document Description cannot be empty" },
-        { condition: Number(documentState.docType) === 0, message: "Document Type cannot be empty" },
-        { condition: Number(documentState.docSubType) === 0, message: "Document Sub Type cannot be empty" },
-        { condition: Number(documentState.institute) === 0, message: "Institute cannot be empty" },
-        { condition: Number(documentState.institute) === 2 && Number(documentState.course) === 0, message: "Course cannot be empty" },
-        { condition: Number(documentState.category) === 0, message: "Category cannot be empty" },
-        { condition: Number(documentState.subCategory) === 0, message: "Sub Category cannot be empty" },
-        { condition: Number(documentState.group) === 0, message: "Group cannot be empty" },
-        { condition: !isValid(new Date(documentState.docDate)), message: "Document Date cannot be empty" },
-        { condition: !isValid(new Date(documentState.docVersionDate)), message: "Document Version Date cannot be empty" },
-        {
-          condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpStart)),
-          message: "Document Expiry Start Date cannot be empty || Valid Date is required",
-        },
-        {
-          condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpEnd)),
-          message: "Document Expiry End Date cannot be empty || Valid Date is required",
-        },
-        {
-          condition:
-            Boolean(documentState.isRequiredExp) &&
-            new Date(documentState.docExpStart) > new Date(documentState.docExpEnd),
-          message: "Document Expiry Start Date cannot be greater than Expiry End Date",
-        },
-      ];
-
-      // Run validations
-      for (const { condition, message } of validations) {
-        if (condition) {
-          warningNofity(message);
-          return;
-        }
+      if (documentState.docName === "") {
+        warningNofity("Document Name cannot be empty");
+        return;
       }
+
+      if (documentState.docDes === "") {
+        warningNofity("Document Description cannot be empty");
+        return;
+      }
+
+      if (Number(documentState.docType) === 0) {
+        warningNofity("Document Type cannot be empty");
+        return;
+      }
+
+      if (Number(documentState.docSubType) === 0) {
+        warningNofity("Document Sub Type cannot be empty");
+        return;
+      }
+
+      if (
+        Number(documentState.institute) === 2 &&
+        Number(documentState.institute) === 0
+      ) {
+        warningNofity("Institute cannot be empty");
+        return;
+      }
+
+      if (
+        Number(documentState.institute) === 2 &&
+        Number(documentState.course) === 0
+      ) {
+        warningNofity("Course cannot be empty");
+        return;
+      }
+
+      if (Number(documentState.category) === 0) {
+        warningNofity("Category cannot be empty");
+        return;
+      }
+
+      if (Number(documentState.subCategory) === 0) {
+        warningNofity("Sub Category cannot be empty");
+        return;
+      }
+
+      if (Number(documentState.group) === 0) {
+        warningNofity("Group cannot be empty");
+        return;
+      }
+
+      if (isValid(new Date(documentState.docDate)) === false) {
+        warningNofity("Document Date cannot be empty");
+        return;
+      }
+
+      if (isValid(new Date(documentState.docVersionDate)) === false) {
+        warningNofity("Document Version Date cannot be empty");
+        return;
+      }
+
+      if (
+        Boolean(documentState.isRequiredExp) === true &&
+        isValid(new Date(documentState.docExpStart)) === false
+      ) {
+        warningNofity(
+          "Document Expiry Start Date cannot be empty || Valid Date is required"
+        );
+        return;
+      }
+
+      if (
+        Boolean(documentState.isRequiredExp) === true &&
+        isValid(new Date(documentState.docExpEnd)) === false
+      ) {
+        warningNofity(
+          "Document Expiry End Date cannot be empty || Valid Date is required"
+        );
+        return;
+      }
+
+      if (
+        Boolean(documentState.isRequiredExp) === true &&
+        new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
+      ) {
+        warningNofity(
+          "Document Expiry Start Date cannot be greater than Expiry End Date"
+        );
+        return;
+      }
+
+
+      // const validations = [
+      //   { condition: !documentState.docName.trim(), message: "Document Name cannot be empty" },
+      //   { condition: !documentState.docDes.trim(), message: "Document Description cannot be empty" },
+      //   { condition: Number(documentState.docType) === 0, message: "Document Type cannot be empty" },
+      //   { condition: Number(documentState.docSubType) === 0, message: "Document Sub Type cannot be empty" },
+      //   { condition: Number(documentState.institute) === 0, message: "Institute cannot be empty" },
+      //   { condition: Number(documentState.institute) === 2 && Number(documentState.course) === 0, message: "Course cannot be empty" },
+      //   { condition: Number(documentState.category) === 0, message: "Category cannot be empty" },
+      //   { condition: Number(documentState.subCategory) === 0, message: "Sub Category cannot be empty" },
+      //   { condition: Number(documentState.group) === 0, message: "Group cannot be empty" },
+      //   { condition: !isValid(new Date(documentState.docDate)), message: "Document Date cannot be empty" },
+      //   { condition: !isValid(new Date(documentState.docVersionDate)), message: "Document Version Date cannot be empty" },
+      //   {
+      //     condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpStart)),
+      //     message: "Document Expiry Start Date cannot be empty || Valid Date is required",
+      //   },
+      //   {
+      //     condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpEnd)),
+      //     message: "Document Expiry End Date cannot be empty || Valid Date is required",
+      //   },
+      //   {
+      //     condition:
+      //       Boolean(documentState.isRequiredExp) &&
+      //       new Date(documentState.docExpStart) > new Date(documentState.docExpEnd),
+      //     message: "Document Expiry Start Date cannot be greater than Expiry End Date",
+      //   },
+      // ];
+
+      // // Run validations
+      // for (const { condition, message } of validations) {
+      //   if (condition) {
+      //     warningNofity(message);
+      //     return;
+      //   }
+      // }
 
       const FormPostData = {
         docID: documentNumber,
@@ -447,12 +447,18 @@ const FileUpload = () => {
         </Snackbar>
         {/* <ToastContainer /> */}
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1.5, borderColor: "divider", borderWidth: 2 }}>
+          <Box sx={{ border: 0, borderBottom: 1.5, borderColor: "rgba(var(--tab-border-color))", borderBottomColor: 'divider', borderWidth: 2 }}>
             <TabList
               onChange={handleChange}
               aria-label="lab API tabs example"
-              sx={{ minHeight: 0 }}
+              sx={{
+                minHeight: 0,
+                '& .MuiTabs-indicator': {
+                  backgroundColor: 'rgba(var(--logo-pink))',
+                },
+              }}
               className="flex justify-end items-center"
+            // indicatorColor="secondary"
             >
               <Tab
                 icon={<PageStar color='rgba(var(--color-white))' />}
@@ -464,20 +470,20 @@ const FileUpload = () => {
                   minHeight: 0,
                   textTransform: "none",
                   color: 'rgba(var(--color-white),0.9)',
-                  bgcolor: "rgba(var(--logo-dark-blue),0.8)",
+                  bgcolor: "rgba(var(--tab-color),0.8)",
                   borderRadius: 1,
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
                   minWidth: '15%',
                   '&.Mui-selected': {
                     color: 'rgba(var(--color-white))',
-                    bgcolor: 'rgba(var(--logo-dark-blue))',
+                    bgcolor: 'rgba(var(--tab-color))',
                   },
                 }}
               />
               <Tab
                 icon={<TaskList color='rgba(var(--color-white))' />}
-                color="secondary"
+                // color="secondary"
                 iconPosition="start"
                 label="Document List"
                 value="2"
@@ -486,7 +492,7 @@ const FileUpload = () => {
                   minHeight: 0,
                   textTransform: "none",
                   color: 'rgba(var(--color-white),0.9)',
-                  bgcolor: "rgba(var(--logo-dark-blue),0.8)",
+                  bgcolor: "rgba(var(--tab-color),0.8)",
                   border: 0,
                   borderRadius: 1,
                   borderBottomLeftRadius: 0,
@@ -494,13 +500,13 @@ const FileUpload = () => {
                   minWidth: '15%',
                   '&.Mui-selected': {
                     color: 'rgba(var(--color-white))',
-                    bgcolor: 'rgba(var(--logo-dark-blue))',
+                    bgcolor: 'rgba(var(--tab-color))',
                   },
                 }}
               />
             </TabList>
           </Box>
-          <TabPanel value="1" className="overflow-scroll" sx={{ p: 1 }}>
+          <TabPanel value="1" className="overflow-scroll" sx={{ p: 1 }} >
             <Box className="">
               {/* Top Section start here */}
               <Box
@@ -519,12 +525,12 @@ const FileUpload = () => {
                     className="border border-red-100 rounded-md"
                   >
                     <Box className="flex flex-1 flex-col">
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-white"
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-fontprimarywhite"
                         sx={{ fontFamily: 'var(--font-varient)' }}
                       >
                         Doc Nubmer
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-white "
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center text-xs font-semibold text-fontprimarywhite "
                         sx={{ fontFamily: 'var(--font-varient)' }}
                       >
                         {documentNumberLoading
@@ -533,12 +539,12 @@ const FileUpload = () => {
                             ? 0
                             : custDocNumber}
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-extrabold text-white"
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-extrabold text-fontprimarywhite"
                         sx={{ fontFamily: 'var(--font-varient)' }}
                       >
                         Doc Date
                       </Box>
-                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold  text-white"
+                      <Box className="flex flex-1 border-b-[0.01rem] justify-center items-center  text-xs font-semibold  text-fontprimarywhite"
                         sx={{ fontFamily: 'var(--font-varient)' }}
                       >
                         <Clock

@@ -5,9 +5,13 @@ module.exports = {
     extend: {
       colors: {
         bgnav: "rgba(var(--bg-nav))",
+        navheadercolor: "rgba(var(--nav-header-color))",
         bgdrawer: "rgba(var(--bg-drawer))",
         bgcommon: "rgba(var(--bg-common))",
         bgcard: "rgba(var(--bg-card))",
+
+        drawerBtnBgColor: "rgba(var(--drawer-btn-bg-color))",
+        drawerFontColor: "rgba(var(--drawer-font-color))",
 
         activebg: "rgba(var(--active-bg))",
 
@@ -40,6 +44,10 @@ module.exports = {
 
         tablehead: "rgba(var(--table-head))",
         tablebody: "rgba(var(--table-body))",
+        tableborder: "rgba(var(--table-border-color))",
+
+        tabBorderColor: "rgba(var(--tab-border-color))",
+        tabColor: "rgba(var(--tab-color))",
 
         fontvarient: "var(--font-varient)",
       },

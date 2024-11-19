@@ -10,7 +10,7 @@ import GppGoodIcon from "@mui/icons-material/GppGood";
 const TableHeaderVirtue = () => {
     return (
         <tr
-            className="h-10 bg-tablehead border-baseBlue border-dashed "
+            className="h-10 bg-tablehead/95 border-tableborder border-dashed "
         >
             <th>
                 <Box className="flex justify-center w-16">

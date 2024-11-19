@@ -35,7 +35,7 @@ const TableContentVirtue = ({ data }) => {
   return (
     <>
       <FileViewModal open={open} setOpen={setOpen} data={data} files={files} />
-      <td className="border-baseBlue border-dashed border-t-[0.20px] h-10">
+      <td className="border-tableborder border-dashed border-t-[0.20px] h-10">
         <Box className="flex flex-1 w-16 h-full justify-center items-center">
           {data.isSecure === 0 ? (
             <Tooltip
@@ -68,7 +68,7 @@ const TableContentVirtue = ({ data }) => {
           )}
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-16 h-full justify-center items-center">
           <Tooltip title="View File" placement="top">
             <IconButton
@@ -92,7 +92,7 @@ const TableContentVirtue = ({ data }) => {
           </Tooltip>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-16 h-full justify-center items-center">
           <Tooltip title="Print File" placement="top">
             <IconButton
@@ -116,7 +116,7 @@ const TableContentVirtue = ({ data }) => {
           </Tooltip>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-[10.5rem] h-full items-center pl-2">
           <Typography
             level="title-md"
@@ -132,7 +132,7 @@ const TableContentVirtue = ({ data }) => {
           </Typography>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-[12rem] justify-center items-center px-2">
           <Typography
             // level="body-md"
@@ -150,7 +150,7 @@ const TableContentVirtue = ({ data }) => {
           </Typography>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-[18rem] justify-center items-center px-2">
           <Typography
             level="body-md"
@@ -170,7 +170,7 @@ const TableContentVirtue = ({ data }) => {
           </Typography>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex w-[12rem] justify-center items-center px-2">
           <Typography
             level="body-md"
@@ -190,7 +190,7 @@ const TableContentVirtue = ({ data }) => {
           </Typography>
         </Box>
       </td>
-      <td className="border-baseBlue border-dashed border-t-[0.20px]">
+      <td className="border-tableborder border-dashed border-t-[0.20px]">
         <Box className="flex h-full w-[38rem] flex-col">
           <Typography
             // level="body-md"

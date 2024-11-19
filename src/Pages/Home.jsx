@@ -79,18 +79,18 @@ function Home(props) {
               onClick={() => navigation(val.text)}
               sx={{
                 display: "flex",
-                mx: 1,
-                borderRadius: 2.5,
-                my: 0.5,
-                height: 30,
+                mx: 0,
+                borderRadius: 0,
+                my: 0.1,
+                height: 35,
                 alignItems: "center",
                 transition: "transform 0.3s ease, color 0.3s ease",
                 transform: "translateX(0)",
                 ":hover": {
-                  bgcolor: "rgba(var(--active-bg))",
+                  bgcolor: "rgba(var(--drawer-btn-bg-color))",
                   "& .hoverClass": {
                     transform: "translateX(2px)",
-                    color: "rgba(var(--font-primary-white))",
+                    color: "rgba(var(--drawer-font-color))",
                   },
                 },
               }}
@@ -101,7 +101,7 @@ function Home(props) {
                   display: "flex",
                   justifyContent: "center",
                   color: "rgba(var(--font-secondary-white))",
-                  transition: "transform 0.3s ease, color 0.3s ease",
+                  transition: "transform 0.3s ease",
                   transform: "translateX(0)",
                 }}
               >
@@ -118,7 +118,7 @@ function Home(props) {
                   fontFamily: "var(--font-varient)",
                   fontSize: "14px",
                   fontWeight: 600,
-                  transition: "transform 0.3s ease, color 0.3s ease",
+                  transition: "transform 0.3s ease",
                   transform: "translateX(0)",
                 }}
               >
@@ -167,7 +167,7 @@ function Home(props) {
                 variant="h6"
                 noWrap
                 component="div"
-                className="text-fontprimarywhite"
+                className="text-navheadercolor"
               >
                 Travancore Medicity
               </Typography>

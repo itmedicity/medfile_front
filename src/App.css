@@ -1,17 +1,21 @@
 .light {
     --bg-nav: 76,102,117; /* Brightened for --bg-nav */
-    --bg-drawer: 92, 186, 232; /* Lightened for --bg-drawer */
-    --bg-common: 245, 246, 250; /* Brighter counterpart for --bg-common */
+    --nav-header-color : 249, 249, 249;
+    --bg-drawer: 63, 132, 170; /* Lightened for --bg-drawer */
+    --bg-common: 240, 246, 245; /* Brighter counterpart for --bg-common */
     --bg-card: 255, 255, 255; /* Slightly brighter than --bg-nav */
   
+    --drawer-btn-bg-color : 48, 52, 58 , 0.4;
+    --drawer-font-color :249, 249, 249;
+
     --active-bg: 48, 52, 58; /* Lighter and softer active background */
   
     --bg-offwhite: 243, 243, 243; /* Pure white for off-white */
   
-    --border-primary: 138,152,172,0.4; /* Lightened version of --border-primary */
+    --border-primary: 80, 83, 86,0.2; /* Lightened version of --border-primary */
     --border-secondary: 85, 183, 231; /* Brighter secondary border */
   
-    --icon-primary: 241, 113, 5, 0.7; /* Dark grey for primary icons in light mode */
+    --icon-primary: 100, 110, 120, 1; /* Dark grey for primary icons in light mode */
     --icon-secondary: 4, 150, 255, 0.7; /* Slightly lighter secondary icons */
     --icon-green: 50, 150, 55; /* More vibrant green */
   
@@ -20,30 +24,38 @@
     --logo-violet: 150, 120, 190; /* Softer violet */
     --logo-pink: 240, 140, 190; /* Soft pink */
   
-    --color-blue: 120, 200, 250; /* Softer blue color */
-    --color-pink: 240, 140, 200; /* Brighter pink */
-    --color-violet: 160, 140, 220; /* Gentle violet */
+    --color-blue:  92, 186, 232; /* Softer blue color */
+    --color-pink:  213, 82, 155; /* Brighter pink */
+    --color-violet:  98, 77, 174; /* Gentle violet */
     --color-white: 255, 255, 255; /* Unchanged white */
   
     --font-black: 40, 40, 40; /* Darker grey for font */
     --font-blue: 50, 120, 240; /* Vibrant blue for fonts */
     --font-darkGrey: 100, 110, 120; /* Softened dark grey */
-    --font-light: 240, 240, 240; /* Slightly lighter for light mode fonts */
+    --font-light: 100, 110, 120; /* Slightly lighter for light mode fonts */
   
-    --font-primary-white: 255, 255, 255; /* Pure white for primary font */
+    --font-primary-white: 100, 110, 120; /* Pure white for primary font */
     --font-secondary-white: 200, 200, 200; /* Muted white for secondary font */
   
-    --table-head: 210, 210, 210; /* Brightened table head */
+    --table-head: 76, 102, 117; /* Brightened table head */
     --table-body: 230, 230, 230; /* Brighter table body */
-  
+    --table-border-color : 76, 102, 117;
+
+    --tab-border-color : 255, 255, 255;
+    --tab-color : 76, 102, 117;
+
     --font-varient: Montserrat, sans-serif; /* Unchanged font variant */
   }
   
 .dark {
   --bg-nav: 31, 34, 36; /*set*/
+  --nav-header-color : 249, 249, 249;
   --bg-drawer: 31, 34, 36; /*set*/
   --bg-common: 19, 21, 22; /*set*/
   --bg-card: 31, 34, 36; /*set*/
+
+  --drawer-btn-bg-color : 48, 52, 58;
+  --drawer-font-color :249, 249, 249;
 
   --active-bg: 48, 52, 58; /*set*/
 
@@ -76,6 +88,10 @@
 
   --table-head: 74, 76, 79;
   --table-body: 74, 76, 79;
+  --table-border-color :92, 186, 232;
+
+  --tab-border-color : 31, 34, 36;
+  --tab-color : 76, 102, 117;
 
   --font-varient: Montserrat, sans-serif; /*set*/
 }
