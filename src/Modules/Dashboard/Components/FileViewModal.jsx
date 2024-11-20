@@ -23,7 +23,7 @@ const FileViewModal = ({ open, setOpen, data, files }) => {
         justifyContent: "center",
         alignItems: "center",
         transition: "all 0.5s ease-in-out",
-        backgroundColor: "rgba(var(--bg-card))",
+        backgroundColor: "transparent",
       }}
     >
       <ModalDialog
@@ -32,13 +32,13 @@ const FileViewModal = ({ open, setOpen, data, files }) => {
           width: screenWidth,
           height: screenHeight,
           p: 1,
-          backgroundColor: "rgba(var(--bg-card))",
+          backgroundColor: "rgba(var(--bg-common))",
           transition: "all 0.5s ease-in-out",
           border: 0.2,
           borderColor: "rgba(var(--border-primary))",
         }}
       >
-        <ModalClose variant="outlined" sx={{ m: 0.5 }} />
+        <ModalClose variant="outlined" sx={{ m: 0.5, color: 'rgba(var(--icon-primary))' }} />
         <Typography
           id="modal-title"
           level="body-md"
@@ -48,7 +48,7 @@ const FileViewModal = ({ open, setOpen, data, files }) => {
           Document Info
         </Typography>
 
-        <Box className="flex flex-1 flex-col rounded-md overflow-scroll w-full p-1">
+        <Box className="flex flex-1 flex-col rounded-md overflow-scroll w-full bg-bgcommon">
           <Grid container spacing={0.5} flexGrow={1} flexDirection={"row"}>
             <Grid
               size={{ xs: 12, sm: 12, md: 4, lg: 4, xl: 4 }}

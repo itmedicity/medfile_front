@@ -49,6 +49,8 @@ module.exports = {
         tabBorderColor: "rgba(var(--tab-border-color))",
         tabColor: "rgba(var(--tab-color))",
 
+
+
         fontvarient: "var(--font-varient)",
       },
     },

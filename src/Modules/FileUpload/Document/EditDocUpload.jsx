@@ -140,11 +140,13 @@ const EditDocUpload = ({ params }) => {
     return (
         <Box>
             <IconButton
+                variant="outlined"
+                size="small"
                 onClick={() => {
                     setOpen(true);
                 }}
             >
-                <BorderColorIcon />
+                <BorderColorIcon sx={{ color: 'rgba(var(--color-pink),1)', fontSize: '1.2rem', m: 0.35 }} />
             </IconButton>
             <Modal
                 aria-labelledby="modal-title"
@@ -156,7 +158,7 @@ const EditDocUpload = ({ params }) => {
                     justifyContent: "center",
                     alignItems: "center",
                     transition: "all 0.5s ease-in-out",
-                    backgroundColor: "#FFFFFF00",
+                    backgroundColor: "transparent",
                 }}
             >
                 <ModalDialog
@@ -165,8 +167,10 @@ const EditDocUpload = ({ params }) => {
                         width: screenWidth,
                         height: screenHeight,
                         p: 1,
-                        backgroundColor: "#F8FFF9",
+                        backgroundColor: "rgba(var(--modal-bg-color))",
                         transition: "all 0.5s ease-in-out",
+                        border: 0.2,
+                        borderColor: "rgba(var(--border-primary))",
                     }}
                 >
                     <ModalClose variant="outlined" sx={{ m: 0.5 }} />
@@ -178,11 +182,12 @@ const EditDocUpload = ({ params }) => {
                     >
                         Document Info
                     </Typography>
-                    <Box className="flex flex-1 flex-col border rounded-md overflow-scroll w-full p-1">
+                    <Box className="flex flex-1 flex-col rounded-md overflow-scroll w-full p-1">
                         <Grid container spacing={0.5} flexGrow={1} flexDirection={"row"}>
                             <Grid
                                 size={{ xs: 12, sm: 12, md: 7, lg: 6, xl: 6 }}
-                                className="p-2 border rounded-md"
+                                className="p-2 rounded-md"
+                                sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
                                 <Box className="p-3">
                                     <Box className="flex justify-between">
@@ -407,7 +412,8 @@ const EditDocUpload = ({ params }) => {
                             <Grid
                                 size={{ xs: 12, sm: 12, md: 7, lg: 6, xl: 6 }}
                                 gap={1}
-                                className="p-2 border rounded-md"
+                                className="p-2 rounded-md"
+                                sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
                                 {docDetlInfpArray?.map((el, idx) => (
                                     <FilleListCmp key={idx} data={el} />

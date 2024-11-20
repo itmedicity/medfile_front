@@ -13,17 +13,17 @@ const CustomSelect = ({ data, placeholder, onChangeSelect, value, icons }) => {
             slotProps={{
                 listbox: {
                     sx: {
-                        backgroundColor: 'rgba(var(--active-bg))',
-                        borderColor: 'rgba(var(--border-primary))',
+                        backgroundColor: 'rgba(var(--list-bg-color))',
+                        borderColor: 'rgba(var(--list-border-color))',
                         '& .MuiOption-root': {
-                            color: "white",
+                            color: "rgba(var(--list-font-color))",
                         },
                         '& .MuiOption-root:hover': {
-                            backgroundColor: 'rgba(var(--bg-offwhite))',
-                            color: 'rgba(var(--font-black))',
+                            backgroundColor: 'rgba(var(--list-hover-bg-color))',
+                            color: 'rgba(var(--list-hover-font-color))',
                         },
                         '& .MuiOption-highlighted': {
-                            color: 'rgba(var(--font-black))',
+                            color: 'rgba(var(--list-hover-font-color))',
                         },
                     },
                 },
@@ -39,14 +39,14 @@ const CustomSelect = ({ data, placeholder, onChangeSelect, value, icons }) => {
                     "--Select-boxShadow": 'none',
                 },
                 borderRadius: '0px',
-                backgroundColor: 'rgba(var(--border-primary))',
-                borderColor: 'rgba(var(--border-secondary))',
-                color: 'rgba(var(--font-light))',
+                backgroundColor: 'rgba(var(--input-bg-color))',
+                borderColor: 'rgba(var(--input-border-color))',
+                color: 'rgba(var(--input-font-color))',
                 ':hover': {
                     transition: 'none',
-                    backgroundColor: 'rgba(var(--bg-offwhite))',
-                    borderColor: 'rgba(var(--logo-dark-blue))',
-                    color: 'rgba(var(--font-black))',
+                    backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                    borderColor: 'rgba(var(--input-hover-border-color))',
+                    color: 'rgba(var(--input-hover-font-color))',
                     '.iconColor': {
                         color: 'rgba(var(--icon-green))',
                     },

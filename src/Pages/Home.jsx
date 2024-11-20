@@ -133,7 +133,7 @@ function Home(props) {
   );
 
   return (
-    <Box sx={{ display: "flex", width: "100%", }}>
+    <Box sx={{ display: "flex", width: "100%", overscrollBehavior: "none" }}>
       <CssBaseline />
 
       {/* TOP APPLICATION BAR START HERE  */}
@@ -259,6 +259,7 @@ function Home(props) {
           p: "0.15rem",
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           height: "100%",
+          overscrollBehavior: "none",
         }}
       >
         <Toolbar variant="dense" />

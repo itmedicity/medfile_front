@@ -82,7 +82,7 @@ const PdfViewComponent = ({ fileLink }) => {
               variant="rectangular"
               sx={{
                 height: "calc(100vh - 180px)",
-                backgroundColor: "rgba(var(--active-bg))",
+                backgroundColor: "rgba(var(--border-primary))",
               }}
               animation="wave"
             />

@@ -12,16 +12,18 @@ import { ToastContainer } from 'react-toastify'
 const DefaultPageLayout = ({ label, children }) => {
     const navigate = useNavigate()
     return (
-        <Box className="flex flex-col border-2 m-0 rounded-xl p-1 pb-2 overflow-scroll w-full" sx={{ backgroundColor: 'white' }} >
-            <ToastContainer />
-            <Box className="flex flex-row items-center" >
-                <AirlinesIcon fontSize='medium' className='text-[#5b6b79]' />
-                <Typography level='title-md' textAlign='left' textColor='neutral.900' sx={{ p: 0.5, opacity: 0.4, flexGrow: 1 }} >{label}</Typography>
-                <Box onClick={() => navigate('/Home/Dashboard')} ><HomeIcon sx={{ mr: 1 }} className='text-[#5b6b79] cursor-pointer' /></Box>
-                <Box onClick={() => navigate(-1)} ><ExitToAppIcon sx={{ rotate: '180deg', mr: 1 }} className='text-[#5b6b79] cursor-pointer' /></Box>
+        <Box className="m-1 h-dvh overscroll-none">
+            <Box className="flex flex-col border-2 m-0 rounded-xl p-1 pb-2 overflow-scroll w-full" sx={{ backgroundColor: 'white' }} >
+                <ToastContainer />
+                <Box className="flex flex-row items-center" >
+                    <AirlinesIcon fontSize='medium' className='text-[#5b6b79]' />
+                    <Typography level='title-md' textAlign='left' textColor='neutral.900' sx={{ p: 0.5, opacity: 0.4, flexGrow: 1 }} >{label}</Typography>
+                    <Box onClick={() => navigate('/Home/Dashboard')} ><HomeIcon sx={{ mr: 1 }} className='text-[#5b6b79] cursor-pointer' /></Box>
+                    <Box onClick={() => navigate(-1)} ><ExitToAppIcon sx={{ rotate: '180deg', mr: 1 }} className='text-[#5b6b79] cursor-pointer' /></Box>
+                </Box>
+                <Divider sx={{ m: 0, mb: 0.5, backgroundColor: baseColor.primarylight }} />
+                {children}
             </Box>
-            <Divider sx={{ m: 0, mb: 0.5, backgroundColor: baseColor.primarylight }} />
-            {children}
         </Box>
     )
 }

@@ -24,9 +24,9 @@ const CustomInput = ({
                 fontFamily: 'var(--font-varient)',
                 fontSize: '0.950rem',
                 fontWeight: '500',
-                backgroundColor: 'rgba(var(--border-primary))',
-                borderColor: 'rgba(var(--border-secondary))',
-                color: 'rgba(var(--font-light))',
+                backgroundColor: 'rgba(var(--input-bg-color))',
+                borderColor: 'rgba(var(--input-border-color))',
+                color: 'rgba(var(--input-font-color))',
                 borderWidth: '2.8px',
                 borderRadius: '0px',
                 "&.MuiInput-root": {
@@ -34,9 +34,9 @@ const CustomInput = ({
                     "--Input-focusedShadow": 'none',
                 },
                 ':hover': {
-                    backgroundColor: 'rgba(var(--bg-offwhite))',
-                    borderColor: 'rgba(var(--logo-dark-blue))',
-                    color: 'rgba(var(--font-black))',
+                    backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                    borderColor: 'rgba(var(--input-hover-border-color))',
+                    color: 'rgba(var(--input-hover-font-color))',
                     '.iconColor': {
                         color: 'rgba(var(--icon-green))',
                     }

@@ -69,13 +69,27 @@ const AdvancedSearch = () => {
         <DefaultPageLayout label='Advance Search' >
             <MasterPageLayout style={{ width: 'calc(100% - 10px)', p: 1 }}>
                 <Grid container spacing={0.5}  >
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoSelectDocTypeMast getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoSubTypeMaster getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoCategoryName getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoSubCategory getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoGroupName getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoInstitutionMast getInputValue={handleSetState} reset={reset} /></Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} ><AutoCourse getInputValue={handleSetState} reset={reset} /></Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoSelectDocTypeMast getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoSubTypeMaster getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoCategoryName getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoSubCategory getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoGroupName getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoInstitutionMast getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <AutoCourse getInputValue={handleSetState} reset={reset} />
+                    </Grid>
                     <Grid size={12}>
                         <Divider>OR</Divider>
                     </Grid>
