@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { memo } from 'react'
 import DefaultPageLayout from '../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../Components/MasterPageLayout'
@@ -70,6 +70,7 @@ const AdvancedSearch = () => {
             <MasterPageLayout style={{ width: 'calc(100% - 10px)', p: 1 }}>
                 <Grid container spacing={0.5}  >
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                        <Suspense></Suspense>
                         <AutoSelectDocTypeMast getInputValue={handleSetState} reset={reset} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
