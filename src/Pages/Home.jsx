@@ -20,12 +20,13 @@ import Typography from "@mui/material/Typography";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ScreenCheck from "../Components/ScreenCheck";
-import { Container } from "@mui/material";
+import { Container, ListSubheader } from "@mui/material";
 import { Switch, switchClasses } from "@mui/joy";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import "./Style.css";
+import { NavArrowRight, MouseButtonLeft } from 'iconoir-react'
 
 function Home(props) {
   const navigation = useNavigate();
@@ -63,29 +64,67 @@ function Home(props) {
     }
   };
 
+
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const handleListItemClick = (event, index, route) => {
+    setSelectedIndex(index);
+    navigation(route);
+  };
+
   const drawer = (
     <div>
       <Toolbar variant="dense" />
       <Divider />
-      <List>
+      <List
+        subheader={
+          <ListSubheader
+            component="div"
+            id="nested-list-subheader"
+            sx={{
+              fontFamily: "var(--font-varient)",
+              fontWeight: 600,
+              bgcolor: "rgba(var(--drawer-bg-color))",
+              color: "rgba(var(--drawer-font-color))",
+            }}
+          >
+            Menu Selections
+          </ListSubheader>
+        }
+      >
         {[
           { menu: "Dashboard", text: "/Home/Dashboard" },
           { menu: "FileUpload", text: "/Home/FileUpload" },
           { menu: "Advance Search", text: "/Home/AdvancedSearch" },
           { menu: "Settings", text: "/Home/Settings" },
         ].map((val, index) => (
-          <ListItem key={index} disablePadding sx={{ display: "flex" }}>
+          <ListItem
+            key={index}
+            disablePadding
+            sx={{ display: "flex", }}
+            secondaryAction={
+              <NavArrowRight height={20} width={20} color="rgba(var(--drawer-font-color))" className={selectedIndex === index && "bouncing-element"} />
+            }
+          >
             <ListItemButton
-              onClick={() => navigation(val.text)}
+              selected={selectedIndex === index ? true : false}
+              onClick={(e) => handleListItemClick(e, index, val.text)}
               sx={{
                 display: "flex",
                 mx: 0,
+                px: 0,
                 borderRadius: 0,
                 my: 0.1,
                 height: 35,
                 alignItems: "center",
                 transition: "transform 0.3s ease, color 0.3s ease",
                 transform: "translateX(0)",
+                '&.Mui-selected': {
+                  bgcolor: "rgba(var(--drawer-btn-bg-color))",
+                  ':hover': {
+                    bgcolor: "rgba(var(--drawer-btn-bg-color))",
+                  }
+                },
                 ":hover": {
                   bgcolor: "rgba(var(--drawer-btn-bg-color))",
                   "& .hoverClass": {

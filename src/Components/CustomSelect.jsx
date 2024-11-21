@@ -38,7 +38,7 @@ const CustomSelect = ({ data, placeholder, onChangeSelect, value, icons }) => {
                     "--Select-focusedThickness": '1.1px',
                     "--Select-boxShadow": 'none',
                 },
-                borderRadius: '0px',
+                borderRadius: '6px',
                 backgroundColor: 'rgba(var(--input-bg-color))',
                 borderColor: 'rgba(var(--input-border-color))',
                 color: 'rgba(var(--input-font-color))',

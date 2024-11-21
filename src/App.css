@@ -15,7 +15,7 @@
     --border-primary: 80, 83, 86,0.2; /* Lightened version of --border-primary */
     --border-secondary: 85, 183, 231; /* Brighter secondary border */
   
-    --icon-primary: 216,75,154,1; /* Dark grey for primary icons in light mode */
+    --icon-primary: 216,75,154,0.8; /* Dark grey for primary icons in light mode */
     --icon-secondary: 4, 150, 255, 0.7; /* Slightly lighter secondary icons */
     --icon-green: 78, 78, 78; /* More vibrant green */
   

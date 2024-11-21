@@ -593,7 +593,7 @@ const FileUpload = () => {
                           fontSize: 15,
                           fontFamily: "var(--font-varient)",
                           borderWidth: "2.8px",
-                          borderRadius: "0px",
+                          borderRadius: "6px",
                           backgroundColor: 'rgba(var(--input-bg-color))',
                           borderColor: 'rgba(var(--input-border-color))',
                           color: 'rgba(var(--input-font-color))',

@@ -19,6 +19,7 @@ import { useCallback } from 'react'
 import { errorNofity, sanitizeInput, warningNofity } from '../../Constant/Constant'
 import axiosApi from '../../Axios/Axios'
 import ClearIcon from '@mui/icons-material/Clear';
+import { PageSearch, Xmark } from 'iconoir-react'
 
 const AdvancedSearch = () => {
     const [reset, setReset] = useState(false)
@@ -68,51 +69,78 @@ const AdvancedSearch = () => {
     return (
         <DefaultPageLayout label='Advance Search' >
             <MasterPageLayout style={{ width: 'calc(100% - 10px)', p: 1 }}>
-                <Grid container spacing={0.5}  >
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
-                        <Suspense></Suspense>
+                <Grid container spacing={0.8} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoSelectDocTypeMast getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5} >
                         <AutoSubTypeMaster getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoCategoryName getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoSubCategory getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoGroupName getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoInstitutionMast getInputValue={handleSetState} reset={reset} />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} >
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoCourse getInputValue={handleSetState} reset={reset} />
                     </Grid>
                     <Grid size={12}>
-                        <Divider>OR</Divider>
+                        <Divider sx={{ color: 'rgba(var(--border-primary))' }} >OR</Divider>
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <Input
                             variant='outlined'
                             color='neutral'
                             value={state.docNumber}
                             placeholder='Enter Document Number'
                             type='number'
-                            sx={{ borderRadius: 14 }}
+                            sx={{
+                                fontFamily: 'var(--font-varient)',
+                                fontSize: '0.950rem',
+                                fontWeight: '500',
+                                backgroundColor: 'rgba(var(--input-bg-color))',
+                                borderColor: 'rgba(var(--input-border-color))',
+                                color: 'rgba(var(--input-font-color))',
+                                borderWidth: '2.8px',
+                                borderRadius: '6px',
+                                "&.MuiInput-root": {
+                                    "--Input-focusedHighlight": 'none',
+                                    "--Input-focusedShadow": 'none',
+                                },
+                                ':hover': {
+                                    backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                                    borderColor: 'rgba(var(--input-hover-border-color))',
+                                    color: 'rgba(var(--input-hover-font-color))',
+                                    '.iconColor': {
+                                        color: 'rgba(var(--icon-green))',
+                                    }
+                                },
+                                transition: 'none',
+                            }}
                             onChange={(e) => handleSetState({ target: { name: 'docNumber', value: e.target.value } })}
                         />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} sx={{ textAlign: 'center' }} >
                         <Button
                             variant='outlined'
-                            color='neutral'
-                            startDecorator={<SearchIcon />}
+                            // color='neutral'
+                            startDecorator={<PageSearch className='rgba(var(--icon-primary))' />}
                             sx={{
-                                borderRadius: 14,
-                                mx: 1
+                                borderRadius: 6,
+                                mx: 1,
+                                fontFamily: 'var(--font-varient)',
+                                color: 'rgba(var(--icon-primary))',
+                                borderColor: 'rgba(var(--border-primary))',
+                                ":hover": {
+                                    backgroundColor: 'rgba(var(--bg-nav),0.1)'
+                                }
                             }}
                             onClick={handleSearchDoc}
                         >
@@ -120,11 +148,17 @@ const AdvancedSearch = () => {
                         </Button>
                         <Button
                             variant='outlined'
-                            color='danger'
-                            startDecorator={<ClearIcon />}
+                            // color='danger'
+                            startDecorator={<Xmark />}
                             sx={{
-                                borderRadius: 14,
-                                mx: 1
+                                borderRadius: 6,
+                                mx: 1,
+                                fontFamily: 'var(--font-varient)',
+                                borderColor: 'rgba(var(--border-primary))',
+                                color: 'rgba(var(--icon-primary))',
+                                ":hover": {
+                                    backgroundColor: 'rgba(var(--bg-nav),0.1)'
+                                }
                             }}
                             onClick={handleReset}
                         >
@@ -133,17 +167,16 @@ const AdvancedSearch = () => {
                     </Grid>
                     <Grid size={12}>
                         <Box
-                            className="flex  justify-center items-center rounded-md"
+                            className="flex justify-center items-center rounded-md"
                             sx={{
                                 height: 'calc(50vh + 3rem)',
                                 width: "100%",
                                 mt: 0.5,
                                 padding: "0.05em",
-                                border: "1px solid #ccc",
                             }}
                         >
                             <TableVirtuoso
-                                style={{ height: "100%", width: "100%", border: "1px solid #ccc" }}
+                                style={{ height: "100%", width: "100%", border: "1px solid rgba(var(--border-primary))" }}
                                 className="flex flex-1 rounded-md"
                                 data={tableData}
                                 fixedHeaderContent={() => (<TableHeaderVirtue />)}

@@ -16,6 +16,9 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import CloseIcon from '@mui/icons-material/Close';
+import QueueIcon from '@mui/icons-material/Queue';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 const UserCreation = () => {
     const navigation = useNavigate()
@@ -176,11 +179,13 @@ const UserCreation = () => {
                     handleChangeSelect={(e, val) => handleChange({ target: { name: 'user_Status', value: val } })}
                     placeholder={"Select User Status"}
                 />
-                <IconButton
+
+
+                {/* <IconButton
                     variant='outlined'
                     sx={{ mt: 1, mr: 1, fontWeight: 400 }}
                     onClick={handleSubmitUserManagment}>
-                    <Tooltip title="Add User" arrow variant='soft' color='danger'>
+                    <Tooltip title="Add User" arrow variant='outlined' >
                         <GroupAddIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
                     </Tooltip>
                 </IconButton>
@@ -188,7 +193,7 @@ const UserCreation = () => {
                     variant='outlined'
                     sx={{ mt: 1, mr: 1, fontWeight: 400 }}
                     onClick={() => { }}>
-                    <Tooltip title="User List" arrow variant='soft' color='danger'>
+                    <Tooltip title="User List" arrow variant='outlined'>
                         <PersonSearchIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
                     </Tooltip>
                 </IconButton>
@@ -196,10 +201,61 @@ const UserCreation = () => {
                     variant='outlined'
                     sx={{ mt: 1, mr: 1, fontWeight: 400 }}
                     onClick={() => navigation(-1)}>
-                    <Tooltip title="Close" arrow variant='soft' color='danger'>
+                    <Tooltip title="Close" arrow variant='outlined'>
                         <CloseIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
                     </Tooltip>
+                </IconButton> */}
+
+                <IconButton
+                    variant='outlined'
+                    sx={{
+                        mt: 1, mr: 1,
+                        fontWeight: 400,
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
+                    onClick={handleSubmitUserManagment}>
+                    <Tooltip title="Click Here to Submit" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }} >
+                        <QueueIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
+                    </Tooltip>
                 </IconButton>
+                <IconButton
+                    variant='outlined'
+                    sx={{
+                        mt: 1, mr: 1, fontWeight: 400,
+                        backgroundColor: 'transparent',
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
+                // onClick={handleViewButtonFun}
+                >
+                    <Tooltip title="Click Here to View" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                        <SearchIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
+                    </Tooltip>
+                </IconButton>
+                <IconButton
+                    variant='outlined'
+                    sx={{
+                        mt: 1, mr: 1, fontWeight: 400,
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
+                    onClick={() => navigation(-1)}
+                >
+                    <Tooltip title="Back to Previous Page" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                        <CloseIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
+                    </Tooltip>
+                </IconButton>
+
             </MasterPageLayout>
         </DefaultPageLayout>
     )

@@ -26,7 +26,8 @@ const AutoSubTypeMaster = ({ getInputValue, reset }) => {
         <Box>
             {
                 isLoading === true || error
-                    ? <Skeleton animation="wave" variant='rectangular' sx={{ height: '45px', borderRadius: '23px', bgcolor: '#E5FEEE' }} />
+                    ? <Skeleton animation="wave" variant='rectangular'
+                        sx={{ height: '45px', borderRadius: '23px', bgcolor: 'rgba(var(--input-bg-color))' }} />
                     : <Autocomplete
                         size='md'
                         placeholder="Select Sub Type"
@@ -46,19 +47,59 @@ const AutoSubTypeMaster = ({ getInputValue, reset }) => {
                         onInputChange={(event, newInputValue) => {
                             setInputValue(newInputValue);
                         }}
+                        slotProps={{
+                            listbox: {
+                                sx: {
+                                    fontFamily: 'var(--font-varient)',
+                                    fontSize: '0.850rem',
+                                    fontWeight: '500',
+                                    backgroundColor: 'rgba(var(--list-bg-color))',
+                                    borderColor: 'rgba(var(--list-border-color))',
+                                    '& .MuiAutocomplete-option': {
+                                        color: "rgba(var(--list-font-color))",
+                                    },
+                                    '& .MuiAutocomplete-option:hover': {
+                                        backgroundColor: 'rgba(var(--list-hover-bg-color))',
+                                        color: 'rgba(var(--list-hover-font-color))',
+                                        fontFamily: 'var(--font-varient)',
+                                        fontSize: '0.850rem',
+                                        fontWeight: '600',
+                                    },
+                                    '& .MuiOption-highlighted': {
+                                        color: 'rgba(var(--list-hover-font-color))',
+                                    },
+                                },
+                            },
+                        }}
                         sx={{
                             minWidth: 300,
+                            fontFamily: 'var(--font-varient)',
+                            fontSize: '0.850rem',
+                            fontWeight: '600',
                             "--Input-minHeight": "20px",
-                            "--Input-radius": "23px",
+                            "--Input-radius": "6px",
                             "--Input-gap": "14px",
                             "--Input-paddingInline": "16px",
                             "--Input-decoratorChildHeight": "35px",
-                            '&:hover': {
-                                '--Input-focusedHighlight': 'darkgreen', // Darker color on hover
+                            borderWidth: '2.8px',
+                            "&.MuiAutocomplete-root": {
+                                "--Input-focusedHighlight": 'none',
+                                backgroundColor: 'rgba(var(--input-bg-color))',
+                                borderColor: 'rgba(var(--input-border-color))',
+                                color: 'rgba(var(--input-font-color),0.8)',
                             },
-                            "&.MuiInput-root": {
-                                "--Input-focusedHighlight": 'green',
-                            }
+                            '& .MuiSvgIcon-root': {
+                                color: 'rgba(var(--input-font-color))',
+                            },
+                            '&:hover': {
+                                // '--Input-focusedHighlight': 'darkgreen',
+                                backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                                borderColor: 'rgba(var(--input-hover-border-color))',
+                                color: 'rgba(var(--input-hover-font-color))',
+                                '.MuiSvgIcon-root': {
+                                    color: 'rgba(var(--input-hover-font-color))',
+                                }
+                            },
                         }}
                     />
             }

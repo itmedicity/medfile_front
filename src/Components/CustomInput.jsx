@@ -28,7 +28,7 @@ const CustomInput = ({
                 borderColor: 'rgba(var(--input-border-color))',
                 color: 'rgba(var(--input-font-color))',
                 borderWidth: '2.8px',
-                borderRadius: '0px',
+                borderRadius: '6px',
                 "&.MuiInput-root": {
                     "--Input-focusedHighlight": 'none',
                     "--Input-focusedShadow": 'none',
