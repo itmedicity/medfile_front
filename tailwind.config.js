@@ -49,9 +49,23 @@ module.exports = {
         tabBorderColor: "rgba(var(--tab-border-color))",
         tabColor: "rgba(var(--tab-color))",
 
-
-
         fontvarient: "var(--font-varient)",
+
+        inputbgcolor: "rgba(var(--input-bg-color))",
+        inputbordercolor: "rgba(var(--input-border-color))",
+        inputfontcolor: "rgba(var(--input-font-color))",
+        inputhoverbgcolor: "rgba(var(--input-hover-bg-color))",
+        inputhoverbordercolor: "rgba(var(--input-hover-border-color))",
+        inputhoverfontcolor: "rgba(var(--input-hover-font-color))",
+
+        listbgcolor: "rgba(var(--list-bg-color))",
+        listbordercolor: "rgba(var(--list-border-color))",
+        listfontcolor: "rgba(var(--list-font-color))",
+        listhoverbgcolor: "rgba(var(--list-hover-bg-color))",
+        listhoverfontcolor: "rgba(var(--list-hover-font-color))",
+
+        modalbgcolor: "rgba(var(--modal-bg-color))",
+
       },
     },
   },
