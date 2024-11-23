@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const axiosApi = Axios.create({
     baseURL: API_URL,
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
         "Accept": 'application/json',
@@ -25,31 +26,31 @@ axiosApi.interceptors.request.use(function (config) {
 })
 
 axiosApi.interceptors.response.use(function (response) {
-    if (response.data.status === 102 || response.data.status === 101) {
-        localStorage.removeItem('app_auth');
-        toast.error(
-            <div className='flex h-20 flex-col' >
-                <div className="text-center">
-                    Session Expired, Please Login Again
-                </div>
-                <div className='flex justify-center'>
-                    <button
-                        className='bg-[#ed766a] text-white rounded-md p-[0.5] w-2/4 my-1'
-                        onClick={() => window.location.href = RETURN_URL}>
-                        Login
-                    </button>
-                </div>
-            </div>, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
-    }
+    // if (response.data.status === 102 || response.data.status === 101) {
+    //     localStorage.removeItem('app_auth');
+    //     toast.error(
+    //         <div className='flex h-20 flex-col' >
+    //             <div className="text-center">
+    //                 Session Expired, Please Login Again
+    //             </div>
+    //             <div className='flex justify-center'>
+    //                 <button
+    //                     className='bg-[#ed766a] text-white rounded-md p-[0.5] w-2/4 my-1'
+    //                     onClick={() => window.location.href = RETURN_URL}>
+    //                     Login
+    //                 </button>
+    //             </div>
+    //         </div>, {
+    //         position: "top-center",
+    //         autoClose: 5000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //         theme: "light",
+    //     });
+    // }
     return response;
 }, function (error) {
     return Promise.reject(error);

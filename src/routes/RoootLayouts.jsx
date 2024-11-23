@@ -99,7 +99,7 @@ const RoootLayouts = () => {
 
     // after verify OTP page redirected to dashboard
 
-    axiosApi.post("/user/verifyOTP", postDataToVerifyOTP).then((res) => {
+    axiosApi.post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true }).then((res) => {
       const { message, success, userInfo } = res.data;
 
       // after verify OTP page redirected to dashboard
@@ -265,7 +265,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () {}}
+                      onResendClick={function () { }}
                       className="flex"
                       style={{
                         color: baseColor.primary,
