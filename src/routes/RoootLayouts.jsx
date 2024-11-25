@@ -40,10 +40,12 @@ import bgImage1 from "../assets/images/Designer.png";
 import bgImage2 from "../assets/images/Designer1.png";
 import bgImage3 from "../assets/images/Designer2.png";
 import ScreenCheck from "../Components/ScreenCheck";
+import useAuth from "../hooks/useAuth";
 
 const RoootLayouts = () => {
   // import functions
   const navigate = useNavigate();
+  const { setAuth } = useAuth()
 
   // state mangement
   const [mobileNumber, setMobileNumber] = useState("");
@@ -111,8 +113,7 @@ const RoootLayouts = () => {
           warningNofity(message); // incorrected OTP
         } else if (success === 2) {
           succesNofity(message); // OTP Verified
-          const { user_slno, name, accessToken, login_type, tokenValidity } =
-            JSON.parse(userInfo);
+          const { user_slno, name, accessToken, login_type, tokenValidity } = JSON.parse(userInfo);
           const authData = {
             authNo: btoa(user_slno),
             authName: btoa(name),
@@ -120,6 +121,9 @@ const RoootLayouts = () => {
             authType: btoa(login_type),
             authTimeStamp: getTime(new Date(tokenValidity)),
           };
+
+          setAuth((prev) => { return { ...prev, accessToken: authData.authToken, userInfo: authData } })
+
           localStorage.setItem("app_auth", JSON.stringify(authData));
           setOpen(true);
           setTimeout(() => {
@@ -267,7 +271,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () {}}
+                      onResendClick={function () { }}
                       className="flex"
                       style={{
                         color: baseColor.primary,

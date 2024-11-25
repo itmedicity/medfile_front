@@ -1,10 +1,17 @@
 // @ts-nocheck
 import React from 'react'
-import { Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+import useValidateToken from '../hooks/useValidateToken'
 
 const ProtectedRoute = () => {
-    const auth_token = localStorage.getItem("app_auth")
-    return (auth_token !== null && auth_token !== undefined) ? <Outlet /> : <Navigate to="/" replace />
+
+    const { isValid, isLoading } = useValidateToken()
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    return isValid === true ? <Outlet /> : <Navigate to="/" replace />
 }
 
 export default ProtectedRoute
