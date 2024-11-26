@@ -13,48 +13,63 @@ const axiosApi = Axios.create({
     },
 })
 
-axiosApi.interceptors.request.use(function (config) {
-    const auth_info = localStorage.getItem('app_auth');
-    const tokenData = JSON.parse(auth_info)
-    const authToken = tokenData?.authToken
-    if (authToken !== null && authToken !== undefined) {
-        config.headers.Authorization = `Bearer ${authToken}`
-    }
-    return config;
-}, function (error) {
-    return Promise.reject(error);
-})
+let authToken = null
 
-axiosApi.interceptors.response.use(function (response) {
-    // if (response.data.status === 102 || response.data.status === 101) {
-    //     localStorage.removeItem('app_auth');
-    //     toast.error(
-    //         <div className='flex h-20 flex-col' >
-    //             <div className="text-center">
-    //                 Session Expired, Please Login Again
-    //             </div>
-    //             <div className='flex justify-center'>
-    //                 <button
-    //                     className='bg-[#ed766a] text-white rounded-md p-[0.5] w-2/4 my-1'
-    //                     onClick={() => window.location.href = RETURN_URL}>
-    //                     Login
-    //                 </button>
-    //             </div>
-    //         </div>, {
-    //         position: "top-center",
-    //         autoClose: 5000,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: undefined,
-    //         theme: "light",
-    //     });
-    // }
-    return response;
-}, function (error) {
-    return Promise.reject(error);
-})
+export const setAuthToken = (token) => {
+    authToken = token
+}
+
+
+// console.log(authToken)
+axiosApi.interceptors.request.use(
+    (config) => {
+        // const auth_info = localStorage.getItem('app_auth');
+        // const tokenData = JSON.parse(auth_info)
+        // const authToken = tokenData?.authToken
+        // if (authToken !== null && authToken !== undefined) {
+        //     config.headers.Authorization = `Bearer ${authToken}`
+        // }
+        return config;
+    },
+    (error) => Promise.reject(error)
+)
+
+axiosApi.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        console.log(error)
+        const localData = localStorage.getItem("app_auth");
+        const userSlno = atob(JSON.parse(localData)?.authNo);
+
+        const originalRequest = error.config;
+        // console.log(error.response?.status)
+        // Check if the error is due to an expired token
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true; // Prevent infinite retries
+
+            // await axiosApi.post(`/user/getRefershToken/${1}`)
+
+            try {
+                // Refresh the token
+                const { data } = await axiosApi.post(`/user/getRefershToken/${userSlno}`);
+
+                // Store the new access token
+                // localStorage.setItem("accessToken", data.accessToken);
+
+                // Retry the original request with the new token
+                // originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
+                return axiosApi(originalRequest);
+            } catch (refreshError) {
+                console.error("Failed to refresh token:", refreshError);
+                // Handle logout or redirection to login page
+                // localStorage.removeItem("accessToken");
+                // window.location.href = "/login";
+            }
+        }
+
+        return Promise.reject(error);
+    }
+)
 
 
 export default axiosApi

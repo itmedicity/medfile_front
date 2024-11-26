@@ -23,11 +23,14 @@ import TableHeaderVirtue from "./Components/TableHeaderVirtue";
 import TableContentVirtue from "./Components/TableContentVirtue";
 import { ToastContainer } from "react-toastify";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import axiosApi from "../../Axios/Axios";
 
 const localData = localStorage.getItem("app_auth");
 const credValue = atob(JSON.parse(localData)?.authType);
 
 const Dashboard = () => {
+
+  // const refresh = useRefreshToken()
   const color = [
     "#fc930a",
     "#de2567",
@@ -115,6 +118,11 @@ const Dashboard = () => {
     setTableData(allDocData);
     setSearchParm("");
   };
+
+  const hadleChek = async () => {
+    const result = await axiosApi.post(`/user/getRefershToken/${1}`)
+    console.log(result.data)
+  }
 
   // console.log(allDocData)
 
@@ -213,6 +221,9 @@ const Dashboard = () => {
                 }}
               >
                 Clear
+              </Button>
+              <Button onClick={() => hadleChek()} >
+                test refresh
               </Button>
             </Box>
           </Box>

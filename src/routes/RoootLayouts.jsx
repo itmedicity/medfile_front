@@ -31,7 +31,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
-import axiosApi from "../Axios/Axios";
+import axiosApi, { setAuthToken } from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
@@ -117,10 +117,12 @@ const RoootLayouts = () => {
           const authData = {
             authNo: btoa(user_slno),
             authName: btoa(name),
-            authToken: accessToken,
+            // authToken: accessToken,
             authType: btoa(login_type),
             authTimeStamp: getTime(new Date(tokenValidity)),
           };
+
+          setAuthToken(accessToken)
 
           setAuth((prev) => { return { ...prev, accessToken: authData.authToken, userInfo: authData } })
 
