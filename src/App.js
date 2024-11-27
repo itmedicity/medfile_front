@@ -10,6 +10,13 @@ import "./App.css";
 import { AuthProvider } from "./Context/AuthProvider";
 import ErrorElement from "./Pages/ErrorElement";
 
+
+
+// import { io } from "socket.io-client";
+// const socket = io("http://localhost:58888", {
+//   transports: ["websocket", "polling"],
+// });
+
 // Main Modules
 const Dashboard = lazy(() => import("./Modules/Dashboard/Dashboard.jsx"));
 const AdvancedSearch = lazy(() =>
@@ -70,6 +77,17 @@ const routes = createBrowserRouter([
 const queryClient = new QueryClient();
 
 function App() {
+
+  // socket.emit("login", { userId: 1 });
+
+  // // Listen for multiple-login event
+  // socket.on("multiple-login", (message) => {
+  //   alert(message);
+  //   // Redirect to login page
+  //   window.location.href = "/login";
+  // });
+
+
   useLayoutEffect(() => {
     document.body.classList.add("light");
   }, []);

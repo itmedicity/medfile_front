@@ -11,9 +11,10 @@ import { Switch, switchClasses } from "@mui/joy";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import LogoutMoidal from "./LogoutMoidal";
+import IdleTimer from "./IdleTimer";
 
 const Header = ({ handleDrawerToggle, drawerWidth, dark, handleChangeDarkMode }) => {
-
+    console.log('render')
     return (
         <AppBar
             position="fixed"
@@ -51,6 +52,7 @@ const Header = ({ handleDrawerToggle, drawerWidth, dark, handleChangeDarkMode })
                         <ScreenCheck />
                     </Box>
                     <Box className="flex flex-row items-center gap-3">
+                        <IdleTimer />
                         <Switch
                             checked={dark}
                             // onChange={() => setDark(!dark)}

@@ -1,16 +1,18 @@
 // @ts-nocheck
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import { Outlet, } from "react-router-dom";
+import { Outlet, useNavigate, } from "react-router-dom";
 import { useState } from "react";
 import "./Style.css";
 import Header from "../Layouts/Header";
 import DrawerWindow from "../Layouts/DrawerWindow";
 import { useCallback } from "react";
 
+
 function Home() {
+
   const [drawerWidth, setDrawerWidth] = useState(240);
   const [dark, setDark] = useState(false);
   // const drawerWidth = 240;

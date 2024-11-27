@@ -29,6 +29,7 @@
     "react-dom": "^18.3.1",
     "react-files": "^3.0.3",
     "react-hot-toast": "^2.4.1",
+    "react-idle-timer": "^5.7.2",
     "react-live-clock": "^6.1.23-beta",
     "react-pdf": "^9.1.1",
     "react-phone-input-2": "^2.15.1",
@@ -37,6 +38,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "react-virtuoso": "^4.10.2",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
