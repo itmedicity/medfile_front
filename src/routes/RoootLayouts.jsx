@@ -31,7 +31,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
-import axiosApi, { setAuthToken } from "../Axios/Axios";
+import axiosApi from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
@@ -45,7 +45,7 @@ import useAuth from "../hooks/useAuth";
 const RoootLayouts = () => {
   // import functions
   const navigate = useNavigate();
-  const { setAuth } = useAuth()
+  const { setAuth } = useAuth();
 
   // state mangement
   const [mobileNumber, setMobileNumber] = useState("");
@@ -89,53 +89,62 @@ const RoootLayouts = () => {
 
   // VERIFY OTP FUNCTION
   const verifyOTPFunction = useCallback(() => {
-    const sanitizedOTP = sanitizeInput(OTP);
-    const mobNumber = sanitizeInput(mobileNumber);
+    try {
+      const sanitizedOTP = sanitizeInput(OTP);
+      const mobNumber = sanitizeInput(mobileNumber);
 
-    const slicedMobileNMumber = mobNumber.slice(2);
+      const slicedMobileNMumber = mobNumber.slice(2);
 
-    const postDataToVerifyOTP = {
-      otp: sanitizedOTP,
-      mobile: slicedMobileNMumber,
-    };
+      const postDataToVerifyOTP = {
+        otp: sanitizedOTP,
+        mobile: slicedMobileNMumber,
+      };
 
-    // after verify OTP page redirected to dashboard
+      // after verify OTP page redirected to dashboard
 
-    axiosApi
-      .post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
-      .then((res) => {
-        const { message, success, userInfo } = res.data;
+      axiosApi
+        .post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
+        .then((res) => {
+          const { message, success, userInfo } = res.data;
 
-        // after verify OTP page redirected to dashboard
-        if (success === 0) {
-          errorNofity(message); // database error
-        } else if (success === 1) {
-          warningNofity(message); // incorrected OTP
-        } else if (success === 2) {
-          succesNofity(message); // OTP Verified
-          const { user_slno, name, accessToken, login_type, tokenValidity } = JSON.parse(userInfo);
-          const authData = {
-            authNo: btoa(user_slno),
-            authName: btoa(name),
-            // authToken: accessToken,
-            authType: btoa(login_type),
-            authTimeStamp: getTime(new Date(tokenValidity)),
-          };
+          // after verify OTP page redirected to dashboard
+          if (success === 0) {
+            errorNofity(message); // database error
+          } else if (success === 1) {
+            warningNofity(message); // incorrected OTP
+          } else if (success === 2) {
+            succesNofity(message); // OTP Verified
+            const { user_slno, name, accessToken, login_type, tokenValidity } =
+              JSON.parse(userInfo);
+            const authData = {
+              authNo: btoa(user_slno),
+              authName: btoa(name),
+              // authToken: accessToken,
+              authType: btoa(login_type),
+              authTimeStamp: getTime(new Date(tokenValidity)),
+            };
 
-          setAuthToken(accessToken)
+            setAuth((prev) => {
+              return {
+                ...prev,
+                accessToken: authData.authToken,
+                userInfo: authData,
+              };
+            });
 
-          setAuth((prev) => { return { ...prev, accessToken: authData.authToken, userInfo: authData } })
-
-          localStorage.setItem("app_auth", JSON.stringify(authData));
-          setOpen(true);
-          setTimeout(() => {
-            setOpen(false);
-            navigate("/Home/Dashboard", { replace: true });
-          }, 2000);
-        } else {
-          errorNofity(message);
-        }
-      });
+            localStorage.setItem("app_auth", JSON.stringify(authData));
+            setOpen(true);
+            setTimeout(() => {
+              setOpen(false);
+              navigate("/Home/Dashboard", { replace: true });
+            }, 2000);
+          } else {
+            errorNofity(message);
+          }
+        });
+    } catch (error) {
+      errorNofity(error);
+    }
   }, [OTP, mobileNumber]);
 
   // RESEND OTP FUNCTION
@@ -273,7 +282,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () { }}
+                      onResendClick={function () {}}
                       className="flex"
                       style={{
                         color: baseColor.primary,
