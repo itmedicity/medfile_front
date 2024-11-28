@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback, useState, memo } from "react";
+import React, { useCallback, useState, memo, useEffect } from "react";
 import {
   AspectRatio,
   Box,
@@ -41,6 +41,7 @@ import bgImage2 from "../assets/images/Designer1.png";
 import bgImage3 from "../assets/images/Designer2.png";
 import ScreenCheck from "../Components/ScreenCheck";
 import useAuth from "../hooks/useAuth";
+import { socket } from "../ws/socket";
 
 const RoootLayouts = () => {
   // import functions
@@ -54,6 +55,15 @@ const RoootLayouts = () => {
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false);
   const [loginwithUserCred, setloginwithUserCred] = useState(false);
+
+  useEffect(() => {
+    const message = localStorage.getItem("message");
+    if (message) {
+      warningNofity(message);
+      localStorage.removeItem("app_auth");
+      localStorage.removeItem("message");
+    }
+  }, [])
 
   // GENERATE OTP FUNCTION
   const generateOtp = useCallback(() => {
@@ -131,7 +141,7 @@ const RoootLayouts = () => {
                 userInfo: authData,
               };
             });
-
+            socket.emit("login", { user_slno });  // EMIT THE USER LOGIN EVENT TO SOCKET
             localStorage.setItem("app_auth", JSON.stringify(authData));
             setOpen(true);
             setTimeout(() => {
@@ -282,7 +292,7 @@ const RoootLayouts = () => {
                   </Box>
                   <Box>
                     <ResendOTP
-                      onResendClick={function () {}}
+                      onResendClick={function () { }}
                       className="flex"
                       style={{
                         color: baseColor.primary,

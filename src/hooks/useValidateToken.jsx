@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 import axiosApi from "../Axios/Axios";
+import { warningNofity } from "../Constant/Constant";
 
 const useValidateToken = () => {
     const [isValid, setIsValid] = useState(false);
@@ -19,7 +20,9 @@ const useValidateToken = () => {
                     setIsValid(false);
                 }
             } catch (e) {
-                console.error("Error validating token:", e);
+                console.log("Error validating token:", e);
+                localStorage.setItem("message", "Your Session has been Expired"); //SET THE MESSAGE FOR THE TOAST IN app.js component
+                localStorage.removeItem("app_auth"); // REMOVE THE AUTH VALUES
                 controler.abort()
                 setIsValid(false);
             } finally {

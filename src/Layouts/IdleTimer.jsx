@@ -1,7 +1,9 @@
 // @ts-nocheck
 import React, { memo, useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
-import { format, addMilliseconds, millisecondsToMinutes, millisecondsToSeconds } from "date-fns";
+import { millisecondsToSeconds } from "date-fns";
+import { useCallback } from 'react';
+import { useMemo } from 'react';
 
 const IdleTimer = () => {
 
@@ -9,23 +11,37 @@ const IdleTimer = () => {
   const [count, setCount] = useState(0)
   const [remaining, setRemaining] = useState("10:00")
 
-  const onIdle = () => {
+  const onIdle = useCallback((e) => {
+    // WHEN THE IDLE TRIGGER IS FIRED LOG OUT FUNCTIONALITY START
+    const userSlno = localStorage.getItem("app_auth");
+
+    if (userSlno) {
+      const userId = atob(JSON.parse(userSlno)?.authNo);
+
+      if (userId) {
+        // localStorage.removeItem("app_auth");
+        // window.location.href = "/";
+      }
+
+    }
+
+    console.log('idle', e)
     setState('Idle')
-  }
+  }, [])
 
-  const onActive = () => {
+  const onActive = useCallback((e) => {
     setState('Active')
-  }
+  }, [])
 
-  const onAction = () => {
-    setCount(count + 1)
-  }
+  // const onAction = useCallback(() => {
+  //   setCount(count + 1)
+  // }, [])
 
   const { getRemainingTime } = useIdleTimer({
     onIdle,
     onActive,
-    onAction,
-    timeout: 1000 * 60 * 10, // 10 minits
+    // onAction,
+    timeout: process.env.NODE_ENV === 'production' ? process.env.REACT_APP_IDLE_TIMEOUT : 1000 * 60 * 1, // 10 minits
     throttle: 500
   })
 

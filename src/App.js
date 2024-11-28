@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useLayoutEffect } from "react";
+import React, { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RoootLayouts from "./routes/RoootLayouts";
 import Home from "./Pages/Home";
@@ -9,13 +9,8 @@ import CustomBackDropWithOutState from "./Components/CustomBackDropWithOutState"
 import "./App.css";
 import { AuthProvider } from "./Context/AuthProvider";
 import ErrorElement from "./Pages/ErrorElement";
-
-
-
-// import { io } from "socket.io-client";
-// const socket = io("http://localhost:58888", {
-//   transports: ["websocket", "polling"],
-// });
+import { socket } from "./ws/socket";
+import { warningNofity } from "./Constant/Constant";
 
 // Main Modules
 const Dashboard = lazy(() => import("./Modules/Dashboard/Dashboard.jsx"));
@@ -78,15 +73,21 @@ const queryClient = new QueryClient();
 
 function App() {
 
-  // socket.emit("login", { userId: 1 });
+  useEffect(() => {
 
-  // // Listen for multiple-login event
-  // socket.on("multiple-login", (message) => {
-  //   alert(message);
-  //   // Redirect to login page
-  //   window.location.href = "/login";
-  // });
+    socket.on("connect", () => {
+      console.log("Connected");
+    });
 
+    socket.on("multiple-login", (message) => {
+      console.log(message);
+      localStorage.removeItem("app_auth");
+      warningNofity(message);
+      // Redirect to login page
+      window.location.href = "/";
+    });
+
+  }, [])
 
   useLayoutEffect(() => {
     document.body.classList.add("light");
