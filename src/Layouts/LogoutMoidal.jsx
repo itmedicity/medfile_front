@@ -12,14 +12,48 @@ import settings from '../assets/setting.gif'
 import exit from '../assets/exit.gif'
 import { useNavigate } from 'react-router-dom';
 import { PeopleTag } from 'iconoir-react'
+import axiosApi from '../Axios/Axios';
+import { toast } from 'react-toastify';
 
 
 const LogoutMoidal = () => {
 
     const navigate = useNavigate()
-    const handleLogout = useCallback(() => {
-        localStorage.removeItem('app_auth')
-        navigate('/')
+    const handleLogout = useCallback(async () => {
+        const userSlno = localStorage.getItem("app_auth");
+
+        if (userSlno) {
+            const userId = atob(JSON.parse(userSlno)?.authNo);
+
+            if (userId) {
+                // localStorage.removeItem("app_auth");
+                // window.location.href = "/";
+                const res = await axiosApi.get(`/user/logout/${userId}`);
+                if (res) {
+                    localStorage.removeItem("app_auth");
+
+                    toast.success(
+                        <div className='flex h-20 flex-col'>You have been successfully logged out</div>,
+                        {
+                            position: "top-center", // Centers toast horizontally at the top
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        }
+                    );
+
+
+                    setTimeout(() => {
+                        navigate('/')
+                    }, 1000); // Wait 3 seconds before redirecting
+                }
+            }
+
+        }
     }, [])
 
     return (

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import Axios from "axios";
 import { API_URL, RETURN_URL } from "../Constant/Static";
+import { toast } from "react-toastify";
 
 const axiosApi = Axios.create({
     baseURL: API_URL,
@@ -34,10 +35,32 @@ axiosApi.interceptors.response.use(
                 await axiosApi.get(`/user/getRefershToken/${userSlno}`, { withCredentials: true });
                 return axiosApi(originalRequest);
             } catch (refreshError) {
-                console.error("Failed to refresh token:", refreshError);
+                console.log("Failed to refresh token:", refreshError);
+                localStorage.removeItem("app_auth");
                 // Handle logout or redirection to login page
-                window.location.href = "/";
+                toast.error(
+                    <div className='flex h-20 flex-col' >Your Session has been Expired</div>, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 3000); // Wait 3 seconds before redirecting
             }
+        }
+
+        if (error.response?.status === 403) {
+            localStorage.removeItem("app_auth");
+            // Handle logout or redirection to login page
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3000); // Wait 3 seconds before redirecting
         }
 
         return Promise.reject(error);

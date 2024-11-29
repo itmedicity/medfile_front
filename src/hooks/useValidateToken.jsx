@@ -21,10 +21,10 @@ const useValidateToken = () => {
                 }
             } catch (e) {
                 console.log("Error validating token:", e);
-                localStorage.setItem("message", "Your Session has been Expired"); //SET THE MESSAGE FOR THE TOAST IN app.js component
                 localStorage.removeItem("app_auth"); // REMOVE THE AUTH VALUES
                 controler.abort()
                 setIsValid(false);
+                setIsLoading(false);
             } finally {
                 setIsLoading(false);
             }

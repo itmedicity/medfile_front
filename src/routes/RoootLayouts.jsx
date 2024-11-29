@@ -27,6 +27,7 @@ import icon4 from "../assets/medivault04.png";
 
 // @ts-ignore
 import OTPInput, { ResendOTP } from "otp-input-react";
+import OtpInput from 'react-otp-input';
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -173,25 +174,6 @@ const RoootLayouts = () => {
     setloginwithUserCred(false);
   }, []);
 
-  // render function for regerate OTP button
-
-  const renderButton = (buttonProps) => {
-    return buttonProps.remainingTime !== 0 ? (
-      <Typography level="body-xs" className="p-5 text-[#d84b9a]">
-        Resend Authorisation code in {buttonProps.remainingTime} sec
-      </Typography>
-    ) : (
-      <Box
-        tabIndex={2}
-        {...buttonProps}
-        onClick={resendOTPFunction}
-        className="pt-5 font-semibold text-[#001C30] cursor-pointer text-sm"
-      >
-        {" "}
-        Regenerate OTP
-      </Box>
-    );
-  };
 
   const renderTime = () => {
     return <span></span>;
@@ -256,10 +238,19 @@ const RoootLayouts = () => {
                   >
                     Verify your Phone number
                   </Typography>
-                  <OTPInput
+                  <OtpInput
                     value={OTP}
                     onChange={setOTP}
-                    autoFocus
+                    numInputs={6}
+                    renderInput={(props) => <input {...props} />}
+                    containerStyle="flex items-center justify-center gap-2"
+                    inputStyle="!mr-0 py-[0.6rem] !w-[2.4rem] rounded-lg 
+                    outline-1 outline-[#53b6e7] text-[#001C30]  text-xl outline-dashed"
+                  />
+                  {/* <OTPInput
+                    value={OTP}
+                    onChange={setOTP}
+                    autoFocus={true}
                     OTPLength={6}
                     otpType="number"
                     disabled={false}
@@ -267,7 +258,7 @@ const RoootLayouts = () => {
                     className="flex items-center justify-center gap-2"
                     inputClassName="!mr-0 py-5 !w-[2.5rem] rounded-lg 
                     outline-1 outline-[#53b6e7] text-[#001C30]  text-xl outline-dashed"
-                  />
+                  /> */}
                   <Box className="flex pt-1 flex-1 justify-center mt-4">
                     <Button
                       onClick={verifyOTPFunction}
@@ -291,22 +282,7 @@ const RoootLayouts = () => {
                     </Button>
                   </Box>
                   <Box>
-                    <ResendOTP
-                      onResendClick={function () { }}
-                      className="flex"
-                      style={{
-                        color: baseColor.primary,
-                        fontSize: "1rem",
-                        fontWeight: "500",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                      maxTime={12000}
-                      onTimerComplete={() => setonclickGenerateOTPbtn(false)}
-                      timeInterval={1000}
-                      renderButton={renderButton}
-                      renderTime={renderTime}
-                    />
+                    {/* RESEND OTP FUNCTION HERE */}
                   </Box>
                 </Box>
               ) : (
@@ -326,8 +302,8 @@ const RoootLayouts = () => {
                       <PhoneInput
                         country={"in"}
                         onlyCountries={["in"]}
-                        autoFormat
-                        disableDropdown
+                        autoFormat={true}
+                        disableDropdown={true}
                         // alwaysDefaultMask={true}
                         // containerStyle={{ height: 50 }}
                         inputStyle={{
