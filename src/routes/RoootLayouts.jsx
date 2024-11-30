@@ -1,48 +1,39 @@
 // @ts-nocheck
 import React, { useCallback, useState, memo, useEffect } from "react";
 import {
-  AspectRatio,
   Box,
   Button,
   CircularProgress,
   Input,
   Typography,
 } from "@mui/joy";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  baseColor,
   errorNofity,
-  isValidMobileNumber,
   isValidOTPMobileNumber,
   sanitizeInput,
-  screenHeight,
   succesNofity,
   warningNofity,
 } from "../Constant/Constant";
-import icons from "../assets/icons.webp";
-import icon1 from "../assets/medivault01.png";
-import icon2 from "../assets/medivault02.png";
-import icon3 from "../assets/medivault03.png";
-import icon4 from "../assets/medivault04.png";
 
 // @ts-ignore
-import OTPInput, { ResendOTP } from "otp-input-react";
 import OtpInput from 'react-otp-input';
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import axios from "axios";
 import axiosApi from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
 
-import bgImage1 from "../assets/images/Designer.png";
-import bgImage2 from "../assets/images/Designer1.png";
-import bgImage3 from "../assets/images/Designer2.png";
-import ScreenCheck from "../Components/ScreenCheck";
 import useAuth from "../hooks/useAuth";
 import { socket } from "../ws/socket";
+
+import { User, KeyBack } from 'iconoir-react'
+import Logo from "../assets/images/logo.png"
+
+
+
 
 const RoootLayouts = () => {
   // import functions
@@ -174,384 +165,322 @@ const RoootLayouts = () => {
     setloginwithUserCred(false);
   }, []);
 
-
-  const renderTime = () => {
-    return <span></span>;
-  };
+  const [top, setTop] = useState(85);
+  const handleChange = () => {
+    setTop((prev) => prev === 85 ? 15 : 85);
+  }
 
   return (
-    <Box className="flex flex-col justify-center items-center w-full h-screen bg-baseBlue/10">
+    <Box className="flex flex-col justify-center items-center w-full h-screen "
+      sx={{ backgroundColor: 'rgba(253, 253, 253)' }}
+    >
       <ToastContainer />
       <CustomBackDrop setOpen={setOpen} open={open} />
-      <ScreenCheck />
+      {/* <ScreenCheck /> */}
       <Box
-        className="flex drop-shadow-md shadow-md  absolute"
         sx={{
-          width: {
-            xs: "clamp(95vw , 50vw , 95vw)",
-            sm: "clamp(95vw , 50vw , 95vw)",
-            md: "clamp(80vw , 50vw , 70vw)",
-            lg: "clamp(80vw , 50vw , 70vw)",
-            xl: "clamp(80vw , 50vw , 70vw)",
-          },
-          height: "clamp(90vh , 80vh , 80vh)",
-          borderRadius: "10px",
-          overflow: "hidden",
-          flexDirection: { xs: "column", sm: "column", md: "row" },
+          position: "relative",
+          minHeight: '55%',
+          maxWidth: "470px",
+          width: "100%",
+          borderRadius: '30px',
+          overflow: 'hidden',
+          outline: 'none',
+          bgcolor: 'rgba(0,125,196,0.6)',
+          boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+          border: '1px solid rgba(0,125,196,1)',
         }}
       >
         <Box
-          className="flex flex-1 min-w-[60%] min-h-[60%] relative left-0 z-[1] justify-center items-center bg-slate-50"
           sx={{
-            borderRadius: 30,
-            borderBottomRightRadius: 30,
-            transform: {
-              xs: "scaleY(1.4)",
-              sm: "scaleY(1.4)",
-              md: "scaleX(1.15)",
-              lg: "scaleX(1.15)",
-              xl: "scaleX(1.15)",
-            },
+            minHeight: '100%',
+            maxWidth: "470px",
+            width: "100%",
+            bgcolor: 'rgba(0,125,196,0.6)',
+            borderRadius: '30px 30px 30px 30px',
+            boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+            overflow: 'hidden',
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
           }}
         >
-          <Box className="flex flex-1 flex-col justify-center items-center bg-slate-50">
-            <Box className="flex h-auto mb-1 justify-center">
-              <img
-                alt="icons"
-                src={icon4}
-                className="w-15 sm:w-18 md:w-25 lg:w-50 h-32"
-              />
-            </Box>
-
-            {loginwithUserCred === false ? (
-              onclickGenerateOTPbtn ? (
-                // {/* OTP Verification form start here */}
-                <Box className="flex flex-col justify-center ">
-                  <Typography
-                    level="body-sm"
-                    className="text-green-900"
-                    sx={{
-                      color: "rgba(var(--font-darkGrey), 0.8)",
-                      textAlign: "center",
-                      pb: 1,
-                    }}
-                  >
-                    Verify your Phone number
-                  </Typography>
-                  <OtpInput
-                    value={OTP}
-                    onChange={setOTP}
-                    numInputs={6}
-                    renderInput={(props) => <input {...props} />}
-                    containerStyle="flex items-center justify-center gap-2"
-                    inputStyle="!mr-0 py-[0.6rem] !w-[2.4rem] rounded-lg 
-                    outline-1 outline-[#53b6e7] text-[#001C30]  text-xl outline-dashed"
-                  />
-                  {/* <OTPInput
-                    value={OTP}
-                    onChange={setOTP}
-                    autoFocus={true}
-                    OTPLength={6}
-                    otpType="number"
-                    disabled={false}
-                    secure={false}
-                    className="flex items-center justify-center gap-2"
-                    inputClassName="!mr-0 py-5 !w-[2.5rem] rounded-lg 
-                    outline-1 outline-[#53b6e7] text-[#001C30]  text-xl outline-dashed"
-                  /> */}
-                  <Box className="flex pt-1 flex-1 justify-center mt-4">
-                    <Button
-                      onClick={verifyOTPFunction}
-                      size="md"
-                      variant="outlined"
-                      // color="neutral"
-                      className="w-[17.5rem] h-10 "
-                      sx={{
-                        color: "#53b6e7",
-                        borderColor: "#53b6e7",
-                        borderRadius: 12,
-                        "&:hover": {
-                          color: "#fff",
-                          borderColor: "#53b6e7",
-                          backgroundColor: "#53b6e7",
-                          transition: "all 0.3s ease-in-out",
-                        },
-                      }}
-                    >
-                      Verify OTP
-                    </Button>
-                  </Box>
-                  <Box>
-                    {/* RESEND OTP FUNCTION HERE */}
-                  </Box>
-                </Box>
-              ) : (
-                // {/* OTP verification form end here */}
-                // {/* Phone Input start here */}
-                <Box className="flex flex-1 flex-col p-4">
-                  <Box className="flex flex-1 items-center flex-col  ">
-                    <Typography
-                      level="body-md"
-                      fontFamily="Roboto"
-                      className="text-lg  py-2 font-medium"
-                      sx={{ color: "rgba(var(--font-darkGrey), 0.8)" }}
-                    >
-                      Enter your credentials
-                    </Typography>
-                    <Box>
-                      <PhoneInput
-                        country={"in"}
-                        onlyCountries={["in"]}
-                        autoFormat={true}
-                        disableDropdown={true}
-                        // alwaysDefaultMask={true}
-                        // containerStyle={{ height: 50 }}
-                        inputStyle={{
-                          height: 50,
-                          width: 300,
-                          border: "2px solid rgba(var(--font-darkGrey), 0.8)",
-                          borderRadius: 10,
-                          opacity: 0.8,
-                        }}
-                        buttonStyle={{
-                          borderRadius: 10,
-                          height: 50,
-                          opacity: 0.8,
-                          overflow: "hidden",
-                          border: "2px solid rgba(var(--font-darkGrey), 0.8)",
-                          borderTopRightRadius: 0,
-                          borderBottomRightRadius: 0,
-                        }}
-                        value={mobileNumber}
-                        onChange={(phone) => setMobileNumber(phone)}
-                      />
-                    </Box>
-                    <Box
-                      className="flex mt-2 border border-[#53b6e7] drop-shadow-lg justify-center items-center"
-                      sx={{
-                        width: 300,
-                        height: 50,
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        "&:hover": {
-                          backgroundColor: "#53b6e7",
-                          opacity: 0.8,
-                          transition: "all 0.5s ease-in-out",
-                        },
-                        color: "white",
-                        backgroundColor: "#53b6e7",
-                        fontWeight: 500,
-                        fontSize: "0.9rem",
-                      }}
-                      onClick={generateOtp}
-                    >
-                      Generate OTP
-                    </Box>
-                  </Box>
-                  {loading && (
-                    <>
-                      <Box className="flex flex-1 justify-center items-center">
-                        <CircularProgress
-                          sx={{
-                            paddingX: "0.8rem",
-                            "--CircularProgress-size": "18px",
-                            "--CircularProgress-trackThickness": "1px",
-                            "--CircularProgress-progressThickness": "2px",
-                          }}
-                        />
-                        <div className="text-center font-semibold text-sm">
-                          validating login credential
-                        </div>
-                      </Box>
-                    </>
-                  )}
-                  <Box
-                    className="flex flex-1 justify-end items-end"
-                    sx={{ fontSize: "0.9rem" }}
-                  >
-                    <Box
-                      onClick={loginwithCredentials}
-                      sx={{
-                        cursor: "pointer",
-                        color: "#d84b9a",
-                        fontWeight: 600,
-                        ":hover": {
-                          color: "#d84b9a",
-                          opacity: 0.6,
-                          transition: "all 0.5s ease-in-out",
-                        },
-                      }}
-                    >
-                      login with user credentials
-                    </Box>
-                  </Box>
-                </Box>
-                // {/* Phone Input end here */}
-              )
-            ) : (
-              <Box
-                className="flex flex-col gap-2"
+          <Box className="h-20 p-4 flex justify-center items-center text-white">
+            <button onClick={handleChange}
+              style={{
+                fontFamily: 'var(--font-varient)',
+                color: 'white',
+                fontWeight: 600
+              }}
+            >sign in with otp</button>
+          </Box>
+          {onclickGenerateOTPbtn ? (
+            // {/* OTP Verification form start here */}
+            <Box className="flex flex-1 flex-col ">
+              <Box className="flex justify-center items-end" >
+                <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+                <Box className="flex float-start pb-2" sx={{ color: 'white', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+              </Box>
+              <Typography
+                level="body-sm"
+                className="text-green-900"
                 sx={{
-                  // backgroundColor: baseColor.secondary,
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  color: "rgba(255,255,255, 0.8)",
+                  textAlign: "center",
+                  pb: 1,
                 }}
               >
-                <Box className="flex justify-center w-[60%] flex-col">
-                  <Typography
-                    sx={{
-                      color: baseColor.primary,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      pl: 0.5,
+                Verify your Phone number
+              </Typography>
+              <OtpInput
+                value={OTP}
+                onChange={setOTP}
+                numInputs={6}
+                renderInput={(props) => <input {...props} />}
+                containerStyle="flex items-center justify-center gap-2"
+                inputStyle="!mr-0 py-[0.4rem] !w-[2.4rem] rounded-lg outline-1 outline-[#53b6e7] text-[#001C30] text-xl"
+              />
+              <Box className="flex pt-1 justify-center mt-4">
+                <Button
+                  onClick={verifyOTPFunction}
+                  size="md"
+                  variant="outlined"
+                  // color="neutral"
+                  className="w-[17.5rem] h-10"
+                  sx={{
+                    color: "white",
+                    borderColor: "#53b6e7",
+                    borderRadius: 12,
+                    "&:hover": {
+                      color: "#fff",
+                      borderColor: "#53b6e7",
+                      backgroundColor: "#53b6e7",
+                      transition: "all 0.3s ease-in-out",
+                    },
+                  }}
+                >
+                  Verify OTP
+                </Button>
+              </Box>
+              <Box>
+                {/* RESEND OTP FUNCTION HERE */}
+              </Box>
+            </Box>
+          ) : (
+            // {/* OTP verification form end here */}
+            <Box className="flex flex-1 flex-col p-4 items-center ">
+              <Box className="flex justify-center items-end" >
+                <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+                <Box className="flex float-start pb-2" sx={{ color: 'white', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+              </Box>
+              <Box className="flex items-center flex-col  ">
+                <Typography
+                  level="body-md"
+                  fontFamily="Roboto"
+                  sx={{ color: "white", fontFamily: 'var(--font-varient)' }}
+                >
+                  Enter your user credentials
+                </Typography>
+                <Box>
+                  <PhoneInput
+                    country={"in"}
+                    onlyCountries={["in"]}
+                    autoFormat={true}
+                    disableDropdown={true}
+                    inputStyle={{
+                      height: 50,
+                      width: 300,
+                      border: "1px solid rgba(0,125,196,1)",
+                      borderRadius: 10,
+                      opacity: 1,
                     }}
-                  >
-                    Mobile Number
-                  </Typography>
-                  <Input
-                    fullWidth
-                    type="number"
-                    sx={{
-                      "&::before": {
-                        border: "1.5px solid var(--Input-focusedHighlight)",
-                        transform: "scaleX(0)",
-                        left: "2.5px",
-                        right: "2.5px",
-                        bottom: 0,
-                        top: "unset",
-                        transition:
-                          "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
-                        borderRadius: 0,
-                        borderBottomLeftRadius: "64px 20px",
-                        borderBottomRightRadius: "64px 20px",
-                      },
-                      "&:focus-within::before": {
-                        transform: "scaleX(1)",
-                      },
+                    buttonStyle={{
+                      borderRadius: 10,
+                      height: 50,
+                      opacity: 0.8,
+                      overflow: "hidden",
+                      border: "1px solid rgba(0,125,196,1)",
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
                     }}
+                    value={mobileNumber}
+                    onChange={(phone) => setMobileNumber(phone)}
                   />
-                </Box>
-                <Box className="flex flex-col justify-center w-[60%]">
-                  <Typography
-                    sx={{
-                      color: baseColor.primary,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      pl: 0.5,
-                    }}
-                  >
-                    Password
-                  </Typography>
-                  <Input
-                    type="password"
-                    fullWidth
-                    sx={{
-                      "&::before": {
-                        border: "1.5px solid var(--Input-focusedHighlight)",
-                        transform: "scaleX(0)",
-                        left: "2.5px",
-                        right: "2.5px",
-                        bottom: 0,
-                        top: "unset",
-                        transition:
-                          "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
-                        borderRadius: 0,
-                        borderBottomLeftRadius: "64px 20px",
-                        borderBottomRightRadius: "64px 20px",
-                      },
-                      "&:focus-within::before": {
-                        transform: "scaleX(1)",
-                      },
-                    }}
-                  />
-                </Box>
-                <Box className="flex flex-col flex-1  items-end  w-[60%] ">
-                  <Box
-                    className="flex border  px-8 m-1 py-[0.1rem] rounded-[13px] drop-shadow-lg"
-                    sx={{
-                      backgroundColor: baseColor.primarylight,
-                      cursor: "pointer",
-                      ":hover": {
-                        backgroundColor: baseColor.ultralight,
-                        transition: "all 0.5s ease-in-out",
-                      },
-                    }}
-                  >
-                    <Typography
-                      level="body-md"
-                      fontWeight={600}
-                      sx={{
-                        color: baseColor.primaryfont,
-                        borderColor: baseColor.primary,
-                      }}
-                    >
-                      Login
-                    </Typography>
-                  </Box>
                 </Box>
                 <Box
-                  className="flex flex-1 w-[100%] justify-end pr-5"
-                  onClick={handleReturnToOTPLoginPage}
-                  sx={{}}
+                  className="flex mt-2 border drop-shadow-lg justify-center items-center"
+                  sx={{
+                    width: 300,
+                    height: 50,
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    color: "rgba(0,125,196,1)",
+                    backgroundColor: "#fff",
+                    fontWeight: 500,
+                    fontSize: "0.9rem",
+                  }}
+                  onClick={generateOtp}
                 >
-                  <Typography
-                    sx={{
-                      color: baseColor.primary,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      textAlign: "right",
-                      cursor: "pointer",
-                      ":hover": {
-                        color: baseColor.primarylight,
-                        transition: "all 0.5s ease-in-out",
-                      },
-                    }}
-                  >
-                    Login with OTP
-                  </Typography>
+                  Generate OTP
                 </Box>
               </Box>
-            )}
-          </Box>
+              {loading && (
+                <>
+                  <Box className="flex justify-center items-center">
+                    <CircularProgress
+                      sx={{
+                        paddingX: "0.8rem",
+                        "--CircularProgress-size": "18px",
+                        "--CircularProgress-trackThickness": "1px",
+                        "--CircularProgress-progressThickness": "2px",
+                      }}
+                    />
+                    <div className="text-center font-semibold text-sm " style={{ color: "rgba(255,255,255,0.8)" }}>
+                      validating login credential
+                    </div>
+                  </Box>
+                </>
+              )}
+            </Box>
+          )}
         </Box>
+        {/* USER CREDENTIALS BASED LOGIN MODAL */}
         <Box
-          className="flex flex-auto bg-transparent"
           sx={{
-            backgroundSize: "cover",
-            backgroundPosition: {
-              xs: "center",
-              sm: "center",
-              md: "right 0% bottom 50%",
-              lg: "right 0% bottom 50%",
-              xl: "right 0% bottom 50%",
-            },
-            backgroundRepeat: "no-repeat",
-            animation: "slider 15s ease infinite",
-            "@keyframes slider": {
-              "0%": {
-                backgroundImage: `url(${bgImage3})`,
-              },
-              "25%": {
-                backgroundImage: `url(${bgImage1})`,
-              },
-              "50%": {
-                backgroundImage: `url(${bgImage2})`,
-              },
-              "75%": {
-                backgroundImage: `url(${bgImage3})`,
-              },
-              "100%": {
-                backgroundImage: `url(${bgImage1})`,
-              },
-            },
+            top: `${top}%`,
+            position: 'absolute',
+            minHeight: '85%',
+            maxWidth: "470px",
+            width: "100%",
+            bgcolor: 'rgba(255,255,255)',
+            borderRadius: '30px 30px',
+            transition: 'top 0.5s ease-in-out',
+            boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+            overflow: 'hidden',
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
           }}
         >
-          {" "}
+          <Box
+            className="h-20 p-4 flex justify-center items-center text-white"
+          >
+            <button onClick={handleChange}
+              style={{
+                backgroundColor: 'white',
+                fontFamily: 'var(--font-varient)',
+                color: 'rgba(0,125,196,1)',
+                fontWeight: 600
+              }}
+            >sign in with credentials</button>
+          </Box>
+          <Box className="flex justify-center items-end" >
+            <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+            <Box className="flex float-start pb-2" sx={{ color: 'rgba(0,125,196,1)', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+          </Box>
+          <Box
+            className="flex flex-1 flex-col gap-1 px-14 "
+            sx={{ width: "100%", }}
+          >
+            <Box className="flex justify-center flex-col">
+              <Typography
+                sx={{
+                  color: 'rgba(0,125,196,0.6)',
+                  fontFamily: "var(--font-varient)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  pl: 0,
+                }}
+              >
+                User Name
+              </Typography>
+              <Input
+                fullWidth
+                startDecorator={<User color="rgba(216,75,154,1)" />}
+                type="text"
+                sx={{
+                  fontFamily: "var(--font-varient)",
+                  border: "1px solid rgba(0,125,196,0.6)",
+                  "&::before": {
+                    border: "0.5px solid rgba(216,75,154,0.6)",
+                    transform: "scaleX(0)",
+                    left: "2.5px",
+                    right: "2.5px",
+                    bottom: 0,
+                    top: "unset",
+                    transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                    borderRadius: 0,
+                    borderBottomLeftRadius: "64px 20px",
+                    borderBottomRightRadius: "64px 20px",
+                  },
+                  "&:focus-within::before": {
+                    transform: "scaleX(1)",
+                  },
+                }}
+              />
+            </Box>
+            <Box className="flex flex-col justify-center ">
+              <Typography
+                sx={{
+                  color: 'rgba(0,125,196,0.6)',
+                  fontFamily: "var(--font-varient)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                }}
+              >
+                Password
+              </Typography>
+              <Input
+                type="password"
+                startDecorator={<KeyBack color="rgba(216,75,154,1)" />}
+                fullWidth
+                sx={{
+                  border: "1px solid rgba(0,125,196,0.6)",
+                  "&::before": {
+                    border: "0.5px solid rgba(216,75,154,0.6)",
+                    transform: "scaleX(0)",
+                    left: "2.5px",
+                    right: "2.5px",
+                    bottom: 0,
+                    top: "unset",
+                    transition:
+                      "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                    borderRadius: 0,
+                    borderBottomLeftRadius: "64px 20px",
+                    borderBottomRightRadius: "64px 20px",
+                  },
+                  "&:focus-within::before": {
+                    transform: "scaleX(1)",
+                  },
+                }}
+              />
+            </Box>
+            <Box className="flex flex-col">
+              <Box
+                className="flex border rounded-[5px] py-2 my-1 items-center justify-center"
+                sx={{
+                  backgroundColor: 'rgba(0,125,196,0.6)',
+                  cursor: "pointer",
+                  border: "1px solid rgba(0,125,196,0.6)",
+                }}
+              >
+                <Typography
+                  level="body-md"
+                  fontWeight={600}
+                  sx={{
+                    color: "white",
+                    fontFamily: "var(--font-varient)",
+                    textAlign: "center",
+                  }}
+                >
+                  Login
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 export default memo(RoootLayouts);

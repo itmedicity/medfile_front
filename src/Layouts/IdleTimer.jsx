@@ -12,7 +12,7 @@ const IdleTimer = () => {
 
   const [state, setState] = useState('Active')
   const [count, setCount] = useState(0)
-  const [remaining, setRemaining] = useState("10:00")
+  const [remaining, setRemaining] = useState("00:00")
 
   const onIdle = useCallback(async (e) => {
     // WHEN THE IDLE TRIGGER IS FIRED LOG OUT FUNCTIONALITY START
@@ -84,7 +84,7 @@ const IdleTimer = () => {
     onIdle,
     onActive,
     // onAction,
-    timeout: process.env.NODE_ENV === 'production' ? process.env.REACT_APP_IDLE_TIMEOUT : 1000 * 60 * 1, // 10 minits
+    timeout: 1000 * 60 * 30, // 10 minits
     throttle: 500
   })
 

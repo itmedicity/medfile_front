@@ -14,7 +14,6 @@ import LogoutMoidal from "./LogoutMoidal";
 import IdleTimer from "./IdleTimer";
 
 const Header = ({ handleDrawerToggle, drawerWidth, dark, handleChangeDarkMode }) => {
-    console.log('render')
     return (
         <AppBar
             position="fixed"
