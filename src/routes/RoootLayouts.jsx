@@ -326,9 +326,10 @@ const RoootLayouts = () => {
               </Box>
               {loading && (
                 <>
-                  <Box className="flex justify-center items-center">
+                  <Box className="flex justify-center items-center mt-1">
                     <CircularProgress
                       sx={{
+                        color: "rgba(216,75,154,1)",
                         paddingX: "0.8rem",
                         "--CircularProgress-size": "18px",
                         "--CircularProgress-trackThickness": "1px",

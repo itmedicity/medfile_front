@@ -1,8 +1,6 @@
 import { Box, Typography } from '@mui/joy'
 import React, { memo } from 'react'
 import CustomSelect from './CustomSelect'
-import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import { baseColor } from '../Constant/Constant';
 import { PageEdit } from 'iconoir-react'
 
 

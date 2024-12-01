@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import useValidateToken from '../hooks/useValidateToken'
+import { Backdrop } from '@mui/material'
 
 const ProtectedRoute = () => {
 
@@ -13,26 +14,27 @@ const ProtectedRoute = () => {
     }, [])
 
     if (isLoading) {
-        return <div
-            className=' h-screen flex justify-center items-center bg-pink-100'
-            style={{}}
+        return <Backdrop
+            sx={{
+                zIndex: 1
+            }}
+            open={isLoading}
+            invisible
         >
             {
                 isLoading === true && isValid === true && <div>Loding....</div>
             }
-            {isLoading === true && isValid === false && <div>
-                <button
-                    style={{
-                        backgroundColor: "#1788ca",
-                        color: "#fff",
-                        padding: "10px 20px",
-                        borderRadius: "5px",
-                        border: "none",
-                        cursor: "pointer",
-                    }}
-                    onClick={handleReturnHome} >Return Home</button>
-            </div>}
-        </div>;
+            {isLoading === true && isValid === false && <button
+                style={{
+                    backgroundColor: "#1788ca",
+                    color: "#fff",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    border: "none",
+                    cursor: "pointer",
+                }}
+                onClick={handleReturnHome} >Return Home</button>}
+        </Backdrop>;
     }
 
     if (isLoading === true && isValid === false) {
