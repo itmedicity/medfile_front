@@ -31,8 +31,9 @@ const Settings = () => {
                         <Grid
                             size={{ xs: 12, sm: 12, md: 6, lg: 3, xl: 3 }}
                             key={idx} onClick={() => navigation(`/Home/${val.menuCodeName}`)} >
-                            <Box className="border-b-[0.2rem] border-gray-400 p-0 cursor-pointer hover:bg-slate-200 hover: " >
-                                <Typography level='body-sm' fontWeight={'md'} >
+                            <Box
+                                className="border-b-[0.2rem] border-iconprimary p-0 cursor-pointer hover:bg-slate-200" >
+                                <Typography level='body-sm' fontWeight={'md'} sx={{ fontFamily: 'var(--font-varient)', color: 'rgba(var(--font-primary-white))' }} >
                                     {val.menuName}
                                 </Typography>
                             </Box>

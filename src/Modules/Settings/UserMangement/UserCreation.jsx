@@ -3,19 +3,19 @@ import React from 'react'
 import { memo } from 'react'
 import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel'
-import { Box, Button, IconButton, Tooltip } from '@mui/joy'
-import { baseColor, errorNofity, isValidMobileNumber, sanitizeInput, screenWidth, succesNofity, validateEmail, warningNofity } from '../../../Constant/Constant'
+import { IconButton, Tooltip } from '@mui/joy'
+import { errorNofity, isValidMobileNumber, sanitizeInput, screenWidth, succesNofity, validateEmail, warningNofity } from '../../../Constant/Constant'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
 import { useNavigate } from 'react-router-dom'
-import { loginType, passwordValidity, userStatus } from '../../../Constant/Data'
+import { loginType, passwordValidity, signInLimit, userStatus } from '../../../Constant/Data'
 import { useState } from 'react'
 import { useCallback } from 'react'
 import axiosApi from '../../../Axios/Axios'
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import CloseIcon from '@mui/icons-material/Close';
+import QueueIcon from '@mui/icons-material/Queue';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 const UserCreation = () => {
     const navigation = useNavigate()
@@ -26,10 +26,11 @@ const UserCreation = () => {
         password: '',
         login_Type: 0,
         password_Validity: 0,
-        user_Status: 0
+        user_Status: 0,
+        signIn_Limit: 0
     })
 
-    const { name, mobile, email, password, login_Type, password_Validity, user_Status } = userManagemt;
+    const { name, mobile, email, password, login_Type, password_Validity, user_Status, signIn_Limit } = userManagemt;
 
     const handleChange = (e) => {
         setUserManagemt({ ...userManagemt, [e.target.name]: sanitizeInput(e.target.value) })
@@ -69,7 +70,12 @@ const UserCreation = () => {
         }
 
         if (Number(userManagemt.password_Validity) === 0 || userManagemt.password_Validity === '') {
-            warningNofity('Password Validity cannot be empty')
+            warningNofity('Select Maximum Password Age Limit')
+            return
+        }
+
+        if (Number(userManagemt.signIn_Limit) === 0 || userManagemt.signIn_Limit === '') {
+            warningNofity('Select Maximum Sign In Limit')
             return
         }
 
@@ -90,7 +96,8 @@ const UserCreation = () => {
             password: userManagemt.password,
             login_Type: Number(userManagemt.login_Type),
             password_Validity: Number(userManagemt.password_Validity),
-            user_Status: Number(userManagemt.user_Status)
+            user_Status: Number(userManagemt.user_Status),
+            signIn_Limit: Number(userManagemt.signIn_Limit)
         })
 
         if (postRegisterUser.status !== 200) {
@@ -114,7 +121,8 @@ const UserCreation = () => {
                     password: '',
                     login_Type: 0,
                     password_Validity: 0,
-                    user_Status: 0
+                    user_Status: 0,
+                    signIn_Limit: 0
                 })
             }
         }
@@ -156,11 +164,18 @@ const UserCreation = () => {
                     type='password'
                 />
                 <CustomSelectWithLabel
-                    labelName='Password Validity Days'
+                    labelName='Maximum Password Age Limit'
                     dataCollection={passwordValidity}
                     values={Number(password_Validity)}
                     handleChangeSelect={(e, val) => handleChange({ target: { name: 'password_Validity', value: val } })}
-                    placeholder={"Select Password Validity Days"}
+                    placeholder={"Select Maximum Password Age Limit"}
+                />
+                <CustomSelectWithLabel
+                    labelName='Number Of Sign In Per Days Limit'
+                    dataCollection={signInLimit}
+                    values={Number(signIn_Limit)}
+                    handleChangeSelect={(e, val) => handleChange({ target: { name: 'signIn_Limit', value: val } })}
+                    placeholder={"Select Number Of Sign In Per Days Limit"}
                 />
                 <CustomSelectWithLabel
                     labelName='Login User Type'
@@ -176,30 +191,57 @@ const UserCreation = () => {
                     handleChangeSelect={(e, val) => handleChange({ target: { name: 'user_Status', value: val } })}
                     placeholder={"Select User Status"}
                 />
+
                 <IconButton
                     variant='outlined'
-                    sx={{ mt: 1, mr: 1, fontWeight: 400 }}
+                    sx={{
+                        mt: 1, mr: 1,
+                        fontWeight: 400,
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
                     onClick={handleSubmitUserManagment}>
-                    <Tooltip title="Add User" arrow variant='soft' color='danger'>
-                        <GroupAddIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                    <Tooltip title="Click Here to Submit" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }} >
+                        <QueueIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                     </Tooltip>
                 </IconButton>
                 <IconButton
                     variant='outlined'
-                    sx={{ mt: 1, mr: 1, fontWeight: 400 }}
-                    onClick={() => { }}>
-                    <Tooltip title="User List" arrow variant='soft' color='danger'>
-                        <PersonSearchIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                    sx={{
+                        mt: 1, mr: 1, fontWeight: 400,
+                        backgroundColor: 'transparent',
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
+                // onClick={handleViewButtonFun}
+                >
+                    <Tooltip title="Click Here to View" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                        <SearchIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                     </Tooltip>
                 </IconButton>
                 <IconButton
                     variant='outlined'
-                    sx={{ mt: 1, mr: 1, fontWeight: 400 }}
-                    onClick={() => navigation(-1)}>
-                    <Tooltip title="Close" arrow variant='soft' color='danger'>
-                        <CloseIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                    sx={{
+                        mt: 1, mr: 1, fontWeight: 400,
+                        '&:hover': {
+                            borderColor: 'rgba(var(--icon-primary))',
+                            backgroundColor: 'transparent',
+                        }
+                    }}
+                    onClick={() => navigation(-1)}
+                >
+                    <Tooltip title="Back to Previous Page" arrow variant='outlined'
+                        sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                        <CloseIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                     </Tooltip>
                 </IconButton>
+
             </MasterPageLayout>
         </DefaultPageLayout>
     )

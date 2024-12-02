@@ -12,6 +12,7 @@ import { Box } from "@mui/joy";
 import EditDocUpload from "./EditDocUpload";
 
 const DocuementList = () => {
+
     const { isLoading, data, error } = useQuery({
         queryKey: ["getDocList"],
         queryFn: getDocumentList,
@@ -22,7 +23,7 @@ const DocuementList = () => {
 
     const columns = [
         { field: "actions", headerName: 'Actions', type: 'actions', width: 100, renderCell: (params) => (<EditDocUpload {...{ params }} />) },
-        { field: "doc_slno", headerName: "Slno", width: 70 },
+        { field: "doc_slno", headerName: "Slno", width: 70, },
         { field: "doc_id", headerName: "Doc ID", width: 70, type: "number" },
         { field: "doc_number", headerName: "Doc Number", width: 160 },
         { field: "doc_name", headerName: "Doc Name", width: 200 },
@@ -48,12 +49,25 @@ const DocuementList = () => {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                rowHeight={25}
+                rowHeight={35}
                 initialState={{ pagination: { paginationModel } }}
                 pageSizeOptions={[25, 50, 75, 100]}
                 columnHeaderHeight={35}
                 // checkboxSelection
-                sx={{ display: 'flex', border: 1, borderColor: 'grey.400' }}
+                sx={{
+                    display: 'flex',
+                    border: 0.5,
+                    borderColor: 'rgba(var(--border-primary))',
+                    color: 'rgba(var(--font-primary-white))',
+                    '&.MuiDataGrid-root .MuiDataGrid-row--borderBottom': {
+                        backgroundColor: 'rgba(var(--font-darkGrey))',
+                        color: 'rgba(var(--font-primary-white))',
+                        // borderColor: 'red',
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        color: 'rgba(var(--color-white))',
+                    },
+                }}
             // onRowClick={(e) => console.log(e)}
             />
         </Box>

@@ -78,7 +78,7 @@ const SubTypeMaster = () => {
 
     return (
         <DefaultPageLayout label={'Sub Type Master'} >
-            <MasterPageLayout>
+            <MasterPageLayout style={{}}>
                 <CustomInputWithLabel
                     handleInputChange={(e) => handleChange({ target: { name: 'subTypeName', value: e.target.value } })}
                     values={subTypeName}

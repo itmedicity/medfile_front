@@ -6,7 +6,17 @@ const CustomTypo = ({ label, style }) => {
     return (
         <Typography
             level="body-sm"
-            sx={{ fontWeight: 200, textTransform: 'capitalize', opacity: 0.9, p: 0.5, ...style }}
+            // className="line-clamp-1"
+            sx={{
+                display: 'flex',
+                fontWeight: 200,
+                textTransform: 'capitalize',
+                p: 0.5,
+                ...style,
+                fontFamily: 'var(--font-varient)',
+                color: 'rgba(var(--font-primary-white),0.8)',
+
+            }}
         >
             {label?.toLowerCase()}
         </Typography>

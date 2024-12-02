@@ -3,10 +3,11 @@ import React, { memo } from "react";
 import CustomTypo from "../../../Components/CustomTypo";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DoDisturbOffOutlinedIcon from "@mui/icons-material/DoDisturbOffOutlined";
-import FileLink from "../../../assets/pdf.png";
+import FileLink from "../../../assets/images/pdfSvg2.svg";
 import { NAS_FOLDER } from "../../../Constant/Static";
 import { useState } from "react";
 import FileDisplayModal from "./FileDisplayModal";
+import { BinMinusIn, PageEdit } from 'iconoir-react'
 
 const FilleListCmp = ({ data }) => {
 
@@ -16,43 +17,67 @@ const FilleListCmp = ({ data }) => {
     const [openFile, setOpenFile] = useState(false)
 
     return (
-        <Box className="p-2 border rounded-md h-24 flex gap-1 flex-1 flex-row">
+        <Box className="p-1 border-[0.5px] rounded-md h-16 flex flex-1 flex-row mb-1 bg-bgcard border-borderprimary">
             <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} fileLink={NasFileLink} />
             <Box
-                className="flex w-20 border rounded-md items-center justify-center cursor-pointer hover:bg-slate-100 drop-shadow-md transition-all"
+                className="flex  
+                w-12 rounded-md items-center justify-center cursor-pointer 
+                hover:bg-baseWhite/85 
+                bg-baseWhite/60
+                drop-shadow-md"
                 onClick={() => setOpenFile(true)}
             >
                 <img
                     alt="upload image"
                     src={mimetype === "application/pdf" ? FileLink : NasFileLink}
-                    width={60}
-                    height={60}
-                    className="p-1 rounded-md object-contain"
+                    width={50}
+                    height={50}
+                    className="p-[0.290rem] rounded-md object-contain"
                 />
             </Box>
-            <Box className="flex flex-1 border rounded-md flex-col items-center justify-center">
+            <Box className="flex flex-auto rounded-md flex-col pl-2">
                 <CustomTypo
                     label={filename}
-                    style={{ fontSize: "1rem", paddingY: 0, textTransform: 'uppercase' }}
+                    style={{ fontSize: 'clamp(0.75rem, 0.9vw, 0.9rem)', paddingY: 0, }}
                 />
                 <CustomTypo
                     label={originalname}
-                    style={{ fontSize: "0.8rem", paddingY: 0, }}
+                    style={{
+                        fontSize: 'clamp(0.75rem, 0.9vw, 0.9rem)',
+                        paddingY: 0,
+                        fontWight: 900,
+                    }}
                 />
                 <CustomTypo
                     label={doc_number}
-                    style={{ fontSize: "0.8rem", paddingY: 0, textTransform: 'uppercase', fontWight: 900 }}
+                    style={{
+                        fontSize: 'clamp(0.75rem, 0.9vw, 0.9rem)',
+                        paddingY: 0,
+                        fontWight: 900,
+                    }}
                 />
             </Box>
-            <Box className="flex w-24 justify-center items-center">
+            <Box className="flex w-24 justify-center items-center gap-1">
                 <Box>
-                    <IconButton color="neutral" onClick={() => { }}>
-                        <DoDisturbOffOutlinedIcon fontSize="large" />
+                    <IconButton onClick={() => { }} variant="outlined" size="sm"
+                        sx={{
+                            ':hover ': {
+                                bgcolor: 'transparent',
+                            }
+                        }}
+                    >
+                        <PageEdit fontSize="small" color="rgba(var(--icon-primary))" />
                     </IconButton>
                 </Box>
                 <Box>
-                    <IconButton color="neutral" onClick={() => { }}>
-                        <DeleteOutlinedIcon fontSize="large" />
+                    <IconButton onClick={() => { }} variant="outlined" size="sm"
+                        sx={{
+                            ':hover ': {
+                                bgcolor: 'transparent',
+                            }
+                        }}
+                    >
+                        <BinMinusIn fontSize="small" color="rgba(var(--icon-primary))" />
                     </IconButton>
                 </Box>
             </Box>
