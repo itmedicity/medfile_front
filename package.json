@@ -21,7 +21,7 @@
     "@toolpad/core": "^0.10.0",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
-    "dompurify": "^3.1.6",
+    "dompurify": "^3.2.2",
     "firebase": "^10.13.0",
     "iconoir-react": "^7.10.0",
     "otp-input-react": "^0.3.0",
