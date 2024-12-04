@@ -117,8 +117,6 @@ const UserCreation = () => {
             lastPasswordChangeDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
         }
 
-        console.log(postData)
-
         const postRegisterUser = await axiosApi.post('/user/insertUser', postData)
 
         if (postRegisterUser.status !== 200) {

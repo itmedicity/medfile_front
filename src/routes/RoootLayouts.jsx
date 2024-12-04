@@ -100,12 +100,12 @@ const RoootLayouts = () => {
       const postDataToVerifyOTP = {
         otp: sanitizedOTP,
         mobile: slicedMobileNMumber,
+        method: 2 // otp method
       };
 
       // after verify OTP page redirected to dashboard
 
-      axiosApi
-        .post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
+      axiosApi.post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
         .then((res) => {
           const { message, success, userInfo } = res.data;
 
@@ -116,12 +116,10 @@ const RoootLayouts = () => {
             warningNofity(message); // incorrected OTP
           } else if (success === 2) {
             succesNofity(message); // OTP Verified
-            const { user_slno, name, accessToken, login_type, tokenValidity } =
-              JSON.parse(userInfo);
+            const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
             const authData = {
               authNo: btoa(user_slno),
               authName: btoa(name),
-              // authToken: accessToken,
               authType: btoa(login_type),
               authTimeStamp: getTime(new Date(tokenValidity)),
             };
@@ -169,6 +167,73 @@ const RoootLayouts = () => {
   const handleChange = () => {
     setTop((prev) => prev === 85 ? 15 : 85);
   }
+
+
+  /*****USER BASED AUTHENTICATION*******/
+  const [userState, setUserState] = useState({
+    userName: "",
+    passWord: ""
+  });
+
+  const handleChangeUser = (e) => {
+    setUserState({
+      ...userState,
+      [e.target.name]: sanitizeInput(e.target.value)
+    })
+  }
+
+  const handleLoginButton = useCallback(async () => {
+    try {
+
+      const postData = {
+        userName: userState.userName,
+        passWord: userState.passWord,
+        method: 3 // user credentials auth method
+      }
+
+      const result = await axiosApi.post("/user/checkUserCres", postData, { withCredentials: true })
+      console.log(result.data)
+
+      const { message, success, userInfo } = result.data;
+
+      if (success === 0) {
+        errorNofity(message); // database error
+      } else if (success === 1) {
+        warningNofity(message); // incorrected OTP
+      } else if (success === 2) {
+        succesNofity(message); // OTP Verified
+        const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
+        const authData = {
+          authNo: btoa(user_slno),
+          authName: btoa(name),
+          authType: btoa(login_type),
+          authTimeStamp: getTime(new Date(tokenValidity)),
+        };
+
+        setAuth((prev) => {
+          return {
+            ...prev,
+            accessToken: authData.authToken,
+            userInfo: authData,
+          };
+        });
+        socket.emit("login", { user_slno });  // EMIT THE USER LOGIN EVENT TO SOCKET
+        localStorage.setItem("app_auth", JSON.stringify(authData));
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+          navigate("/Home/Dashboard", { replace: true });
+        }, 2000);
+      } else {
+        errorNofity(message);
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }, [userState])
 
   return (
     <Box className="flex flex-col justify-center items-center w-full h-screen "
@@ -399,6 +464,11 @@ const RoootLayouts = () => {
                 fullWidth
                 startDecorator={<User color="rgba(216,75,154,1)" />}
                 type="text"
+                name="userName"
+                value={userState.username}
+                onChange={handleChangeUser}
+                placeholder="enter your username"
+                variant="outlined"
                 sx={{
                   fontFamily: "var(--font-varient)",
                   border: "1px solid rgba(0,125,196,0.6)",
@@ -435,6 +505,10 @@ const RoootLayouts = () => {
                 type="password"
                 startDecorator={<KeyBack color="rgba(216,75,154,1)" />}
                 fullWidth
+                name="passWord"
+                value={userState.passWord}
+                onChange={handleChangeUser}
+                placeholder="enter your password"
                 sx={{
                   border: "1px solid rgba(0,125,196,0.6)",
                   "&::before": {
@@ -464,6 +538,7 @@ const RoootLayouts = () => {
                   cursor: "pointer",
                   border: "1px solid rgba(0,125,196,0.6)",
                 }}
+                onClick={handleLoginButton}
               >
                 <Typography
                   level="body-md"
