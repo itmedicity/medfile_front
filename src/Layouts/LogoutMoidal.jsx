@@ -6,7 +6,6 @@ import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import MenuButton from '@mui/joy/MenuButton';
 import Dropdown from '@mui/joy/Dropdown';
 import { Avatar, Box, Divider, Typography } from '@mui/joy';
-import { baseColor } from '../Constant/Constant';
 import person from '../assets/Individual.gif'
 import settings from '../assets/setting.gif'
 import exit from '../assets/exit.gif'
@@ -14,13 +13,14 @@ import { useNavigate } from 'react-router-dom';
 import { PeopleTag } from 'iconoir-react'
 import axiosApi from '../Axios/Axios';
 import { toast } from 'react-toastify';
-
+import { socket } from '../ws/socket';
 
 const LogoutMoidal = () => {
 
     const navigate = useNavigate()
     const handleLogout = useCallback(async () => {
         const userSlno = localStorage.getItem("app_auth");
+        socket.disconnect();
 
         if (userSlno) {
             const userId = atob(JSON.parse(userSlno)?.authNo);

@@ -11,6 +11,7 @@ import { AuthProvider } from "./Context/AuthProvider";
 import ErrorElement from "./Pages/ErrorElement";
 import { socket } from "./ws/socket";
 import { warningNofity } from "./Constant/Constant";
+import { toast } from "react-toastify";
 
 // Main Modules
 const Dashboard = lazy(() => import("./Modules/Dashboard/Dashboard.jsx"));
@@ -31,6 +32,10 @@ const InstituteTypeMaster = lazy(() => import("./Modules/Settings/InstituteTypeM
 const InstitutionMaster = lazy(() => import("./Modules/Settings/InstitutionMaster/InstitutionMaster.jsx"));
 const CourseType = lazy(() => import("./Modules/Settings/CourseType/CourseType.jsx"));
 const CourseMaster = lazy(() => import("./Modules/Settings/CourseMaster/CourseMaster.jsx"));
+const RackMaster = lazy(() => import("./Modules/Settings/RackMaster/RackMaster.jsx"));
+const LocationMaster = lazy(() => import("./Modules/Settings/LocationMaster/LocationMaster.jsx"));
+const CustodianMaster = lazy(() => import("./Modules/Settings/CustomdienMaster/CustodianMaster.jsx"));
+const CustodianDepartment = lazy(() => import("./Modules/Settings/CustodienDepartment/CustodianDepartment.jsx"));
 
 const routes = createBrowserRouter([
   {
@@ -60,6 +65,10 @@ const routes = createBrowserRouter([
           { path: "InstitutionMaster", element: <InstitutionMaster />, errorElement: <ErrorElement /> },
           { path: "CourseType", element: <CourseType />, errorElement: <ErrorElement /> },
           { path: "CourseMaster", element: <CourseMaster />, errorElement: <ErrorElement /> },
+          { path: "RackMaster", element: <RackMaster />, errorElement: <ErrorElement /> },
+          { path: "LocationMaster", element: <LocationMaster />, errorElement: <ErrorElement /> },
+          { path: "CustodianMaster", element: <CustodianMaster />, errorElement: <ErrorElement /> },
+          { path: "CustodianDepartment", element: <CustodianDepartment />, errorElement: <ErrorElement /> },
           { path: "Color", element: <Colors />, errorElement: <ErrorElement /> },
         ],
       },
@@ -82,10 +91,31 @@ function App() {
     socket.on("multiple-login", (message) => {
       console.log(message);
       localStorage.removeItem("app_auth");
-      warningNofity(message);
+      toast.error(
+        <div className='flex h-20 flex-col' >{message}</div>, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       // Redirect to login page
-      window.location.href = "/";
+      setTimeout(() => {
+        // warningNofity(message);
+        window.location.href = "/";
+      }, 3000); // Wait 3 seconds before redirecting
     });
+
+    // socket.on("disconnect", () => {
+    //   console.log("Disconnected");
+    // });
+
+    // return () => {
+    //   socket.disconnect();
+    // };
 
   }, [])
 

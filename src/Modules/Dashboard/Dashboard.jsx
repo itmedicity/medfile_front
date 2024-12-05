@@ -119,12 +119,6 @@ const Dashboard = () => {
     setSearchParm("");
   };
 
-  const hadleChek = async () => {
-    const result = await axiosApi.post(`/user/getRefershToken/${1}`)
-    console.log(result.data)
-  }
-
-  // console.log(allDocData)
 
   return (
     <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
@@ -221,9 +215,6 @@ const Dashboard = () => {
                 }}
               >
                 Clear
-              </Button>
-              <Button onClick={() => hadleChek()} >
-                test refresh
               </Button>
             </Box>
           </Box>

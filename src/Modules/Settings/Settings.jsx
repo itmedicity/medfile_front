@@ -21,6 +21,10 @@ const Settings = () => {
         { menuSlno: 800, menuName: 'Institution Master', menuCodeName: 'InstitutionMaster' },
         { menuSlno: 700, menuName: 'Course Type', menuCodeName: 'CourseType' },
         { menuSlno: 800, menuName: 'Course Name Master', menuCodeName: 'CourseMaster' },
+        { menuSlno: 900, menuName: 'Rack Master', menuCodeName: 'RackMaster' },
+        { menuSlno: 1000, menuName: 'Location Master', menuCodeName: 'LocationMaster' },
+        { menuSlno: 1100, menuName: 'Custodian Master', menuCodeName: 'CustodianMaster' },
+        { menuSlno: 1100, menuName: 'Custodian Department', menuCodeName: 'CustodianDepartment' },
     ]
 
     return (
