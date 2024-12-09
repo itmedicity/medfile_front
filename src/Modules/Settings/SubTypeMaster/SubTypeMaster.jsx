@@ -69,7 +69,7 @@ const SubTypeMaster = () => {
 
     const { isLoading, data, error } = useQuery({
         queryKey: ['docSubTypeMaster'],
-        queryFn: getSubTypeMasterList
+        queryFn: getSubTypeMasterList,
     })
 
     if (isLoading) return <CustomBackDropWithOutState message="Loading..." />
