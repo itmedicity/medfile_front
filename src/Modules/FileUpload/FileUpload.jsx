@@ -58,6 +58,9 @@ import FileListComponent from "./Document/FileListComponent";
 import Snackbar from "@mui/joy/Snackbar";
 import MarkUnreadChatAltOutlinedIcon from "@mui/icons-material/MarkUnreadChatAltOutlined";
 import { PageStar, TaskList, PageEdit } from 'iconoir-react'
+import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
+import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
+import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
 
 const DocuementList = lazy(() => import("./Document/DocuementList"));
 
@@ -105,6 +108,8 @@ const FileUpload = () => {
     docExpEnd: new Date(),
     isRequiredExp: false,
     isSecure: false,
+    docRack: 0,
+    docCustodian: 0
   });
 
   const {
@@ -124,13 +129,12 @@ const FileUpload = () => {
     docExpEnd,
     isRequiredExp,
     isSecure,
+    docRack,
+    docCustodian
   } = documentState;
 
   const handleDocumentState = (e) => {
-    setDocumentState({
-      ...documentState,
-      [e.target.name]: sanitizeInput(e.target.value),
-    });
+    setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
   };
 
   /******************
@@ -166,19 +170,6 @@ const FileUpload = () => {
       warningNofity("Upload failed. Maximum file count reached");
     }
   };
-
-  // const handleError = (error, file) => {
-  //   const errorMessages = {
-  //     1: () => `Upload failed. Invalid file type: ${file?.name || "unknown file"}`,
-  //     2: () => `Upload failed. File too large: ${file?.size || "unknown size"} bytes`,
-  //     3: () => `Upload failed. File too small: ${file?.size || "unknown size"} bytes`,
-  //     default: () => "Upload failed. Maximum file count reached",
-  //   };
-
-  //   const message = (errorMessages[error.code] || errorMessages.default)();
-  //   warningNofity(message);
-  // };
-
 
   /***********
    * FILE UPLOAD SECTION END
@@ -279,43 +270,6 @@ const FileUpload = () => {
         );
         return;
       }
-
-
-      // const validations = [
-      //   { condition: !documentState.docName.trim(), message: "Document Name cannot be empty" },
-      //   { condition: !documentState.docDes.trim(), message: "Document Description cannot be empty" },
-      //   { condition: Number(documentState.docType) === 0, message: "Document Type cannot be empty" },
-      //   { condition: Number(documentState.docSubType) === 0, message: "Document Sub Type cannot be empty" },
-      //   { condition: Number(documentState.institute) === 0, message: "Institute cannot be empty" },
-      //   { condition: Number(documentState.institute) === 2 && Number(documentState.course) === 0, message: "Course cannot be empty" },
-      //   { condition: Number(documentState.category) === 0, message: "Category cannot be empty" },
-      //   { condition: Number(documentState.subCategory) === 0, message: "Sub Category cannot be empty" },
-      //   { condition: Number(documentState.group) === 0, message: "Group cannot be empty" },
-      //   { condition: !isValid(new Date(documentState.docDate)), message: "Document Date cannot be empty" },
-      //   { condition: !isValid(new Date(documentState.docVersionDate)), message: "Document Version Date cannot be empty" },
-      //   {
-      //     condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpStart)),
-      //     message: "Document Expiry Start Date cannot be empty || Valid Date is required",
-      //   },
-      //   {
-      //     condition: Boolean(documentState.isRequiredExp) && !isValid(new Date(documentState.docExpEnd)),
-      //     message: "Document Expiry End Date cannot be empty || Valid Date is required",
-      //   },
-      //   {
-      //     condition:
-      //       Boolean(documentState.isRequiredExp) &&
-      //       new Date(documentState.docExpStart) > new Date(documentState.docExpEnd),
-      //     message: "Document Expiry Start Date cannot be greater than Expiry End Date",
-      //   },
-      // ];
-
-      // // Run validations
-      // for (const { condition, message } of validations) {
-      //   if (condition) {
-      //     warningNofity(message);
-      //     return;
-      //   }
-      // }
 
       const FormPostData = {
         docID: documentNumber,
@@ -629,10 +583,17 @@ const FileUpload = () => {
               </Typography>
 
               <Box
-                className="flex flex-col border-[0.1rem] rounded w-full py-1 sm:flex-col md:flex-col lg:flex-row xl:flex-row"
+                className="flex flex-col border-[0.1rem] rounded w-full py-1 sm:flex-col md:flex-col lg:flex-row xl:flex-row "
                 sx={{ borderColor: "rgba(var(--border-primary))" }}
               >
-                <Box className="flex flex-1 flex-col px-4">
+                <Box className="flex flex-col px-4 flex-1 ">
+                  <Box className="flex flex-1 items-center justify-between py-[0.199rem] px-2">
+                    <CustomCheckBoxWithLabel
+                      label="Is Legal Document"
+                      checkBoxValue={isRequiredExp}
+                      handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isRequiredExp", value: e.target.checked } })}
+                    />
+                  </Box>
                   <Box className="flex flex-1 flex-col">
                     <SelectDocTypeMaster
                       label={"Document Type Master"}
@@ -707,25 +668,50 @@ const FileUpload = () => {
                   <Box className="flex flex-1 flex-col">
                     <SelectGroupMaster
                       label={"Group Master"}
-                      handleChange={(e, element) =>
-                        handleDocumentState({
-                          target: { name: "group", value: element },
-                        })
-                      }
+                      handleChange={(e, element) => handleDocumentState({ target: { name: "group", value: element } })}
                       value={group}
                     />
                   </Box>
-                  <Box className="flex flex-1 flex-col pt-1">
-                    <Box className="flex flex-1 items-center justify-between py-[0.1rem]">
-                      <Box className="flex flex-1 items-center justify-between py-[0.1rem]">
+                  <Box className="flex flex-1 flex-col pt-2">
+                    <div style={{
+                      fontWeight: 700,
+                      fontFamily: "var(--font-varient)",
+                      opacity: 0.8,
+                      paddingLeft: "0.36rem",
+                      lineHeight: "1.0rem",
+                      fontSize: "0.81rem",
+                    }} >Document Location</div>
+                    <Divider />
+
+                    <Box className="flex flex-1 py-[0.4rem] gap-2" >
+                      {/* rack  name */}
+                      <SelectCmpRackMaster
+                        label={"Rack Name"}
+                        handleChange={() => { }}
+                        value={docRack}
+                      />
+                      {/* custodian name */}
+                      <SelectCmpCustodianMaster
+                        label={"Custodian Name"}
+                        handleChange={() => { }}
+                        value={docCustodian}
+                      />
+                    </Box>
+
+                    <Box className="flex flex-1 py-[0.1rem] flex-wrap gap-2 justify-center">
+                      <Box className="flex flex-col">
                         <Typography
-                          level="body-sm"
-                          sx={{ fontWeight: 200, opacity: 0.9, pl: 0.2 }}
+                          sx={{
+                            fontWeight: 600,
+                            fontFamily: "var(--font-varient)",
+                            opacity: 0.8,
+                            paddingLeft: "0.36rem",
+                            lineHeight: "1.0rem",
+                            fontSize: "0.81rem",
+                          }}
                         >
                           Document Date
                         </Typography>
-                      </Box>
-                      <Box className="flex flex-1 justify-end">
                         <CustomDateFeild
                           date={docDate}
                           setDate={(date) =>
@@ -735,59 +721,39 @@ const FileUpload = () => {
                           }
                         />
                       </Box>
-                    </Box>
-                    <Box className="flex flex-1 items-center justify-between py-[0.1rem]">
-                      <Box className="flex flex-1 items-center justify-between py-[0.1rem]">
+                      <Box className="flex flex-col ">
                         <Typography
                           level="body-sm"
-                          sx={{ fontWeight: 200, opacity: 0.9, pl: 0.2 }}
+                          sx={{
+                            fontWeight: 600,
+                            fontFamily: "var(--font-varient)",
+                            opacity: 0.8,
+                            paddingLeft: "0.36rem",
+                            lineHeight: "1.0rem",
+                            fontSize: "0.81rem",
+                          }}
                         >
                           Document Version Date
                         </Typography>
-                      </Box>
-                      <Box className="flex flex-1 justify-end ">
                         <CustomDateFeild
                           date={docVersionDate}
-                          setDate={(date) =>
-                            handleDocumentState({
-                              target: { name: "docVersionDate", value: date },
-                            })
-                          }
+                          setDate={(date) => handleDocumentState({ target: { name: "docVersionDate", value: date } })}
                         />
                       </Box>
                     </Box>
+
                     <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
-                      <Checkbox
+                      <CustomCheckBoxWithLabel
                         label="Is a Secure Document"
-                        variant="outlined"
-                        color="warning"
-                        checked={Boolean(isSecure)}
-                        onChange={(e) =>
-                          handleDocumentState({
-                            target: {
-                              name: "isSecure",
-                              value: e.target.checked,
-                            },
-                          })
-                        }
-                        sx={{ opacity: 0.9, fontSize: "0.9rem" }}
+                        checkBoxValue={isSecure}
+                        handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isSecure", value: e.target.checked } })}
                       />
                     </Box>
                     <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
-                      <Checkbox
+                      <CustomCheckBoxWithLabel
                         label="Is Validity Required for this Document"
-                        variant="outlined"
-                        color="danger"
-                        checked={Boolean(isRequiredExp)}
-                        onChange={(e) =>
-                          handleDocumentState({
-                            target: {
-                              name: "isRequiredExp",
-                              value: e.target.checked,
-                            },
-                          })
-                        }
-                        sx={{ opacity: 0.9, fontSize: "0.9rem" }}
+                        checkBoxValue={isRequiredExp}
+                        handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isRequiredExp", value: e.target.checked } })}
                       />
                     </Box>
                     {Boolean(isRequiredExp) === true && (
@@ -825,8 +791,10 @@ const FileUpload = () => {
                   {/* END SUBMIT BUTTON SECTION */}
                 </Box>
 
-                {/* COCUMENT UPLOAD SECTION */}
-                <Box className="flex flex-1 border p-1 border-[#8EADCD] rounded-lg flex-col">
+                {/* DOCUMENT UPLOAD SECTION */}
+                <Box className="flex flex-1 border-[0.1rem] p-1 rounded-lg flex-col "
+                  sx={{ borderColor: "rgba(var(--border-primary))" }}
+                >
                   <Files
                     className="files-dropzone"
                     onChange={handlefileChange}
@@ -838,21 +806,25 @@ const FileUpload = () => {
                     minFileSize={0}
                     clickable
                   >
-                    <Box className="flex min-h-28 max-h-36 h-32 rounded-xl mb-1 border flex-col justify-center items-center ">
-                      <CloudUploadIcon
-                        sx={{ fontSize: 50, color: "#8EADCD" }}
-                      />
+                    <Box className="flex min-h-16 max-h-16 h-16 rounded-md mb-1 border-[0.1rem] flex-row border-dashed cursor-pointer items-center"
+                      sx={{ borderColor: "rgba(var(--icon-primary))" }}
+                    >
+                      <Box className="flex items-center justify-center w-16" >
+                        <CloudUploadIcon
+                          sx={{ fontSize: 30, color: "rgba(var(--icon-primary))" }}
+                        />
+                      </Box>
                       <Typography
                         color="neutral"
-                        level="body-xs"
+                        level="body-md"
                         noWrap
-                        sx={{ textAlign: "center", color: "#8EADCD" }}
+                        sx={{ textAlign: "center", fontFamily: "var(--font-varient)", color: "rgba(var(--font-primary-white))" }}
                       >
                         Drag and Drop or Browse the file
                       </Typography>
                     </Box>
                   </Files>
-                  <Box className="flex h-72 flex-col rounded-xl border p-2">
+                  <Box className="flex flex-1 flex-col rounded-xl">
                     <Box className="flex flex-col gap-1 overflow-scroll shadow-inner rounded-md">
                       <Suspense fallback={<div>Loading...</div>}>
                         {files?.map((val, idx) => (

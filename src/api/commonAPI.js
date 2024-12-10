@@ -409,3 +409,33 @@ export const getCustodianMasterList = async () => {
     }
   });
 };
+
+export const getRackMasterData = async () => {
+  return await axiosApi.get("/rackMaster/selectCmpRackMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.rac_slno,
+            label: item.rack.toUpperCase()
+          };
+        });
+      }
+    });
+};
+
+export const getSelectCustodianDepartmentData = async () => {
+  return await axiosApi.get("/custodianMaster/selectCustodianMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.cust_slno,
+            label: item.cust_name.toUpperCase()
+          };
+        });
+      }
+    });
+};
