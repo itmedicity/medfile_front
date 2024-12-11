@@ -12,7 +12,7 @@ import {
     Sheet,
     Typography,
 } from "@mui/joy";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { memo } from "react";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useState } from "react";
@@ -48,6 +48,8 @@ const EditDocUpload = ({ params }) => {
     const docmntSlno = doc_slno; // ID FOR GETTIG THE DOC DETAILS
     const docmntID = doc_id
 
+    const [open, setOpen] = useState(false);
+
     //   SET STATE BASED ON THE DATA FETCH USING THE ID
     const [editDocumentState, seteditDocumentState] = useState({
         docNumber: 0,
@@ -73,36 +75,43 @@ const EditDocUpload = ({ params }) => {
         queryKey: ["getDocInfoByID", docmntSlno],
         queryFn: () => getDocInforByID(docmntSlno),
         enabled: !!docmntSlno,
+        staleTime: Infinity,
+        refetchOnWindowFocus: false
     });
+
+
+
     const docData = useMemo(() => data, [data]);
     //   console.log(docData);
 
     useEffect(() => {
-        seteditDocumentState({
-            docNumber: docData?.doc_number,
-            docName: docData?.doc_name,
-            docDes: docData?.doc_desc,
-            docType: docData?.doc_type,
-            docSubType: docData?.doc_sub_type,
-            institute: docData?.institute,
-            course: docData?.course,
-            category: docData?.category,
-            subCategory: docData?.sub_category,
-            group: docData?.group_mast,
-            docDate:
-                isValid(docData?.doc_date) &&
-                format(new Date(docData?.doc_date), "yyyy-MM-dd"),
-            docVersionDate: new Date(docData?.doc_ver_date),
-            docExpStart: new Date(docData?.doc_exp_start),
-            docExpEnd:
-                isValid(new Date(docData?.doc_date)) &&
-                format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
-            isRequiredExp: docData?.isRequiredExp === 1 ? true : false,
-            isSecure: docData?.isSecure === 1 ? true : false,
-        });
+        if (docData) {
+            seteditDocumentState((prev) =>
+            ({
+                ...prev,
+                docNumber: docData?.doc_number,
+                docName: docData?.doc_name,
+                docDes: docData?.doc_desc,
+                docType: docData?.doc_type,
+                docSubType: docData?.doc_sub_type,
+                institute: docData?.institute,
+                course: docData?.course,
+                category: docData?.category,
+                subCategory: docData?.sub_category,
+                group: docData?.group_mast,
+                docDate:
+                    isValid(docData?.doc_date) &&
+                    format(new Date(docData?.doc_date), "yyyy-MM-dd"),
+                docVersionDate: new Date(docData?.doc_ver_date),
+                docExpStart: new Date(docData?.doc_exp_start),
+                docExpEnd:
+                    isValid(new Date(docData?.doc_date)) &&
+                    format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
+                isRequiredExp: docData?.isRequiredExp === 1 ? true : false,
+                isSecure: docData?.isSecure === 1 ? true : false,
+            }));
+        }
     }, [docData]);
-
-    const [open, setOpen] = useState(false);
 
     const {
         docNumber,
@@ -133,18 +142,22 @@ const EditDocUpload = ({ params }) => {
         queryKey: ["getTheDocInfoDetl", docmntID],
         queryFn: () => getDocumentDetl(docmntID),
         enabled: !!docmntID,
+        staleTime: Infinity
     });
 
     const docDetlInfpArray = useMemo(() => docDetlArray, [docDetlArray]);
 
+    const handleModelOpen = () => {
+        setOpen(true);
+    };
+
+    if (!docData) return <div>Loading Document Details...</div>;
     return (
         <Box>
             <IconButton
                 variant="outlined"
                 size="small"
-                onClick={() => {
-                    setOpen(true);
-                }}
+                onClick={handleModelOpen}
             >
                 <BorderColorIcon sx={{ color: 'rgba(var(--color-pink),1)', fontSize: '1.2rem', m: 0.35 }} />
             </IconButton>

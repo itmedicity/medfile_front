@@ -16,10 +16,17 @@ const CustomSelectWithLabel = ({
       <Typography level='body-sm'
         sx={{
           fontWeight: 600,
-          opacity: 0.9,
-          pl: 0.2,
-          fontFamily: 'var(--font-varient)',
+          fontFamily: "var(--font-varient)",
+          opacity: 0.8,
+          paddingLeft: "0.36rem",
+          lineHeight: "1.0rem",
+          fontSize: "0.81rem",
           color: 'rgba(var(--font-primary-white))'
+          // fontWeight: 600,
+          // opacity: 0.9,
+          // pl: 0.2,
+          // fontFamily: 'var(--font-varient)',
+          // color: 'rgba(var(--font-primary-white))'
         }}
         fontSize='0.7rem'
       >{labelName}</Typography>

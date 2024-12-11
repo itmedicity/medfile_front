@@ -11,20 +11,44 @@ const CustomButtonDateFeild = ({ date, setDate, startLabel }) => {
     <Button
       startDecorator={
         <Typography
-          fontSize="small"
-          sx={{ justifyItems: "center", alignItems: "center" }}
+          level="body-sm"
+          sx={{
+            fontWeight: 600,
+            fontFamily: "var(--font-varient)",
+            opacity: 0.8,
+            paddingLeft: "0.36rem",
+            lineHeight: "1.0rem",
+            fontSize: "0.81rem",
+            color: 'rgba(var(--font-primary-white))'
+          }}
         >
           {startLabel}
         </Typography>
       }
-      endDecorator={<CalendarMonthIcon sx={{ cursor: "pointer" }} />}
       className={className}
       onClick={onClick}
       ref={ref}
       size="sm"
       variant="outlined"
       color="neutral"
-      fullWidth
+      sx={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        flex: 1,
+        cursor: "pointer",
+        "--Button-focusedThickness": "1px",
+        backgroundColor: 'rgba(var(--list-bg-color))',
+        borderColor: 'rgba(var(--list-border-color))',
+        color: "rgba(var(--list-font-color))",
+        ':hover': {
+          transition: 'none',
+          backgroundColor: 'rgba(var(--list-hover-bg-color))',
+          borderColor: 'rgba(var(--list-hover-border-color))',
+          color: 'rgba(var(--list-hover-font-color))',
+        },
+        borderWidth: '2.8px',
+        borderColor: 'rgba(var(--input-border-color))',
+      }}
     >
       {value}
     </Button>

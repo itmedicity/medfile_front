@@ -12,7 +12,7 @@ import {
 } from "@mui/joy";
 import Grid from "@mui/material/Grid2";
 import "./Document/Style.css";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   baseColor,
   customFontSize,
@@ -108,12 +108,12 @@ const FileUpload = () => {
     docExpEnd: new Date(),
     isRequiredExp: false,
     isSecure: false,
+    isLegalDoc: false,
     docRack: 0,
     docCustodian: 0
   });
 
   const {
-    docNumber,
     docName,
     docDes,
     docType,
@@ -129,17 +129,35 @@ const FileUpload = () => {
     docExpEnd,
     isRequiredExp,
     isSecure,
+    isLegalDoc,
     docRack,
     docCustodian
   } = documentState;
 
-  const handleDocumentState = (e) => {
+  const handleDocumentState = useCallback((e) => {
     setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
-  };
+  }, [documentState]);
 
-  /******************
-   * FILE UPLOAD SECTION START
-   */
+  useEffect(() => {
+    if (isLegalDoc) {
+      setDocumentState((prevState) => {
+        return {
+          ...prevState,
+          isSecure: true
+        }
+      });
+    } else {
+      setDocumentState((prevState) => {
+        return {
+          ...prevState,
+          isSecure: false
+        }
+      });
+    }
+  }, [isLegalDoc]);
+
+
+  /********* FILE UPLOAD SECTION START ********/
 
   const [files, setFiles] = useState([]);
   const handlefileChange = (newFiles) => {
@@ -158,7 +176,7 @@ const FileUpload = () => {
   };
   // console.log(files);
 
-  const handleError = (error, file) => {
+  const handleError = useCallback((error, file) => {
     const { code } = error;
     if (code === 1) {
       warningNofity("Upload failed. Invalid file type");
@@ -169,183 +187,173 @@ const FileUpload = () => {
     } else {
       warningNofity("Upload failed. Maximum file count reached");
     }
-  };
+  }, []);
 
   /***********
    * FILE UPLOAD SECTION END
    */
 
   // HANDLE SUBMIT
-  const handleDocInformationSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleDocInformationSubmit = useCallback(async (e) => {
+    e.preventDefault();
 
-      if (documentState.docName === "") {
-        warningNofity("Document Name cannot be empty");
-        return;
-      }
+    if (documentState.docName === "") {
+      warningNofity("Document Name cannot be empty");
+      return;
+    }
 
-      if (documentState.docDes === "") {
-        warningNofity("Document Description cannot be empty");
-        return;
-      }
+    if (documentState.docDes === "") {
+      warningNofity("Document Description cannot be empty");
+      return;
+    }
 
-      if (Number(documentState.docType) === 0) {
-        warningNofity("Document Type cannot be empty");
-        return;
-      }
+    if (Number(documentState.docType) === 0) {
+      warningNofity("Document Type cannot be empty");
+      return;
+    }
 
-      if (Number(documentState.docSubType) === 0) {
-        warningNofity("Document Sub Type cannot be empty");
-        return;
-      }
+    if (Number(documentState.docSubType) === 0) {
+      warningNofity("Document Sub Type cannot be empty");
+      return;
+    }
 
-      if (
-        Number(documentState.institute) === 2 &&
-        Number(documentState.institute) === 0
-      ) {
-        warningNofity("Institute cannot be empty");
-        return;
-      }
+    if (
+      Number(documentState.institute) === 2 &&
+      Number(documentState.institute) === 0
+    ) {
+      warningNofity("Institute cannot be empty");
+      return;
+    }
 
-      if (
-        Number(documentState.institute) === 2 &&
-        Number(documentState.course) === 0
-      ) {
-        warningNofity("Course cannot be empty");
-        return;
-      }
+    if (
+      Number(documentState.institute) === 2 &&
+      Number(documentState.course) === 0
+    ) {
+      warningNofity("Course cannot be empty");
+      return;
+    }
 
-      if (Number(documentState.category) === 0) {
-        warningNofity("Category cannot be empty");
-        return;
-      }
+    if (Number(documentState.category) === 0) {
+      warningNofity("Category cannot be empty");
+      return;
+    }
 
-      if (Number(documentState.subCategory) === 0) {
-        warningNofity("Sub Category cannot be empty");
-        return;
-      }
+    if (Number(documentState.subCategory) === 0) {
+      warningNofity("Sub Category cannot be empty");
+      return;
+    }
 
-      if (Number(documentState.group) === 0) {
-        warningNofity("Group cannot be empty");
-        return;
-      }
+    if (Number(documentState.group) === 0) {
+      warningNofity("Group cannot be empty");
+      return;
+    }
 
-      if (isValid(new Date(documentState.docDate)) === false) {
-        warningNofity("Document Date cannot be empty");
-        return;
-      }
+    if (isValid(new Date(documentState.docDate)) === false) {
+      warningNofity("Document Date cannot be empty");
+      return;
+    }
 
-      if (isValid(new Date(documentState.docVersionDate)) === false) {
-        warningNofity("Document Version Date cannot be empty");
-        return;
-      }
+    if (isValid(new Date(documentState.docVersionDate)) === false) {
+      warningNofity("Document Version Date cannot be empty");
+      return;
+    }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        isValid(new Date(documentState.docExpStart)) === false
-      ) {
-        warningNofity(
-          "Document Expiry Start Date cannot be empty || Valid Date is required"
-        );
-        return;
-      }
+    if (
+      Boolean(documentState.isRequiredExp) === true &&
+      isValid(new Date(documentState.docExpStart)) === false
+    ) {
+      warningNofity(
+        "Document Expiry Start Date cannot be empty || Valid Date is required"
+      );
+      return;
+    }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        isValid(new Date(documentState.docExpEnd)) === false
-      ) {
-        warningNofity(
-          "Document Expiry End Date cannot be empty || Valid Date is required"
-        );
-        return;
-      }
+    if (
+      Boolean(documentState.isRequiredExp) === true &&
+      isValid(new Date(documentState.docExpEnd)) === false
+    ) {
+      warningNofity(
+        "Document Expiry End Date cannot be empty || Valid Date is required"
+      );
+      return;
+    }
 
-      if (
-        Boolean(documentState.isRequiredExp) === true &&
-        new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
-      ) {
-        warningNofity(
-          "Document Expiry Start Date cannot be greater than Expiry End Date"
-        );
-        return;
-      }
+    if (
+      Boolean(documentState.isRequiredExp) === true &&
+      new Date(documentState.docExpStart) > new Date(documentState.docExpEnd)
+    ) {
+      warningNofity(
+        "Document Expiry Start Date cannot be greater than Expiry End Date"
+      );
+      return;
+    }
 
-      const FormPostData = {
-        docID: documentNumber,
-        docNumber: custDocNumber,
-        docName: documentState.docName.trim(),
-        docDes: documentState.docDes.trim(),
-        docType: Number(documentState.docType),
-        docSubType: Number(documentState.docSubType),
-        institute: Number(documentState.institute),
-        course: Number(documentState.course),
-        category: Number(documentState.category),
-        subCategory: Number(documentState.subCategory),
-        group: Number(documentState.group),
-        docDate: format(new Date(documentState.docDate), "yyyy-MM-dd HH:mm"),
-        docVersionDate: format(
-          new Date(documentState.docVersionDate),
-          "yyyy-MM-dd HH:mm"
-        ),
-        docExpStart: format(new Date(documentState.docExpStart), "yyyy-MM-dd"),
-        docExpEnd: format(new Date(documentState.docExpEnd), "yyyy-MM-dd"),
-        isRequiredExp: Boolean(documentState.isRequiredExp) === true ? 1 : 0,
-        isSecure: Boolean(documentState.isSecure) === true ? 1 : 0,
-      };
+    const FormPostData = {
+      docID: documentNumber,
+      docNumber: custDocNumber,
+      docName: documentState.docName.trim(),
+      docDes: documentState.docDes.trim(),
+      docType: Number(documentState.docType),
+      docSubType: Number(documentState.docSubType),
+      institute: Number(documentState.institute),
+      course: Number(documentState.course),
+      category: Number(documentState.category),
+      subCategory: Number(documentState.subCategory),
+      group: Number(documentState.group),
+      docDate: format(new Date(documentState.docDate), "yyyy-MM-dd HH:mm"),
+      docVersionDate: format(new Date(documentState.docVersionDate), "yyyy-MM-dd HH:mm"),
+      docExpStart: format(new Date(documentState.docExpStart), "yyyy-MM-dd"),
+      docExpEnd: format(new Date(documentState.docExpEnd), "yyyy-MM-dd"),
+      isRequiredExp: Boolean(documentState.isRequiredExp) === true ? 1 : 0,
+      isSecure: Boolean(documentState.isSecure) === true ? 1 : 0,
+      isLegalDoc: Boolean(documentState.isLegalDoc) === true ? 1 : 0,
+      docRack: Number(documentState.docRack),
+      docCustodian: Number(documentState.docCustodian),
+    };
 
-      const formData = new FormData();
+    const formData = new FormData();
 
-      formData.append("postData", JSON.stringify(FormPostData));
-      files.forEach((file) => {
-        formData.append(
-          "file",
-          new Blob([file], { type: file.type }),
-          file.name || "file"
-        );
-      });
-      // console.log(files)
-      // formData.append('file', files);
-      // console.log(FormPostData)
+    formData.append("postData", JSON.stringify(FormPostData));
+    files.forEach((file) => {
+      formData.append("file", new Blob([file], { type: file.type }), file.name || "file");
+    });
 
-      try {
-        const response = await axiosApi.post(
-          "/docMaster/insertDocMaster",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        const { success, message } = await response.data;
-        if (success === 0) {
-          // setFiles([]);
-          // errorNofity(message);
-          setMessage(message);
-          setOpen(true);
-        } else if (success === 2) {
-          setMessage(message);
-          setOpen(true);
-          // warningNofity(message);
-        } else if (success === 1) {
-          setMessage(message);
-          setOpen(true);
-          // succesNofity(message);
-          queryClient.invalidateQueries(["getDocumentNumber", "getDocList"]);
-          resetForm()
-        } else {
-          setMessage(message);
-          setOpen(true);
-          // warningNofity(message);
+    formData.append('file', files);
+
+    try {
+      const response = await axiosApi.post("/docMaster/insertDocMaster", formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      } catch (error) {
-        setMessage("An error has occurred: " + error);
-        setOpen(true);
-        // errorNofity("An error has occurred: " + error);
+      );
+      const { success, message } = await response.data;
+      if (success === 0) {
         // setFiles([]);
+        // errorNofity(message);
+        setMessage(message);
+        setOpen(true);
+      } else if (success === 2) {
+        setMessage(message);
+        setOpen(true);
+        // warningNofity(message);
+      } else if (success === 1) {
+        setMessage(message);
+        setOpen(true);
+        // succesNofity(message);
+        queryClient.invalidateQueries(["getDocumentNumber", "getDocList"]);
+        resetForm()
+      } else {
+        setMessage(message);
+        setOpen(true);
+        // warningNofity(message);
       }
-    },
+    } catch (error) {
+      setMessage("An error has occurred: " + error);
+      setOpen(true);
+    }
+  },
     [documentState, documentNumber, custDocNumber, files, warningNofity, setMessage, setOpen, queryClient]
   );
 
@@ -367,6 +375,9 @@ const FileUpload = () => {
       docExpEnd: new Date(),
       isRequiredExp: false,
       isSecure: false,
+      isLegalDoc: false,
+      docRack: 0,
+      docCustodian: 0,
     });
     setFiles([]);
   };
@@ -530,7 +541,7 @@ const FileUpload = () => {
                       <Textarea
                         placeholder="Doccument Descriptions Type here..."
                         // startDecorator={<PageEdit width={25} height={25} color='rgba(var(--icon-primary))' className='iconColor' style={{ transition: 'none' }} />}
-                        minRows={1}
+                        minRows={2}
                         value={docDes}
                         onChange={(e) =>
                           handleDocumentState({
@@ -586,12 +597,12 @@ const FileUpload = () => {
                 className="flex flex-col border-[0.1rem] rounded w-full py-1 sm:flex-col md:flex-col lg:flex-row xl:flex-row "
                 sx={{ borderColor: "rgba(var(--border-primary))" }}
               >
-                <Box className="flex flex-col px-4 flex-1 ">
+                <Box className="flex flex-col px-10 flex-1 gap-1">
                   <Box className="flex flex-1 items-center justify-between py-[0.199rem] px-2">
                     <CustomCheckBoxWithLabel
                       label="Is Legal Document"
-                      checkBoxValue={isRequiredExp}
-                      handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isRequiredExp", value: e.target.checked } })}
+                      checkBoxValue={isLegalDoc}
+                      handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isLegalDoc", value: e.target.checked } })}
                     />
                   </Box>
                   <Box className="flex flex-1 flex-col">
@@ -645,11 +656,7 @@ const FileUpload = () => {
                   <Box className="flex flex-1 flex-col">
                     <SelectCmpCategoryNameList
                       label={"Category Name List"}
-                      handleChange={(e, element) =>
-                        handleDocumentState({
-                          target: { name: "category", value: element },
-                        })
-                      }
+                      handleChange={(e, element) => handleDocumentState({ target: { name: "category", value: element }, })}
                       value={category}
                     />
                   </Box>
@@ -672,6 +679,7 @@ const FileUpload = () => {
                       value={group}
                     />
                   </Box>
+                  {/* docuemtn location section start */}
                   <Box className="flex flex-1 flex-col pt-2">
                     <div style={{
                       fontWeight: 700,
@@ -680,6 +688,7 @@ const FileUpload = () => {
                       paddingLeft: "0.36rem",
                       lineHeight: "1.0rem",
                       fontSize: "0.81rem",
+                      color: 'rgba(var(--font-primary-white))'
                     }} >Document Location</div>
                     <Divider />
 
@@ -687,19 +696,19 @@ const FileUpload = () => {
                       {/* rack  name */}
                       <SelectCmpRackMaster
                         label={"Rack Name"}
-                        handleChange={() => { }}
+                        handleChange={(e, element) => handleDocumentState({ target: { name: "docRack", value: element } })}
                         value={docRack}
                       />
                       {/* custodian name */}
                       <SelectCmpCustodianMaster
                         label={"Custodian Name"}
-                        handleChange={() => { }}
+                        handleChange={(e, element) => handleDocumentState({ target: { name: "docCustodian", value: element } })}
                         value={docCustodian}
                       />
                     </Box>
 
-                    <Box className="flex flex-1 py-[0.1rem] flex-wrap gap-2 justify-center">
-                      <Box className="flex flex-col">
+                    <Box className="flex flex-1 py-[0.1rem] flex-wrap gap-2 justify-between">
+                      <Box className="flex flex-col flex-auto">
                         <Typography
                           sx={{
                             fontWeight: 600,
@@ -708,6 +717,7 @@ const FileUpload = () => {
                             paddingLeft: "0.36rem",
                             lineHeight: "1.0rem",
                             fontSize: "0.81rem",
+                            color: 'rgba(var(--font-primary-white))'
                           }}
                         >
                           Document Date
@@ -721,7 +731,7 @@ const FileUpload = () => {
                           }
                         />
                       </Box>
-                      <Box className="flex flex-col ">
+                      <Box className="flex flex-col flex-auto">
                         <Typography
                           level="body-sm"
                           sx={{
@@ -731,6 +741,7 @@ const FileUpload = () => {
                             paddingLeft: "0.36rem",
                             lineHeight: "1.0rem",
                             fontSize: "0.81rem",
+                            color: 'rgba(var(--font-primary-white))'
                           }}
                         >
                           Document Version Date
@@ -747,6 +758,7 @@ const FileUpload = () => {
                         label="Is a Secure Document"
                         checkBoxValue={isSecure}
                         handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isSecure", value: e.target.checked } })}
+                        disabled={Boolean(isLegalDoc)}
                       />
                     </Box>
                     <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
@@ -757,30 +769,25 @@ const FileUpload = () => {
                       />
                     </Box>
                     {Boolean(isRequiredExp) === true && (
-                      <Box className="flex flex-1 items-center py-[0.1rem]">
-                        <Box className="flex flex-1">
+                      <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
+                        <Box className="flex flex-auto">
                           <CustomButtonDateFeild
+                            startLabel={'From Date'}
                             date={docExpStart}
-                            setDate={(date) =>
-                              handleDocumentState({
-                                target: { name: "docExpStart", value: date },
-                              })
-                            }
+                            setDate={(date) => handleDocumentState({ target: { name: "docExpStart", value: date } })}
                           />
                         </Box>
-                        <Box className="flex flex-1">
+                        <Box className="flex flex-auto">
                           <CustomButtonDateFeild
+                            startLabel={'To Date'}
                             date={docExpEnd}
-                            setDate={(date) =>
-                              handleDocumentState({
-                                target: { name: "docExpEnd", value: date },
-                              })
-                            }
+                            setDate={(date) => handleDocumentState({ target: { name: "docExpEnd", value: date } })}
                           />
                         </Box>
                       </Box>
                     )}
                   </Box>
+
                   {/* SUBMIT BUTTON SECTION */}
                   <Box className="flex flex-1 flex-row py-2 justify-end">
                     <CommonMenuList
@@ -792,7 +799,7 @@ const FileUpload = () => {
                 </Box>
 
                 {/* DOCUMENT UPLOAD SECTION */}
-                <Box className="flex flex-1 border-[0.1rem] p-1 rounded-lg flex-col "
+                <Box className="flex flex-1 border-[0.1rem] p-2 rounded-lg flex-col mx-5"
                   sx={{ borderColor: "rgba(var(--border-primary))" }}
                 >
                   <Files
@@ -820,7 +827,7 @@ const FileUpload = () => {
                         noWrap
                         sx={{ textAlign: "center", fontFamily: "var(--font-varient)", color: "rgba(var(--font-primary-white))" }}
                       >
-                        Drag and Drop or Browse the file
+                        Drop files here
                       </Typography>
                     </Box>
                   </Files>
@@ -844,7 +851,7 @@ const FileUpload = () => {
               </Box>
             </Box>
           </TabPanel>
-          <TabPanel value="2" sx={{ p: 1 }}>
+          <TabPanel value="2" sx={{ p: 1, overflow: 'hidden' }}>
             <Suspense
               fallback={<CustomBackDropWithOutState message={"Loading..."} />}
             >

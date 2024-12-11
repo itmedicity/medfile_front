@@ -7,7 +7,6 @@ import { memo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 const SelectCmpRackMaster = ({ handleChange, value, label }) => {
-
     const { isLoading, data, error } = useQuery({
         queryKey: ['selectRackMasterData'],
         queryFn: getRackMasterData,

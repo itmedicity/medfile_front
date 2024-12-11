@@ -5,7 +5,8 @@ import { memo } from 'react'
 const CustomCheckBoxWithLabel = ({
     checkBoxValue,
     handleCheckBoxValue,
-    label
+    label,
+    disabled
 }) => {
     return (
         <Checkbox
@@ -19,6 +20,7 @@ const CustomCheckBoxWithLabel = ({
             size="lg"
             checked={Boolean(checkBoxValue)}
             onChange={handleCheckBoxValue}
+            disabled={disabled}
             sx={{ fontSize: "0.950rem" }}
         />
     )

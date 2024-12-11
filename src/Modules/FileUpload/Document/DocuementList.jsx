@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { memo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { getDocumentList } from "../../../api/commonAPI";
@@ -16,13 +16,18 @@ const DocuementList = () => {
     const { isLoading, data, error } = useQuery({
         queryKey: ["getDocList"],
         queryFn: getDocumentList,
+        refetchOnWindowFocus: false
     });
 
     if (isLoading) <CustomBackDropWithOutState message={"Loading..."} />;
     if (error) errorNofity(error);
 
-    const columns = [
-        { field: "actions", headerName: 'Actions', type: 'actions', width: 100, renderCell: (params) => (<EditDocUpload {...{ params }} />) },
+    const renderCmp = useCallback((params) => (<EditDocUpload {...{ params }} />), []);
+
+    // type: 'actions', width: 100,  renderCell: (params) => (<EditDocUpload {...{ params }} />) 
+
+    const columns = useMemo(() => [
+        { field: "actions", headerName: 'Actions', width: 100, type: 'actions', renderCell: renderCmp },
         { field: "doc_slno", headerName: "Slno", width: 70, },
         { field: "doc_id", headerName: "Doc ID", width: 70, type: "number" },
         { field: "doc_number", headerName: "Doc Number", width: 160 },
@@ -37,14 +42,14 @@ const DocuementList = () => {
         { field: "group_name", headerName: "Group", width: 200 },
         { field: "docDate", headerName: "Doc Date", width: 170, },
         { field: "docVersion", headerName: "Doc Version", width: 170 },
-    ];
+    ], []);
 
-    const rows = data
-
-    const paginationModel = { page: 0, pageSize: 25 };
+    const rows = useMemo(() => data, [data])
+    const pagination = { page: 0, pageSize: 25 };
+    const paginationModel = useMemo(() => pagination, [pagination]);
 
     return (
-        <Box sx={{ height: '80vh', overflow: 'hidden', width: '100%', maxWidth: '100vw' }}>
+        <Box sx={{ height: '80vh', overflow: 'hidden', width: '100%', maxWidth: '100vw', }}>
             <ToastContainer />
             <DataGrid
                 rows={rows}
