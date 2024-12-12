@@ -16,6 +16,13 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { NavArrowRight } from 'iconoir-react'
 import { useCallback } from "react";
 import { useMemo } from "react";
+import {
+    HomeAltSlimHoriz,
+    ShieldUpload,
+    PageSearch,
+    Settings,
+    DocMagnifyingGlass
+} from 'iconoir-react'
 
 const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
@@ -30,10 +37,11 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
     const drawerMenu = useMemo(() => {
         return [
-            { menu: "Dashboard", text: "/Home/Dashboard" },
-            { menu: "FileUpload", text: "/Home/FileUpload" },
-            { menu: "Advance Search", text: "/Home/AdvancedSearch" },
-            { menu: "Settings", text: "/Home/Settings" },
+            { menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { menu: "File Search", text: "/Home/FileSearch", icon: <DocMagnifyingGlass height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
         ]
     }, [])
 
@@ -104,10 +112,7 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                                     transform: "translateX(0)",
                                 }}
                             >
-                                <HomeOutlinedIcon
-                                    className="hoverClass"
-                                    sx={{ fontSize: "1.3rem", lineHeight: "1.4rem" }}
-                                />
+                                {val.icon}
                             </ListItemIcon>
                             <Typography
                                 noWrap

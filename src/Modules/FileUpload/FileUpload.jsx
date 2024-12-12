@@ -57,7 +57,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import FileListComponent from "./Document/FileListComponent";
 import Snackbar from "@mui/joy/Snackbar";
 import MarkUnreadChatAltOutlinedIcon from "@mui/icons-material/MarkUnreadChatAltOutlined";
-import { PageStar, TaskList, PageEdit } from 'iconoir-react'
+import { PageStar, TaskList, PrivacyPolicy } from 'iconoir-react'
 import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
 import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
@@ -447,10 +447,10 @@ const FileUpload = () => {
                 }}
               />
               <Tab
-                icon={<TaskList color='rgba(var(--color-white))' />}
+                icon={<PrivacyPolicy color='rgba(var(--color-white))' />}
                 // color="secondary"
                 iconPosition="start"
-                label="Document List"
+                label="Document Approval"
                 value="2"
                 sx={{
                   display: "flex",

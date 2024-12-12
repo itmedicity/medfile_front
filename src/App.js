@@ -36,6 +36,7 @@ const RackMaster = lazy(() => import("./Modules/Settings/RackMaster/RackMaster.j
 const LocationMaster = lazy(() => import("./Modules/Settings/LocationMaster/LocationMaster.jsx"));
 const CustodianMaster = lazy(() => import("./Modules/Settings/CustomdienMaster/CustodianMaster.jsx"));
 const CustodianDepartment = lazy(() => import("./Modules/Settings/CustodienDepartment/CustodianDepartment.jsx"));
+const FileApprovals = lazy(() => import("./Modules/FileApprovals/FileApprovals.jsx"));
 
 const routes = createBrowserRouter([
   {
@@ -51,10 +52,36 @@ const routes = createBrowserRouter([
         path: "/Home",
         element: <Home />,
         children: [
-          { path: "Dashboard", element: <Dashboard />, errorElement: <ErrorElement /> },
-          { path: "AdvancedSearch", element: <AdvancedSearch />, errorElement: <ErrorElement /> },
-          { path: "FileUpload", element: <FileUpload />, errorElement: <ErrorElement /> },
-          { path: "Settings", element: <Settings />, errorElement: <ErrorElement /> },
+          {
+            path: "Dashboard", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <Dashboard />
+              </Suspense>, errorElement: <ErrorElement />
+          },
+          {
+            path: "AdvancedSearch", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <AdvancedSearch />
+              </Suspense>, errorElement: <ErrorElement />
+          },
+          {
+            path: "FileUpload", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <FileUpload />
+              </Suspense>, errorElement: <ErrorElement />
+          },
+          {
+            path: "Settings", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <Settings />
+              </Suspense>, errorElement: <ErrorElement />
+          },
+          {
+            path: "FileSearch", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <FileApprovals />
+              </Suspense>, errorElement: <ErrorElement />
+          },
           { path: "UserManagement", element: <UserManagement />, errorElement: <ErrorElement /> },
           { path: "DocTypeMaster", element: <DocTypeMaster />, errorElement: <ErrorElement /> },
           { path: "SubTypeMaster", element: <SubTypeMaster />, errorElement: <ErrorElement /> },
@@ -122,15 +149,15 @@ function App() {
   useLayoutEffect(() => {
     document.body.classList.add("light");
   }, []);
-
+  {/* <CustomBackDropWithOutState message={"Loading..."} /> */ }
   return (
-    <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />}>
           <RouterProvider router={routes} />
-        </AuthProvider>
-      </QueryClientProvider>
-    </Suspense>
+        </Suspense>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

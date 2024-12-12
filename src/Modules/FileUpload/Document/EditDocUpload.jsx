@@ -41,6 +41,7 @@ import FilleListCmp from "./FilleListCmp";
 import { useQuery } from "@tanstack/react-query";
 import { getDocInforByID, getDocumentDetl } from "../../../api/commonAPI";
 import { format, isValid } from "date-fns";
+import { MultiplePages } from 'iconoir-react'
 
 const EditDocUpload = ({ params }) => {
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
@@ -71,12 +72,11 @@ const EditDocUpload = ({ params }) => {
     });
 
     //    GET THE DATA USING THE DOCUMENT ID USING THE REACT QERY
-    const { isLoading, data, error } = useQuery({
+    const { isLoading, data, error, refetch: refetchDocInfoByID } = useQuery({
         queryKey: ["getDocInfoByID", docmntSlno],
-        queryFn: () => getDocInforByID(docmntSlno),
-        enabled: !!docmntSlno,
+        queryFn: async () => await getDocInforByID(docmntSlno),
+        enabled: false,
         staleTime: Infinity,
-        refetchOnWindowFocus: false
     });
 
 
@@ -138,20 +138,23 @@ const EditDocUpload = ({ params }) => {
         isLoading: docDetlIsLoading,
         data: docDetlArray,
         error: docDetlError,
+        refetch: refetchDocDetl
     } = useQuery({
         queryKey: ["getTheDocInfoDetl", docmntID],
-        queryFn: () => getDocumentDetl(docmntID),
-        enabled: !!docmntID,
+        queryFn: async () => await getDocumentDetl(docmntID),
+        enabled: false,
         staleTime: Infinity
     });
 
     const docDetlInfpArray = useMemo(() => docDetlArray, [docDetlArray]);
 
-    const handleModelOpen = () => {
+    const handleModelOpen = async () => {
         setOpen(true);
+        await refetchDocDetl();
+        await refetchDocInfoByID();
     };
 
-    if (!docData) return <div>Loading Document Details...</div>;
+    // if (!docData) return <div>Loading Document Details...</div>;
     return (
         <Box>
             <IconButton
@@ -189,16 +192,15 @@ const EditDocUpload = ({ params }) => {
                     <ModalClose variant="outlined" sx={{ m: 0.5 }} />
                     <Typography
                         id="modal-title"
-                        level="body-md"
                         textColor="inherit"
-                        sx={{ fontWeight: "lg", mb: 1 }}
+                        sx={{ fontWeight: "md", mb: 1, fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }}
                     >
-                        Document Info
+                        Document Information and Approval Form
                     </Typography>
-                    <Box className="flex flex-1 flex-col rounded-md overflow-scroll w-full p-1">
+                    <Box className="flex flex-1 flex-col rounded-md overflow-scroll w-full p-1" sx={{ borderColor: "rgba(var(--border-primary))" }}>
                         <Grid container spacing={0.5} flexGrow={1} flexDirection={"row"}>
                             <Grid
-                                size={{ xs: 12, sm: 12, md: 7, lg: 6, xl: 6 }}
+                                size={{ xs: 12, sm: 12, md: 7, lg: 8, xl: 8 }}
                                 className="p-2 rounded-md"
                                 sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
@@ -207,9 +209,8 @@ const EditDocUpload = ({ params }) => {
                                         <Typography
                                             level="title-lg"
                                             textAlign="left"
-                                            textColor="neutral.700"
-                                            color="neutral"
-                                            endDecorator={<AssignmentOutlinedIcon />}
+                                            sx={{ fontWeight: 500, color: "rgba(var(--font-primary-white))", fontFamily: "var(--font-varient)" }}
+                                            startDecorator={<MultiplePages />}
                                         >
                                             {docName?.toUpperCase()}
                                         </Typography>
@@ -423,7 +424,7 @@ const EditDocUpload = ({ params }) => {
                                 {/* END */}
                             </Grid>
                             <Grid
-                                size={{ xs: 12, sm: 12, md: 7, lg: 6, xl: 6 }}
+                                size={{ xs: 12, sm: 12, md: 5, lg: 4, xl: 4 }}
                                 gap={1}
                                 className="p-2 rounded-md"
                                 sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
@@ -436,7 +437,7 @@ const EditDocUpload = ({ params }) => {
                     </Box>
                 </ModalDialog>
             </Modal>
-        </Box>
+        </Box >
     );
 };
 

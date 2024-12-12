@@ -6,19 +6,22 @@ import { Typography } from '@mui/joy';
 const CustomBackDropWithOutState = ({ message }) => {
     return (
         <Backdrop
-            // sx={(theme) => ({ zIndex: theme.zIndex.drawer + 1, backgroundColor: 'transparent', })}
             sx={{
-                zIndex: 1
+                zIndex: 1,
+                bgcolor: 'transparent',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
             }}
             open={true}
             invisible
-        // onClick={handleClose}
-        // className='flex flex-col justify-center items-center'
         >
-            {/* <Typography level="body-xs" className="p-5" sx={{ color: 'rgba(216,75,154,1)' }} >{message}</Typography> */}
             <CircularProgress sx={{ color: 'rgba(216,75,154,1)' }} />
+            <Typography sx={{ color: 'rgba(216,75,154,1)' }}>{message}</Typography>
         </Backdrop>
     )
 }
 
 export default memo(CustomBackDropWithOutState)
+
