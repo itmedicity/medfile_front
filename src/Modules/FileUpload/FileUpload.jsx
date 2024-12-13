@@ -67,6 +67,8 @@ const DocuementList = lazy(() => import("./Document/DocuementList"));
 const FileUpload = () => {
   // const [docType, setDocType] = useState(0)
   const queryClient = useQueryClient();
+  const userData = localStorage.getItem("app_auth");
+  const user = atob(JSON.parse(userData)?.authNo);
 
   // GET UNIQUE DOCUMENT NUMBER
   const {
@@ -103,6 +105,7 @@ const FileUpload = () => {
     subCategory: 0,
     group: 0,
     docDate: new Date(),
+    docVersion: "1.0.0",
     docVersionDate: new Date(),
     docExpStart: new Date(),
     docExpEnd: new Date(),
@@ -110,7 +113,8 @@ const FileUpload = () => {
     isSecure: false,
     isLegalDoc: false,
     docRack: 0,
-    docCustodian: 0
+    docCustodian: 0,
+
   });
 
   const {
@@ -301,6 +305,7 @@ const FileUpload = () => {
       subCategory: Number(documentState.subCategory),
       group: Number(documentState.group),
       docDate: format(new Date(documentState.docDate), "yyyy-MM-dd HH:mm"),
+      docVersion: "1.0.0",
       docVersionDate: format(new Date(documentState.docVersionDate), "yyyy-MM-dd HH:mm"),
       docExpStart: format(new Date(documentState.docExpStart), "yyyy-MM-dd"),
       docExpEnd: format(new Date(documentState.docExpEnd), "yyyy-MM-dd"),
@@ -309,6 +314,8 @@ const FileUpload = () => {
       isLegalDoc: Boolean(documentState.isLegalDoc) === true ? 1 : 0,
       docRack: Number(documentState.docRack),
       docCustodian: Number(documentState.docCustodian),
+      userID: user,
+      docUpload: format(new Date(), "yyyy-MM-dd HH:mm")
     };
 
     const formData = new FormData();

@@ -32,6 +32,7 @@ const DocuementList = () => {
         { field: "doc_id", headerName: "Doc ID", width: 70, type: "number" },
         { field: "doc_number", headerName: "Doc Number", width: 160 },
         { field: "doc_name", headerName: "Doc Name", width: 200 },
+        { field: "docVer", headerName: "Version", width: 80 },
         { field: "doc_desc", headerName: "Doc Description", width: 200 },
         { field: "doc_type_master_name", headerName: "Do Type", width: 300 },
         { field: "doc_sub_type_name", headerName: "Doc Sub Type", width: 250 },

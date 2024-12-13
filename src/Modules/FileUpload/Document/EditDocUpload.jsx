@@ -41,7 +41,9 @@ import FilleListCmp from "./FilleListCmp";
 import { useQuery } from "@tanstack/react-query";
 import { getDocInforByID, getDocumentDetl } from "../../../api/commonAPI";
 import { format, isValid } from "date-fns";
-import { MultiplePages } from 'iconoir-react'
+import { MultiplePages, MenuScale } from 'iconoir-react'
+import CustomTypoHeader from "../Components/CustomTypoHeader";
+import CustomTypoPara from "../Components/CustomTypoPara";
 
 const EditDocUpload = ({ params }) => {
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
@@ -63,10 +65,10 @@ const EditDocUpload = ({ params }) => {
         category: 0,
         subCategory: 0,
         group: 0,
-        docDate: new Date(),
-        docVersionDate: new Date(),
-        docExpStart: new Date(),
-        docExpEnd: new Date(),
+        docDate: format(new Date(), "yyyy-MM-dd HH:mm"),
+        docVersionDate: format(new Date(), "yyyy-MM-dd HH:mm"),
+        docExpStart: format(new Date(), "yyyy-MM-dd HH:mm"),
+        docExpEnd: format(new Date(), "yyyy-MM-dd HH:mm"),
         isRequiredExp: false,
         isSecure: false,
     });
@@ -82,7 +84,7 @@ const EditDocUpload = ({ params }) => {
 
 
     const docData = useMemo(() => data, [data]);
-    //   console.log(docData);
+    console.log(docData);
 
     useEffect(() => {
         if (docData) {
@@ -99,14 +101,10 @@ const EditDocUpload = ({ params }) => {
                 category: docData?.category,
                 subCategory: docData?.sub_category,
                 group: docData?.group_mast,
-                docDate:
-                    isValid(docData?.doc_date) &&
-                    format(new Date(docData?.doc_date), "yyyy-MM-dd"),
+                docDate: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "yyyy-MM-dd HH:mm"),
                 docVersionDate: new Date(docData?.doc_ver_date),
                 docExpStart: new Date(docData?.doc_exp_start),
-                docExpEnd:
-                    isValid(new Date(docData?.doc_date)) &&
-                    format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
+                docExpEnd: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
                 isRequiredExp: docData?.isRequiredExp === 1 ? true : false,
                 isSecure: docData?.isSecure === 1 ? true : false,
             }));
@@ -131,6 +129,7 @@ const EditDocUpload = ({ params }) => {
         isRequiredExp,
         isSecure,
     } = editDocumentState;
+    console.log(editDocumentState)
 
     // GET THE DOCUEMNT DETAILS
 
@@ -206,64 +205,18 @@ const EditDocUpload = ({ params }) => {
                             >
                                 <Box className="p-3">
                                     <Box className="flex justify-between">
-                                        <Typography
-                                            level="title-lg"
-                                            textAlign="left"
-                                            sx={{ fontWeight: 500, color: "rgba(var(--font-primary-white))", fontFamily: "var(--font-varient)" }}
-                                            startDecorator={<MultiplePages />}
-                                        >
-                                            {docName?.toUpperCase()}
-                                        </Typography>
-                                        <SecurityOutlinedIcon
-                                            color={isSecure === 1 ? "error" : "success"}
+                                        <CustomTypoHeader startIcon={<MultiplePages color="rgba(var(--icon-primary))" />} label={docName} />
+                                    </Box>
+                                    <Box className="flex flex-col mt-1 rounded-md">
+                                        <CustomTypoPara label={docNumber} className="line-clamp-1" startIcon={<>Document no : </>} />
+                                        <CustomTypoPara label={docDate} className="capitalize"
+                                            startIcon={<>Document date : </>}
+                                            endIcon={<>ver 1.0.0</>}
+                                            endIconStyle={{ opacity: 0.8, fontWeight: 600, color: "rgba(var(--font-primary-white))" }}
                                         />
                                     </Box>
-                                    <Box className="flex justify-between">
-                                        <Typography
-                                            level="body-sm"
-                                            sx={{ fontWeight: 200, opacity: 0.9 }}
-                                        >
-                                            {docNumber}
-                                        </Typography>
-                                        <Typography
-                                            startDecorator={
-                                                <span
-                                                    className="font-semibold text-red-500"
-                                                    style={{
-                                                        display: isRequiredExp === true ? "flex" : "none"
-                                                    }}
-                                                >
-                                                    expired on
-                                                </span>
-                                            }
-                                            sx={{ color: isRequiredExp === true ? "red" : "green" }}
-                                            level="body-sm"
-                                            className=" font-semibold"
-                                        >
-                                            {isRequiredExp === true ? docExpEnd?.toString() : "Document has no expiry"}
-                                        </Typography>
-                                    </Box>
-                                    {/* <CustomTypo label={"DOC-2024-10-000218"} />
-                                    <CustomTypo label={"19/10/2024 12:58:11 PM"} /> */}
-                                </Box>
-                                <Box className="p-3">
-                                    <Typography
-                                        level="body-sm"
-                                        sx={{
-                                            fontWeight: 200,
-                                            fontSize: "0.8rem",
-                                            textTransform: "uppercase",
-                                            opacity: 0.9,
-                                        }}
-                                        endDecorator={
-                                            <PriorityHighOutlinedIcon
-                                                sx={{ fontSize: "0.8rem", color: "red" }}
-                                            />
-                                        }
-                                    >
-                                        Description
-                                    </Typography>
-                                    <Box className="border h-12 ml-1 mt-1">
+                                    <CustomTypoPara label={"document Description"} className="line-clamp-1 pt-1" startIcon={<MenuScale height={15} width={15} color="rgba(var(--icon-primary))" />} />
+                                    <Box className="">
                                         <CustomTypo label={"asdasd asda sdas dasd asd"} />
                                     </Box>
                                 </Box>

@@ -6,11 +6,9 @@ const CustomTypo = ({ label, style }) => {
     return (
         <Typography
             level="body-sm"
-            // className="line-clamp-1"
             sx={{
                 display: 'flex',
                 fontWeight: 200,
-                textTransform: 'capitalize',
                 p: 0.5,
                 ...style,
                 fontFamily: 'var(--font-varient)',
