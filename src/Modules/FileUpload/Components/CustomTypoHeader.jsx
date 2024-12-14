@@ -1,12 +1,11 @@
 import { Typography } from '@mui/joy'
 import React, { memo } from 'react'
 
-const CustomTypoHeader = ({ startIcon, label, endIcon }) => {
+const CustomTypoHeader = ({ startIcon, label, endIcon, sx }) => {
     return (
         <Typography
-            level="title-lg"
             textAlign="left"
-            sx={{ fontWeight: 500, color: "rgba(var(--font-primary-white))", fontFamily: "var(--font-varient)", textTransform: 'capitalize' }}
+            sx={{ fontWeight: 600, color: "rgba(var(--font-primary-white))", fontFamily: "var(--font-varient)", textTransform: 'capitalize', ...sx }}
             startDecorator={startIcon || <></>}
             endDecorator={endIcon || <></>}
         >

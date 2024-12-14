@@ -1,7 +1,13 @@
 // @ts-nocheck
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionGroup,
+    AccordionSummary,
+    Avatar,
     Box,
     Checkbox,
+    Divider,
     IconButton,
     List,
     ListItemButton,
@@ -41,7 +47,7 @@ import FilleListCmp from "./FilleListCmp";
 import { useQuery } from "@tanstack/react-query";
 import { getDocInforByID, getDocumentDetl } from "../../../api/commonAPI";
 import { format, isValid } from "date-fns";
-import { MultiplePages, MenuScale } from 'iconoir-react'
+import { MultiplePages, MenuScale, MessageText, Pin, Calendar } from 'iconoir-react'
 import CustomTypoHeader from "../Components/CustomTypoHeader";
 import CustomTypoPara from "../Components/CustomTypoPara";
 
@@ -153,6 +159,9 @@ const EditDocUpload = ({ params }) => {
         await refetchDocInfoByID();
     };
 
+    const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
+    const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
+    const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     // if (!docData) return <div>Loading Document Details...</div>;
     return (
         <Box>
@@ -200,181 +209,173 @@ const EditDocUpload = ({ params }) => {
                         <Grid container spacing={0.5} flexGrow={1} flexDirection={"row"}>
                             <Grid
                                 size={{ xs: 12, sm: 12, md: 7, lg: 8, xl: 8 }}
-                                className="p-2 rounded-md"
+                                className="p-4 rounded-md"
                                 sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
-                                <Box className="p-3">
-                                    <Box className="flex justify-between">
-                                        <CustomTypoHeader startIcon={<MultiplePages color="rgba(var(--icon-primary))" />} label={docName} />
-                                    </Box>
-                                    <Box className="flex flex-col mt-1 rounded-md">
-                                        <CustomTypoPara label={docNumber} className="line-clamp-1" startIcon={<>Document no : </>} />
-                                        <CustomTypoPara label={docDate} className="capitalize"
-                                            startIcon={<>Document date : </>}
-                                            endIcon={<>ver 1.0.0</>}
-                                            endIconStyle={{ opacity: 0.8, fontWeight: 600, color: "rgba(var(--font-primary-white))" }}
-                                        />
-                                    </Box>
-                                    <CustomTypoPara label={"document Description"} className="line-clamp-1 pt-1" startIcon={<MenuScale height={15} width={15} color="rgba(var(--icon-primary))" />} />
-                                    <Box className="">
-                                        <CustomTypo label={"asdasd asda sdas dasd asd"} />
+                                {/* Docuemnt Header Information */}
+                                <Box className="flex p-2 rounded-md">
+                                    <Avatar size="lg" >
+                                        <MultiplePages />
+                                    </Avatar>
+                                    <Box className="flex flex-col ml-2 justify-end" >
+                                        <div
+                                            className="flex"
+                                            style={{
+                                                fontFamily: "var(--font-family)", lineHeight: '1.4rem',
+                                                fontWeight: 600,
+                                                fontSize: "1rem",
+                                                textTransform: "capitalize",
+                                                textAlign: "justify",
+                                                color: "rgba(var(--font-primary-white))"
+                                            }} >{docName}</div>
+                                        <div className="flex gap-2">
+                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document no : {docNumber} </div>
+                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document date : {docDate} </div>
+                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {'1.0.0'}</div>
+                                        </div>
                                     </Box>
                                 </Box>
-                                {/* *************************************START************************************ */}
+                                <Box sx={{ height: "calc(100vh - 20dvh)", overflowY: 'scroll' }}>
+                                    <Box className="flex flex-col mt-4 rounded-md pb-1 border-[0.1rem] mx-0"
+                                        sx={{ borderColor: "rgba(var(--border-primary))", position: 'relative' }} >
+                                        {/* Docuemnt Detailed Section */}
+                                        <Box>
+                                            <Box className="flex p-1 pl-4 rounded-md"  >
+                                                {/* Header */}
+                                                <Avatar size="md" >
+                                                    <MultiplePages />
+                                                </Avatar>
+                                                <Box className="flex flex-col ml-2 justify-center" >
+                                                    <div
+                                                        className="flex"
+                                                        style={{
+                                                            fontFamily: "var(--font-family)", lineHeight: '1.4rem',
+                                                            fontWeight: 500,
+                                                            fontSize: "1rem",
+                                                            textTransform: "capitalize",
+                                                            textAlign: "justify",
+                                                            color: "rgba(var(--font-primary-white))"
+                                                        }} >Document Information</div>
+                                                </Box>
+                                            </Box>
+                                            <Divider sx={{ m: 0, mb: 0.5, backgroundColor: 'rgba(var(--border-primary))' }} />
+                                            <Box className="flex p-1 px-10 rounded-md">
+                                                <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
+                                                    <Box className="flex flex-1 flex-row gap-2" >
+                                                        <CustomTypoPara label={docNumber} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon} Document no : </div>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={docDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender} Document date : </div>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                    </Box>
+                                                    <Box className="flex flex-1 flex-row gap-2" >
+                                                        <CustomTypoPara label={'1.0.0'} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon}Document Version : </div>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={docDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender}Version Date : </div>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                    </Box>
+                                                    <Box className="flex flex-1 flex-col gap-1" >
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Description : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Sub Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Institute Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Course Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Rack Name: </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Custodian : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Validity Period : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Created User : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Created Date : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                            <Divider sx={{ m: 0, mb: 0.5, backgroundColor: 'rgba(var(--border-primary))' }} />
+                                        </Box>
+                                        {/* Edit Document Section */}
+                                        <Box sx={{ position: 'relative', top: 0, zIndex: 100, backgroundColor: 'rgba(var(--bg-card))' }}  >
+                                            <Box>
+                                                <Box className="flex p-1 pl-4 rounded-md">
+                                                    {/* Header */}
+                                                    <Avatar size="md" >
+                                                        <MultiplePages />
+                                                    </Avatar>
+                                                    <Box className="flex flex-col ml-2 justify-center" >
+                                                        <div
+                                                            className="flex"
+                                                            style={{
+                                                                fontFamily: "var(--font-family)", lineHeight: '1.4rem',
+                                                                fontWeight: 500,
+                                                                fontSize: "1rem",
+                                                                textTransform: "capitalize",
+                                                                textAlign: "justify",
+                                                                color: "rgba(var(--font-primary-white))"
+                                                            }} >Edit / Updated the Document Information</div>
+                                                    </Box>
+                                                </Box>
+                                                <Divider />
+                                            </Box>
+                                            <Box className="flex p-1 px-10 rounded-md">
+                                                <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
 
-                                <Box className="flex flex-1 flex-col px-4">
-                                    <Box className="flex flex-1 flex-col">
-                                        <SelectDocTypeMaster
-                                            label={"Document Type Master"}
-                                            // handleChange={(e, element) =>
-                                            //     handleDocumentState({
-                                            //         target: { name: "docType", value: element },
-                                            //     })
-                                            // }
-                                            value={docType}
-                                        />
-                                    </Box>
-                                    <Box className="flex flex-1 flex-col">
-                                        <SelectDocSubTypeMaster
-                                            label={"Document Sub Type Master"}
-                                            // handleChange={(e, element) =>
-                                            //     handleDocumentState({
-                                            //         target: { name: "docSubType", value: element },
-                                            //     })
-                                            // }
-                                            value={docSubType}
-                                        />
-                                    </Box>
-                                    {docSubType === "2" ? (
-                                        <>
-                                            <Box className="flex flex-1 flex-col">
-                                                <SelectInstituteMaster
-                                                    label={"Institute Master"}
-                                                    // handleChange={(e, element) =>
-                                                    //     handleDocumentState({
-                                                    //         target: { name: "institute", value: element },
-                                                    //     })
-                                                    // }
-                                                    value={institute}
-                                                />
-                                            </Box>
-                                            <Box className="flex flex-1 flex-col">
-                                                <SelectCourseMaster
-                                                    label={"Course Master"}
-                                                    // handleChange={(e, element) =>
-                                                    //     handleDocumentState({
-                                                    //         target: { name: "course", value: element },
-                                                    //     })
-                                                    // }
-                                                    value={course}
-                                                />
-                                            </Box>
-                                        </>
-                                    ) : null}
-                                    <Box className="flex flex-1 flex-col">
-                                        <SelectCmpCategoryNameList
-                                            label={"Category Name List"}
-                                            // handleChange={(e, element) =>
-                                            //     handleDocumentState({
-                                            //         target: { name: "category", value: element },
-                                            //     })
-                                            // }
-                                            value={category}
-                                        />
-                                    </Box>
-                                    <Box className="flex flex-1 flex-col">
-                                        <SelectSubCategoryMater
-                                            label={"Sub Category Master"}
-                                            catSlno={Number(category) ?? 0}
-                                            // handleChange={(e, element) =>
-                                            //     handleDocumentState({
-                                            //         target: { name: "subCategory", value: element },
-                                            //     })
-                                            // }
-                                            value={subCategory}
-                                        />
-                                    </Box>
-                                    <Box className="flex flex-1 flex-col">
-                                        <SelectGroupMaster
-                                            label={"Group Master"}
-                                            // handleChange={(e, element) =>
-                                            //     handleDocumentState({
-                                            //         target: { name: "group", value: element },
-                                            //     })
-                                            // }
-                                            value={group}
-                                        />
-                                    </Box>
-                                    <Box className="flex flex-1 flex-col pt-1">
-                                        <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
-                                            <Checkbox
-                                                label="Is a Secure Document"
-                                                variant="outlined"
-                                                color="warning"
-                                                checked={Boolean(isSecure)}
-                                                // onChange={(e) =>
-                                                //     handleDocumentState({
-                                                //         target: {
-                                                //             name: "isSecure",
-                                                //             value: e.target.checked,
-                                                //         },
-                                                //     })
-                                                // }
-                                                sx={{ opacity: 0.9, fontSize: "0.9rem" }}
-                                            />
-                                        </Box>
-                                        <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
-                                            <Checkbox
-                                                label="Is Validity Required for this Document"
-                                                variant="outlined"
-                                                color="danger"
-                                                checked={Boolean(isRequiredExp)}
-                                                // onChange={(e) =>
-                                                //     handleDocumentState({
-                                                //         target: {
-                                                //             name: "isRequiredExp",
-                                                //             value: e.target.checked,
-                                                //         },
-                                                //     })
-                                                // }
-                                                sx={{ opacity: 0.9, fontSize: "0.9rem" }}
-                                            />
-                                        </Box>
-                                        {Boolean(isRequiredExp) === true && (
-                                            <Box className="flex flex-1 items-center py-[0.1rem]">
-                                                <Box className="flex flex-1">
-                                                    <CustomButtonDateFeild
-                                                        date={docExpStart}
-                                                    // setDate={(date) =>
-                                                    //     handleDocumentState({
-                                                    //         target: { name: "docExpStart", value: date },
-                                                    //     })
-                                                    // }
-                                                    />
-                                                </Box>
-                                                <Box className="flex flex-1">
-                                                    <CustomButtonDateFeild
-                                                        date={docExpEnd}
-                                                    // setDate={(date) =>
-                                                    //     handleDocumentState({
-                                                    //         target: { name: "docExpEnd", value: date },
-                                                    //     })
-                                                    // }
-                                                    />
+                                                    <Box className="flex flex-1 flex-col gap-1" >
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Description : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Sub Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Institute Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Course Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Rack Name: </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Custodian : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
+                                                        <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Validity Period : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Created User : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            <CustomTypoPara label={"Docuemtn Desc "} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Created Date : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
+                                                    </Box>
                                                 </Box>
                                             </Box>
-                                        )}
+                                        </Box>
                                     </Box>
-                                    {/* SUBMIT BUTTON SECTION */}
-                                    <Box className="flex flex-1 flex-row py-2 justify-end">
-                                        <CommonMenuList
-                                            handleSubmitButtonFun={() => { }}
-                                            handleViewButtonFun={() => { }}
-                                        />
-                                    </Box>
-                                    {/* END SUBMIT BUTTON SECTION */}
                                 </Box>
-                                {/* END */}
                             </Grid>
                             <Grid
                                 size={{ xs: 12, sm: 12, md: 5, lg: 4, xl: 4 }}

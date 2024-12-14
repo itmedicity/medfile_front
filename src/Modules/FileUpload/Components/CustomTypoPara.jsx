@@ -5,12 +5,13 @@ const CustomTypoPara = ({ label, startIcon, endIcon, className, startIconStyle, 
     return (
         <Typography
             sx={{
-                fontWeight: 500,
+                fontWeight: 600,
                 color: "rgba(var(--font-primary-white))",
                 fontFamily: "var(--font-varient)",
                 textTransform: 'capitalize',
                 fontSize: '0.88rem',
-                lineHeight: '1.2rem'
+                lineHeight: '1.2rem',
+                borderColor: 'rgba(var(--border-primary))'
             }}
             className={className}
             startDecorator={<div style={{ ...startIconStyle }} >{startIcon}</div> || <></>}
