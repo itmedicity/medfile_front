@@ -16,6 +16,7 @@ import {
     ModalClose,
     ModalDialog,
     Sheet,
+    Textarea,
     Typography,
 } from "@mui/joy";
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -50,6 +51,8 @@ import { format, isValid } from "date-fns";
 import { MultiplePages, MenuScale, MessageText, Pin, Calendar, Lock, LockSlash, OpenBook } from 'iconoir-react'
 import CustomTypoHeader from "../Components/CustomTypoHeader";
 import CustomTypoPara from "../Components/CustomTypoPara";
+import SelectCmpRackMaster from "../../../Components/SelectCmpRackMaster";
+import SelectCmpCustodianMaster from "../../../Components/SelectCmpCustodianMaster";
 
 const EditDocUpload = ({ params }) => {
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
@@ -104,10 +107,7 @@ const EditDocUpload = ({ params }) => {
         staleTime: Infinity,
     });
 
-
-
     const docData = useMemo(() => data, [data]);
-    console.log(docData);
 
     useEffect(() => {
         if (docData) {
@@ -132,10 +132,10 @@ const EditDocUpload = ({ params }) => {
                 group_mast: docData?.group_mast,
                 group_name: docData?.group_name,
                 docVer: docData?.docVer,
-                doc_date: docData?.doc_date && isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "dd-MM-yyyy HH:mm") || "",
-                doc_ver_date: docData?.doc_ver_date && isValid(new Date(docData?.doc_ver_date)) && format(new Date(docData?.doc_ver_date), "dd-MM-yyyy HH:mm") || "",
-                doc_exp_start: docData?.doc_exp_start && isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "dd-MM-yyyy") || "", //format(new Date(docData?.doc_exp_start), " yyyy-MM-dd") || "",
-                doc_exp_end: docData?.doc_exp_end && isValid(new Date(docData?.doc_exp_end)) && format(new Date(docData?.doc_exp_end), "dd-MM-yyyy") || "",
+                doc_date: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "dd-MM-yyyy HH:mm") || "",
+                doc_ver_date: isValid(new Date(docData?.doc_ver_date)) && format(new Date(docData?.doc_ver_date), "dd-MM-yyyy HH:mm") || "",
+                doc_exp_start: isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "dd-MM-yyyy") || "", //format(new Date(docData?.doc_exp_start), " yyyy-MM-dd") || "",
+                doc_exp_end: isValid(new Date(docData?.doc_exp_end)) && format(new Date(docData?.doc_exp_end), "dd-MM-yyyy") || "",
                 isRequiredExp: docData?.isRequiredExp,
                 isSecure: docData?.isSecure,
                 docRack: docData?.docRack,
@@ -231,6 +231,9 @@ const EditDocUpload = ({ params }) => {
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     // if (!docData) return <div>Loading Document Details...</div>;
+
+    console.log(doc_sub_type)
+    console.log(typeof (doc_sub_type))
     return (
         <Box>
             <IconButton
@@ -442,17 +445,159 @@ const EditDocUpload = ({ params }) => {
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
                                                     <Box className="flex flex-1 flex-col gap-1" >
                                                         {/* Document Description */}
+                                                        <Box>
+                                                            <Textarea
+                                                                placeholder="Doccument Descriptions Type here..."
+                                                                // startDecorator={<PageEdit width={25} height={25} color='rgba(var(--icon-primary))' className='iconColor' style={{ transition: 'none' }} />}
+                                                                minRows={2}
+                                                                value={doc_desc}
+                                                                // onChange={(e) =>
+                                                                //   handleDocumentState({
+                                                                //     target: { name: "docDes", value: e.target.value },
+                                                                //   })
+                                                                // }
+                                                                sx={{
+                                                                    transition: 'none',
+                                                                    "&.MuiTextarea-root": {
+                                                                        "--Textarea-focusedHighlight": 'none',
+                                                                        "--Textarea-focusedShadow": "none",
+                                                                        "--Textarea-focusedThickness": "1.1px",
+                                                                    },
+                                                                    fontSize: 15,
+                                                                    fontFamily: "var(--font-varient)",
+                                                                    borderWidth: "2.8px",
+                                                                    borderRadius: "6px",
+                                                                    backgroundColor: 'rgba(var(--input-bg-color))',
+                                                                    borderColor: 'rgba(var(--input-border-color))',
+                                                                    color: 'rgba(var(--input-font-color))',
+                                                                    boxShadow: "none",
+                                                                    ':hover': {
+                                                                        backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                                                                        borderColor: 'rgba(var(--input-hover-border-color))',
+                                                                        color: 'rgba(var(--input-hover-font-color))',
+                                                                        '.iconColor': {
+                                                                            color: 'rgba(var(--icon-green))',
+                                                                        }
+                                                                    },
+                                                                }}
+                                                            />
+                                                        </Box>
                                                         {/* Document Type */}
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectDocTypeMaster
+                                                                label={"Document Type Master"}
+                                                                //   handleChange={(e, element) =>
+                                                                //     handleDocumentState({
+                                                                //       target: { name: "docType", value: element },
+                                                                //     })
+                                                                //   }
+                                                                value={doc_type}
+                                                            />
+                                                        </Box>
                                                         {/* Document Sub type */}
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectDocSubTypeMaster
+                                                                label={"Document Sub Type Master"}
+                                                                // handleChange={(e, element) =>
+                                                                //     handleDocumentState({
+                                                                //         target: { name: "docSubType", value: element },
+                                                                //     })
+                                                                // }
+                                                                value={doc_sub_type}
+                                                            />
+                                                        </Box>
                                                         {/* category */}
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectCmpCategoryNameList
+                                                                label={"Category Name List"}
+                                                                //   handleChange={(e, element) => handleDocumentState({ target: { name: "category", value: element }, })}
+                                                                value={category}
+                                                            />
+                                                        </Box>
                                                         {/* sub category */}
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectSubCategoryMater
+                                                                label={"Sub Category Master"}
+                                                                catSlno={Number(category) ?? 0}
+                                                                //   handleChange={(e, element) =>
+                                                                //     handleDocumentState({
+                                                                //       target: { name: "subCategory", value: element },
+                                                                //     })
+                                                                //   }
+                                                                value={sub_category}
+                                                            />
+                                                        </Box>
                                                         {/* Group */}
-                                                        {/* Institute */}
-                                                        {/* course */}
-                                                        {/* Custodian */}
-                                                        {/* rack and location */}
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectGroupMaster
+                                                                label={"Group Master"}
+                                                                //   handleChange={(e, element) => handleDocumentState({ target: { name: "group", value: element } })}
+                                                                value={group_mast}
+                                                            />
+                                                        </Box>
+                                                        {doc_sub_type === 2 ? (
+                                                            <>
+                                                                <Box className="flex flex-1 flex-col">
+                                                                    {/* Institute */}
+                                                                    <SelectInstituteMaster
+                                                                        label={"Institute Master"}
+                                                                        //   handleChange={(e, element) =>
+                                                                        //     handleDocumentState({
+                                                                        //       target: { name: "institute", value: element },
+                                                                        //     })
+                                                                        //   }
+                                                                        value={institute}
+                                                                    />
+                                                                </Box>
+                                                                {/* course */}
+                                                                <Box className="flex flex-1 flex-col">
+                                                                    <SelectCourseMaster
+                                                                        label={"Course Master"}
+                                                                        //   handleChange={(e, element) =>
+                                                                        //     handleDocumentState({
+                                                                        //       target: { name: "course", value: element },
+                                                                        //     })
+                                                                        //   }
+                                                                        value={course}
+                                                                    />
+                                                                </Box>
+                                                            </>
+                                                        ) : null}
+                                                        <Box className="flex flex-1 py-[0.4rem] gap-5" >
+                                                            {/* rack  name */}
+                                                            <SelectCmpRackMaster
+                                                                label={"Rack Name"}
+                                                                // handleChange={(e, element) => handleDocumentState({ target: { name: "docRack", value: element } })}
+                                                                value={docRack}
+                                                            />
+                                                            {/* custodian name */}
+                                                            <SelectCmpCustodianMaster
+                                                                label={"Custodian Name"}
+                                                                // handleChange={(e, element) => handleDocumentState({ target: { name: "docCustodian", value: element } })}
+                                                                value={docCustodian}
+                                                            />
+                                                        </Box>
                                                         {/* Document Validity Period */}
+                                                        {Boolean(isRequiredExp) === true && (
+                                                            <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
+                                                                <Box className="flex flex-auto">
+                                                                    <CustomButtonDateFeild
+                                                                        startLabel={'From Date'}
+                                                                        date={doc_exp_start}
+                                                                    // setDate={(date) => handleDocumentState({ target: { name: "docExpStart", value: date } })}
+                                                                    />
+                                                                </Box>
+                                                                <Box className="flex flex-auto">
+                                                                    <CustomButtonDateFeild
+                                                                        startLabel={'To Date'}
+                                                                        date={doc_exp_end}
+                                                                    // setDate={(date) => handleDocumentState({ target: { name: "docExpEnd", value: date } })}
+                                                                    />
+                                                                </Box>
+                                                            </Box>
+                                                        )}
                                                     </Box>
+
                                                 </Box>
                                             </Box>
                                         </Box>
