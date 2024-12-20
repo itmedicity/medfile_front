@@ -14,8 +14,8 @@ const CustomTypoPara = ({ label, startIcon, endIcon, className, startIconStyle, 
                 borderColor: 'rgba(var(--border-primary))'
             }}
             className={className}
-            startDecorator={<div style={{ ...startIconStyle }} >{startIcon}</div> || <></>}
-            endDecorator={<div style={{ ...endIconStyle }}>{endIcon}</div> || <></>}
+            startDecorator={<span style={{ ...startIconStyle }} >{startIcon}</span> || <></>}
+            endDecorator={<span style={{ ...endIconStyle }}>{endIcon}</span> || <></>}
         >
             {label}
         </Typography>

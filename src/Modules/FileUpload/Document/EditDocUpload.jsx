@@ -23,7 +23,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { memo } from "react";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useState } from "react";
-import { screenHeight, screenWidth } from "../../../Constant/Constant";
+import { sanitizeInput, screenHeight, screenWidth } from "../../../Constant/Constant";
 import Grid from "@mui/material/Grid2";
 import CustomTypo from "../../../Components/CustomTypo";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
@@ -53,6 +53,7 @@ import CustomTypoHeader from "../Components/CustomTypoHeader";
 import CustomTypoPara from "../Components/CustomTypoPara";
 import SelectCmpRackMaster from "../../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../../Components/SelectCmpCustodianMaster";
+import CustomCheckBoxWithLabel from "../../../Components/CustomCheckBoxWithLabel";
 
 const EditDocUpload = ({ params }) => {
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
@@ -84,8 +85,8 @@ const EditDocUpload = ({ params }) => {
         docVer: "",
         doc_date: format(new Date(), "yyyy-MM-dd HH:mm"),
         doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
-        doc_exp_start: format(new Date(), "yyyy-MM-dd"),
-        doc_exp_end: format(new Date(), "yyyy-MM-dd"),
+        doc_exp_start: format(new Date(), "yyyy-MM-dd HH:mm"),
+        doc_exp_end: format(new Date(), "yyyy-MM-dd HH:mm"),
         isRequiredExp: false,
         isSecure: false,
         docRack: "",
@@ -96,7 +97,8 @@ const EditDocUpload = ({ params }) => {
         cust_name: "",
         uploadUser: "",
         uploadUserName: "",
-        uploadDate: ""
+        uploadDate: "",
+        isLegalDoc: false,
     });
 
     //    GET THE DATA USING THE DOCUMENT ID USING THE REACT QERY
@@ -134,8 +136,8 @@ const EditDocUpload = ({ params }) => {
                 docVer: docData?.docVer,
                 doc_date: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "dd-MM-yyyy HH:mm") || "",
                 doc_ver_date: isValid(new Date(docData?.doc_ver_date)) && format(new Date(docData?.doc_ver_date), "dd-MM-yyyy HH:mm") || "",
-                doc_exp_start: isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "dd-MM-yyyy") || "", //format(new Date(docData?.doc_exp_start), " yyyy-MM-dd") || "",
-                doc_exp_end: isValid(new Date(docData?.doc_exp_end)) && format(new Date(docData?.doc_exp_end), "dd-MM-yyyy") || "",
+                doc_exp_start: isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "yyyy-MM-dd HH:mm") || "",
+                doc_exp_end: isValid(new Date(docData?.doc_exp_end)) && format(new Date(docData?.doc_exp_end), "yyyy-MM-dd HH:mm") || "",
                 isRequiredExp: docData?.isRequiredExp,
                 isSecure: docData?.isSecure,
                 docRack: docData?.docRack,
@@ -146,7 +148,8 @@ const EditDocUpload = ({ params }) => {
                 cust_name: docData?.cust_name,
                 uploadUser: docData?.uploadUser,
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
-                uploadUserName: docData?.name
+                uploadUserName: docData?.name,
+                isLegalDoc: docData?.isLegalDoc,
 
                 // docNumber: docData?.doc_number,
                 // docName: docData?.doc_name,
@@ -201,7 +204,8 @@ const EditDocUpload = ({ params }) => {
         cust_name,
         uploadUser,
         uploadDate,
-        uploadUserName
+        uploadUserName,
+        isLegalDoc
     } = editDocumentState;
     // console.log(editDocumentState)
 
@@ -232,8 +236,16 @@ const EditDocUpload = ({ params }) => {
     const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     // if (!docData) return <div>Loading Document Details...</div>;
 
+    // HANDLE CHANGE FUNTIONS FOR UPDATING THE DOCUMENT DETAILS
+
+    const handleDocumentUpdateChange = useCallback((e) => {
+        seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
+    }, [editDocumentState]);
+
+
+
     console.log(doc_sub_type)
-    console.log(typeof (doc_sub_type))
+
     return (
         <Box>
             <IconButton
@@ -306,7 +318,8 @@ const EditDocUpload = ({ params }) => {
                                         </div>
                                     </Box>
                                 </Box>
-                                <Box sx={{ height: "calc(100vh - 20dvh)", overflowY: 'scroll' }}>
+                                <Divider sx={{ mb: 1, backgroundColor: "rgba(var(--border-primary))" }} />
+                                <Box sx={{ height: "calc(100vh - 28dvh)", overflowY: 'scroll' }}>
                                     <Box className="flex flex-col mt-4 rounded-md pb-1 border-[0.1rem] mx-0"
                                         sx={{ borderColor: "rgba(var(--border-primary))", position: 'relative' }} >
                                         {/* Docuemnt Detailed Section */}
@@ -359,59 +372,59 @@ const EditDocUpload = ({ params }) => {
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                         <CustomTypoPara label={doc_number} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon} Document no : </div>}
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon} Document no : </span>}
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={doc_date} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender} Document date : </div>}
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender} Document date : </span>}
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                     </Box>
                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                         <CustomTypoPara label={'1.0.0'} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon}Document Version : </div>}
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon}Document Version : </span>}
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={doc_ver_date} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender}Version Date : </div>}
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender}Version Date : </span>}
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                     </Box>
                                                     <Box className="flex flex-1 flex-col gap-1" >
                                                         <CustomTypoPara label={doc_desc} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Description : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Description : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={main_type_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Type : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={doc_sub_type_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Sub Type : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Sub Type : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={category_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={subcat_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={group_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                            startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         {
                                                             institute !== 0 &&
                                                             <CustomTypoPara label={institution_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Institute Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Institute Master : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         }
                                                         {
                                                             course !== 0 &&
                                                             <CustomTypoPara label={course_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Course Master : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Course Master : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         }
                                                         <Box className="flex flex-1 flex-row gap-x-1" >
                                                             <CustomTypoPara label={rack} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Rack & Location: </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Rack & Location: </span>} startIconStyle={{ opacity: 0.8, }} />
                                                             <CustomTypoPara label={cust_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Custodian Name : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Custodian Name : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
                                                         {
                                                             isRequiredExp === 1 &&
-                                                            <CustomTypoPara label={`${doc_exp_start}  -  ${doc_exp_end}`} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Validity Period : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                            <CustomTypoPara label={`${format(new Date(doc_exp_start), "do-LLLL-yyyy")}  to  ${format(new Date(doc_exp_end), "do-LLLL-yyyy")}`} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Validity Period : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         }
                                                         <Box className="flex flex-1 flex-row gap-x-1" >
                                                             <CustomTypoPara label={uploadUserName} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created User : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created User : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                             <CustomTypoPara label={uploadDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
-                                                                startIcon={<div className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created Date : </div>} startIconStyle={{ opacity: 0.8, }} />
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created Date : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
                                                     </Box>
                                                 </Box>
@@ -444,18 +457,20 @@ const EditDocUpload = ({ params }) => {
                                             <Box className="flex p-1 px-10 rounded-md">
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
                                                     <Box className="flex flex-1 flex-col gap-1" >
+                                                        <Box className="flex flex-1 items-center justify-between py-[0.199rem] px-2">
+                                                            <CustomCheckBoxWithLabel
+                                                                label="Is Legal Document"
+                                                                checkBoxValue={isLegalDoc}
+                                                                handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isLegalDoc", value: e.target.checked } })}
+                                                            />
+                                                        </Box>
                                                         {/* Document Description */}
                                                         <Box>
                                                             <Textarea
                                                                 placeholder="Doccument Descriptions Type here..."
-                                                                // startDecorator={<PageEdit width={25} height={25} color='rgba(var(--icon-primary))' className='iconColor' style={{ transition: 'none' }} />}
                                                                 minRows={2}
                                                                 value={doc_desc}
-                                                                // onChange={(e) =>
-                                                                //   handleDocumentState({
-                                                                //     target: { name: "docDes", value: e.target.value },
-                                                                //   })
-                                                                // }
+                                                                onChange={(e) => handleDocumentUpdateChange({ target: { name: "doc_desc", value: e.target.value } })}
                                                                 sx={{
                                                                     transition: 'none',
                                                                     "&.MuiTextarea-root": {
@@ -486,11 +501,7 @@ const EditDocUpload = ({ params }) => {
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectDocTypeMaster
                                                                 label={"Document Type Master"}
-                                                                //   handleChange={(e, element) =>
-                                                                //     handleDocumentState({
-                                                                //       target: { name: "docType", value: element },
-                                                                //     })
-                                                                //   }
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "doc_type", value: element } })}
                                                                 value={doc_type}
                                                             />
                                                         </Box>
@@ -498,11 +509,7 @@ const EditDocUpload = ({ params }) => {
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectDocSubTypeMaster
                                                                 label={"Document Sub Type Master"}
-                                                                // handleChange={(e, element) =>
-                                                                //     handleDocumentState({
-                                                                //         target: { name: "docSubType", value: element },
-                                                                //     })
-                                                                // }
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "doc_sub_type", value: element } })}
                                                                 value={doc_sub_type}
                                                             />
                                                         </Box>
@@ -510,7 +517,7 @@ const EditDocUpload = ({ params }) => {
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectCmpCategoryNameList
                                                                 label={"Category Name List"}
-                                                                //   handleChange={(e, element) => handleDocumentState({ target: { name: "category", value: element }, })}
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "category", value: element }, })}
                                                                 value={category}
                                                             />
                                                         </Box>
@@ -519,11 +526,7 @@ const EditDocUpload = ({ params }) => {
                                                             <SelectSubCategoryMater
                                                                 label={"Sub Category Master"}
                                                                 catSlno={Number(category) ?? 0}
-                                                                //   handleChange={(e, element) =>
-                                                                //     handleDocumentState({
-                                                                //       target: { name: "subCategory", value: element },
-                                                                //     })
-                                                                //   }
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "sub_category", value: element } })}
                                                                 value={sub_category}
                                                             />
                                                         </Box>
@@ -531,21 +534,17 @@ const EditDocUpload = ({ params }) => {
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectGroupMaster
                                                                 label={"Group Master"}
-                                                                //   handleChange={(e, element) => handleDocumentState({ target: { name: "group", value: element } })}
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "group_mast", value: element } })}
                                                                 value={group_mast}
                                                             />
                                                         </Box>
-                                                        {doc_sub_type === 2 ? (
+                                                        {doc_sub_type === "2" ? (
                                                             <>
                                                                 <Box className="flex flex-1 flex-col">
                                                                     {/* Institute */}
                                                                     <SelectInstituteMaster
                                                                         label={"Institute Master"}
-                                                                        //   handleChange={(e, element) =>
-                                                                        //     handleDocumentState({
-                                                                        //       target: { name: "institute", value: element },
-                                                                        //     })
-                                                                        //   }
+                                                                        handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "institute", value: element } })}
                                                                         value={institute}
                                                                     />
                                                                 </Box>
@@ -553,11 +552,7 @@ const EditDocUpload = ({ params }) => {
                                                                 <Box className="flex flex-1 flex-col">
                                                                     <SelectCourseMaster
                                                                         label={"Course Master"}
-                                                                        //   handleChange={(e, element) =>
-                                                                        //     handleDocumentState({
-                                                                        //       target: { name: "course", value: element },
-                                                                        //     })
-                                                                        //   }
+                                                                        handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "course", value: element } })}
                                                                         value={course}
                                                                     />
                                                                 </Box>
@@ -567,32 +562,77 @@ const EditDocUpload = ({ params }) => {
                                                             {/* rack  name */}
                                                             <SelectCmpRackMaster
                                                                 label={"Rack Name"}
-                                                                // handleChange={(e, element) => handleDocumentState({ target: { name: "docRack", value: element } })}
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "docRack", value: element } })}
                                                                 value={docRack}
                                                             />
                                                             {/* custodian name */}
                                                             <SelectCmpCustodianMaster
                                                                 label={"Custodian Name"}
-                                                                // handleChange={(e, element) => handleDocumentState({ target: { name: "docCustodian", value: element } })}
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "docCustodian", value: element } })}
                                                                 value={docCustodian}
                                                             />
                                                         </Box>
                                                         {/* Document Validity Period */}
+                                                        <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
+                                                            <CustomCheckBoxWithLabel
+                                                                label="Is a Secure Document"
+                                                                checkBoxValue={isSecure}
+                                                                handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isSecure", value: e.target.checked } })}
+                                                                disabled={Boolean(isLegalDoc)}
+                                                            />
+                                                        </Box>
+                                                        <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
+                                                            <CustomCheckBoxWithLabel
+                                                                label="Is Validity Required for this Document"
+                                                                checkBoxValue={isRequiredExp}
+                                                                handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isRequiredExp", value: e.target.checked } })}
+                                                            />
+                                                        </Box>
                                                         {Boolean(isRequiredExp) === true && (
                                                             <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                                                                 <Box className="flex flex-auto">
-                                                                    <CustomButtonDateFeild
-                                                                        startLabel={'From Date'}
-                                                                        date={doc_exp_start}
-                                                                    // setDate={(date) => handleDocumentState({ target: { name: "docExpStart", value: date } })}
-                                                                    />
+                                                                    <Box className="flex flex-col flex-auto">
+                                                                        <Typography
+                                                                            level="body-sm"
+                                                                            sx={{
+                                                                                fontWeight: 600,
+                                                                                fontFamily: "var(--font-varient)",
+                                                                                opacity: 0.8,
+                                                                                paddingLeft: "0.36rem",
+                                                                                lineHeight: "1.0rem",
+                                                                                fontSize: "0.81rem",
+                                                                                color: 'rgba(var(--font-primary-white))'
+                                                                            }}
+                                                                        >
+                                                                            Doc Expiry From Date
+                                                                        </Typography>
+                                                                        <CustomDateFeild
+                                                                            date={doc_exp_start}
+                                                                            setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_start", value: date } })}
+                                                                        />
+                                                                    </Box>
                                                                 </Box>
                                                                 <Box className="flex flex-auto">
-                                                                    <CustomButtonDateFeild
-                                                                        startLabel={'To Date'}
-                                                                        date={doc_exp_end}
-                                                                    // setDate={(date) => handleDocumentState({ target: { name: "docExpEnd", value: date } })}
-                                                                    />
+                                                                    <Box className="flex flex-col flex-auto">
+                                                                        <Typography
+                                                                            level="body-sm"
+                                                                            sx={{
+                                                                                fontWeight: 600,
+                                                                                fontFamily: "var(--font-varient)",
+                                                                                opacity: 0.8,
+                                                                                paddingLeft: "0.36rem",
+                                                                                lineHeight: "1.0rem",
+                                                                                fontSize: "0.81rem",
+                                                                                color: 'rgba(var(--font-primary-white))'
+                                                                            }}
+                                                                        >
+                                                                            Doc Expiry To Date
+                                                                        </Typography>
+                                                                        <CustomDateFeild
+                                                                            date={doc_exp_end}
+                                                                            setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_end", value: date } })}
+                                                                        />
+                                                                    </Box>
                                                                 </Box>
                                                             </Box>
                                                         )}
@@ -602,6 +642,12 @@ const EditDocUpload = ({ params }) => {
                                             </Box>
                                         </Box>
                                     </Box>
+                                </Box>
+                                <Box className="flex flex-1 flex-row py-2 justify-end">
+                                    <CommonMenuList
+                                    //   handleSubmitButtonFun={handleDocInformationSubmit}
+                                    // handleViewButtonFun={() => setValue("2")}
+                                    />
                                 </Box>
                             </Grid>
                             <Grid
