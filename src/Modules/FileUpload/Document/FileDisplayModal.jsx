@@ -18,6 +18,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const FileDisplayModal = ({ openFile, setOpenFile, fileLink }) => {
+    console.log('modelreder')
 
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);

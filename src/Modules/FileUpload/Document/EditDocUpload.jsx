@@ -224,6 +224,7 @@ const EditDocUpload = ({ params }) => {
     });
 
     const docDetlInfpArray = useMemo(() => docDetlArray, [docDetlArray]);
+    console.log(docDetlInfpArray)
 
     const handleModelOpen = async () => {
         setOpen(true);
