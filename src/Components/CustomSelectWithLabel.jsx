@@ -18,10 +18,11 @@ const CustomSelectWithLabel = ({
           fontWeight: 600,
           fontFamily: "var(--font-varient)",
           opacity: 0.8,
-          paddingLeft: "0.36rem",
+          paddingLeft: "0.26rem",
           lineHeight: "1.0rem",
           fontSize: "0.81rem",
-          color: 'rgba(var(--font-primary-white))'
+          color: 'rgba(var(--font-primary-white))',
+          paddingY: "0.26rem",
           // fontWeight: 600,
           // opacity: 0.9,
           // pl: 0.2,

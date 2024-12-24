@@ -23,7 +23,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { memo } from "react";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useState } from "react";
-import { sanitizeInput, screenHeight, screenWidth } from "../../../Constant/Constant";
+import { sanitizeInput, screenHeight, screenWidth, warningNofity } from "../../../Constant/Constant";
 import Grid from "@mui/material/Grid2";
 import CustomTypo from "../../../Components/CustomTypo";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
@@ -54,12 +54,16 @@ import CustomTypoPara from "../Components/CustomTypoPara";
 import SelectCmpRackMaster from "../../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../../Components/SelectCmpCustodianMaster";
 import CustomCheckBoxWithLabel from "../../../Components/CustomCheckBoxWithLabel";
+import CustomInput from "../../../Components/CustomInput";
 
 const EditDocUpload = ({ params }) => {
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
     const docmntSlno = doc_slno; // ID FOR GETTIG THE DOC DETAILS
     const docmntID = doc_id
+
+    const userData = localStorage.getItem("app_auth");
+    const user = atob(JSON.parse(userData)?.authNo);
 
     const [open, setOpen] = useState(false);
 
@@ -82,7 +86,9 @@ const EditDocUpload = ({ params }) => {
         subcat_name: "",
         group_mast: 0,
         group_name: "",
-        docVer: "",
+        docVer: 0,
+        docVersionAment: 0,
+        docVersionInfoEdit: 0,
         doc_date: format(new Date(), "yyyy-MM-dd HH:mm"),
         doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
         doc_exp_start: format(new Date(), "yyyy-MM-dd HH:mm"),
@@ -134,12 +140,14 @@ const EditDocUpload = ({ params }) => {
                 group_mast: docData?.group_mast,
                 group_name: docData?.group_name,
                 docVer: docData?.docVer,
+                docVersionAment: docData?.docVersionAment,
+                docVersionInfoEdit: docData?.docVersionInfoEdit,
                 doc_date: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "dd-MM-yyyy HH:mm") || "",
                 doc_ver_date: isValid(new Date(docData?.doc_ver_date)) && format(new Date(docData?.doc_ver_date), "dd-MM-yyyy HH:mm") || "",
                 doc_exp_start: isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "yyyy-MM-dd HH:mm") || "",
                 doc_exp_end: isValid(new Date(docData?.doc_exp_end)) && format(new Date(docData?.doc_exp_end), "yyyy-MM-dd HH:mm") || "",
                 isRequiredExp: docData?.isRequiredExp,
-                isSecure: docData?.isSecure,
+                isSecure: docData?.isSecure === 1 ? true : false,
                 docRack: docData?.docRack,
                 rac_desc: docData?.rac_desc,
                 loc_name: docData?.loc_name,
@@ -149,7 +157,7 @@ const EditDocUpload = ({ params }) => {
                 uploadUser: docData?.uploadUser,
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
                 uploadUserName: docData?.name,
-                isLegalDoc: docData?.isLegalDoc,
+                isLegalDoc: docData?.isLegalDoc === 1 ? true : false,
 
                 // docNumber: docData?.doc_number,
                 // docName: docData?.doc_name,
@@ -190,6 +198,8 @@ const EditDocUpload = ({ params }) => {
         group_mast,
         group_name,
         docVer,
+        docVersionAment,
+        docVersionInfoEdit,
         doc_date,
         doc_ver_date,
         doc_exp_start,
@@ -224,7 +234,6 @@ const EditDocUpload = ({ params }) => {
     });
 
     const docDetlInfpArray = useMemo(() => docDetlArray, [docDetlArray]);
-    console.log(docDetlInfpArray)
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -244,8 +253,130 @@ const EditDocUpload = ({ params }) => {
     }, [editDocumentState]);
 
 
+    useEffect(() => {
+        isLegalDoc === "true" ? seteditDocumentState({ ...editDocumentState, isSecure: true }) : seteditDocumentState({ ...editDocumentState, isSecure: false })
+    }, [isLegalDoc])
 
-    console.log(doc_sub_type)
+    // console.log(isLegalDoc, isSecure)
+
+    const handleUpdateDocument = useCallback(async (e) => {
+
+        e.preventDefault();
+
+        if (editDocumentState.doc_name === "") {
+            warningNofity("Document Name cannot be empty");
+            return;
+        }
+
+        if (editDocumentState.doc_desc === "") {
+            warningNofity("Document Description cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.doc_type) === 0) {
+            warningNofity("Document Type cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.doc_sub_type) === 0) {
+            warningNofity("Document Sub Type cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
+            warningNofity("Institute cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
+            warningNofity("Course cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.category) === 0) {
+            warningNofity("Category cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.sub_category) === 0) {
+            warningNofity("Sub Category cannot be empty");
+            return;
+        }
+
+        if (Number(editDocumentState.group_mast) === 0) {
+            warningNofity("Group cannot be empty");
+            return;
+        }
+
+        // if (isValid(new Date(editDocumentState.doc_date)) === false) {
+        //     warningNofity("Document Date cannot be empty");
+        //     return;
+        // }
+
+        // if (isValid(new Date(editDocumentState.doc_ver_date)) === false) {
+        //     warningNofity("Document Version Date cannot be empty");
+        //     return;
+        // }
+
+        if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
+            warningNofity(
+                "Document Expiry Start Date cannot be empty || Valid Date is required"
+            );
+            return;
+        }
+
+        if (
+            Boolean(editDocumentState.isRequiredExp) === true &&
+            isValid(new Date(editDocumentState.doc_exp_end)) === false
+        ) {
+            warningNofity(
+                "Document Expiry End Date cannot be empty || Valid Date is required"
+            );
+            return;
+        }
+
+        if (
+            Boolean(editDocumentState.isRequiredExp) === true &&
+            new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
+        ) {
+            warningNofity(
+                "Document Expiry Start Date cannot be greater than Expiry End Date"
+            );
+            return;
+        }
+
+
+
+        const FormPostData = {
+            docID: doc_id,
+            docName: editDocumentState.doc_name.trim(),
+            docDes: editDocumentState.doc_desc.trim(),
+            docType: Number(editDocumentState.doc_type),
+            docSubType: Number(editDocumentState.doc_sub_type),
+            institute: Number(editDocumentState.institute),
+            course: Number(editDocumentState.course),
+            category: Number(editDocumentState.category),
+            subCategory: Number(editDocumentState.sub_category),
+            group: Number(editDocumentState.group_mast),
+            docDate: format(new Date(editDocumentState.doc_date), "yyyy-MM-dd HH:mm"),
+            docVersion: 1,
+            docVersionAment: 0,
+            docVersionInfoEdit: 0,
+            docVersionDate: format(new Date(editDocumentState.doc_ver_date), "yyyy-MM-dd HH:mm"),
+            docExpStart: format(new Date(editDocumentState.doc_exp_start), "yyyy-MM-dd"),
+            docExpEnd: format(new Date(editDocumentState.doc_exp_end), "yyyy-MM-dd"),
+            isRequiredExp: Boolean(editDocumentState.isRequiredExp) === true ? 1 : 0,
+            isSecure: Boolean(editDocumentState.isSecure) === true ? 1 : 0,
+            isLegalDoc: Boolean(editDocumentState.isLegalDoc) === true ? 1 : 0,
+            docRack: Number(editDocumentState.docRack),
+            docCustodian: Number(editDocumentState.docCustodian),
+            userID: user,
+            docUpload: format(new Date(), "yyyy-MM-dd HH:mm")
+        };
+
+        console.log(editDocumentState)
+        console.log(FormPostData)
+    }, [editDocumentState])
 
     return (
         <Box>
@@ -467,6 +598,39 @@ const EditDocUpload = ({ params }) => {
                                                         </Box>
                                                         {/* Document Description */}
                                                         <Box>
+                                                            <Typography level='body-sm'
+                                                                sx={{
+                                                                    fontWeight: 600,
+                                                                    fontFamily: "var(--font-varient)",
+                                                                    opacity: 0.8,
+                                                                    paddingY: "0.10rem",
+                                                                    paddingLeft: "0.16rem",
+                                                                    lineHeight: "1.0rem",
+                                                                    fontSize: "0.81rem",
+                                                                    color: 'rgba(var(--font-primary-white))'
+                                                                }}
+                                                                fontSize='0.7rem'
+                                                            >Document Name</Typography>
+                                                            <CustomInput
+                                                                placeholder="Document Name Type here..."
+                                                                value={doc_name}
+                                                                onChange={(e) => handleDocumentUpdateChange({ target: { name: "doc_name", value: e.target.value } })}
+                                                            />
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography level='body-sm'
+                                                                sx={{
+                                                                    fontWeight: 600,
+                                                                    fontFamily: "var(--font-varient)",
+                                                                    opacity: 0.8,
+                                                                    paddingY: "0.26rem",
+                                                                    paddingLeft: "0.16rem",
+                                                                    lineHeight: "1.0rem",
+                                                                    fontSize: "0.81rem",
+                                                                    color: 'rgba(var(--font-primary-white))'
+                                                                }}
+                                                                fontSize='0.7rem'
+                                                            >Document Description</Typography>
                                                             <Textarea
                                                                 placeholder="Doccument Descriptions Type here..."
                                                                 minRows={2}
@@ -646,7 +810,7 @@ const EditDocUpload = ({ params }) => {
                                 </Box>
                                 <Box className="flex flex-1 flex-row py-2 justify-end">
                                     <CommonMenuList
-                                    //   handleSubmitButtonFun={handleDocInformationSubmit}
+                                        handleSubmitButtonFun={handleUpdateDocument}
                                     // handleViewButtonFun={() => setValue("2")}
                                     />
                                 </Box>
