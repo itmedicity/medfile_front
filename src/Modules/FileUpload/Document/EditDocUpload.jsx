@@ -6,6 +6,7 @@ import {
     AccordionSummary,
     Avatar,
     Box,
+    Button,
     Checkbox,
     Divider,
     IconButton,
@@ -19,11 +20,11 @@ import {
     Textarea,
     Typography,
 } from "@mui/joy";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, Suspense, useCallback, useEffect, useMemo } from "react";
 import { memo } from "react";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useState } from "react";
-import { sanitizeInput, screenHeight, screenWidth, warningNofity } from "../../../Constant/Constant";
+import { errorNofity, sanitizeInput, screenHeight, screenWidth, succesNofity, warningNofity } from "../../../Constant/Constant";
 import Grid from "@mui/material/Grid2";
 import CustomTypo from "../../../Components/CustomTypo";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
@@ -45,18 +46,27 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DoDisturbOffOutlinedIcon from "@mui/icons-material/DoDisturbOffOutlined";
 import FileLink from "../../../assets/pdf.png";
 import FilleListCmp from "./FilleListCmp";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getDocInforByID, getDocumentDetl } from "../../../api/commonAPI";
 import { format, isValid } from "date-fns";
-import { MultiplePages, MenuScale, MessageText, Pin, Calendar, Lock, LockSlash, OpenBook } from 'iconoir-react'
+import { MultiplePages, MenuScale, MessageText, Pin, Calendar, Lock, LockSlash, OpenBook, ArrowRight, CalendarXmark } from 'iconoir-react'
 import CustomTypoHeader from "../Components/CustomTypoHeader";
 import CustomTypoPara from "../Components/CustomTypoPara";
 import SelectCmpRackMaster from "../../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../../Components/SelectCmpCustodianMaster";
 import CustomCheckBoxWithLabel from "../../../Components/CustomCheckBoxWithLabel";
 import CustomInput from "../../../Components/CustomInput";
+import axiosApi from "../../../Axios/Axios";
+import DocEditHeaderSection from "../Components/DocEditHeaderSection";
+import Files from "react-files";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import FileListComponent from "./FileListComponent";
+import dummyImage from "../../../assets/pdf.png";
+import ExpiryRenewDoc from "./ExpiryRenewDoc";
+import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
 
 const EditDocUpload = ({ params }) => {
+    const queryClient = useQueryClient();
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
     const docmntSlno = doc_slno; // ID FOR GETTIG THE DOC DETAILS
@@ -140,8 +150,8 @@ const EditDocUpload = ({ params }) => {
                 group_mast: docData?.group_mast,
                 group_name: docData?.group_name,
                 docVer: docData?.docVer,
-                docVersionAment: docData?.docVersionAment,
-                docVersionInfoEdit: docData?.docVersionInfoEdit,
+                docVersionAment: docData?.docVer_amentment,
+                docVersionInfoEdit: docData?.dovVer_infoAment,
                 doc_date: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "dd-MM-yyyy HH:mm") || "",
                 doc_ver_date: isValid(new Date(docData?.doc_ver_date)) && format(new Date(docData?.doc_ver_date), "dd-MM-yyyy HH:mm") || "",
                 doc_exp_start: isValid(new Date(docData?.doc_exp_start)) && format(new Date(docData?.doc_exp_start), "yyyy-MM-dd HH:mm") || "",
@@ -217,7 +227,8 @@ const EditDocUpload = ({ params }) => {
         uploadUserName,
         isLegalDoc
     } = editDocumentState;
-    // console.log(editDocumentState)
+
+    console.log(isRequiredExp)
 
     // GET THE DOCUEMNT DETAILS
 
@@ -233,7 +244,43 @@ const EditDocUpload = ({ params }) => {
         staleTime: Infinity
     });
 
-    const docDetlInfpArray = useMemo(() => docDetlArray, [docDetlArray]);
+    const docDetlInfpArray = useMemo(() => {
+        if (!docDetlArray || !Array.isArray(docDetlArray) || docDetlArray.length === 0) {
+            console.warn("docDetlArray is empty or not valid.");
+            return [];
+        }
+
+        const groupedItems = docDetlArray.reduce((acc, item) => {
+            if (item?.docVer) {
+                acc[item.docVer] = acc[item.docVer] || [];
+                acc[item.docVer].push(item);
+            }
+            return acc;
+        }, {});
+
+
+        return Object.entries(groupedItems)
+            .sort(([verA], [verB]) => verB.localeCompare(verA)) // Descending order
+            .map(([docVer, items]) => {
+                const firstItem = items[0];
+                return {
+                    docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
+                    docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
+                    docVersionAment: items,
+                };
+            });
+
+        // return [...new Set(docDetlArray?.map((item) => item.docVer))].map((items) => {
+        //     return {
+        //         docVer: items,
+        //         docAment: docDetlArray?.filter((item) => item.docVer === items)[0].docVer_amentment,
+        //         docInfo: docDetlArray?.filter((item) => item.docVer === items)[0].dovVer_infoAment,
+        //         docVerDate: format(new Date(docDetlArray?.filter((item) => item.docVer === items)[0].docVerDate), "dd-MM-yyyy HH:mm"),
+        //         docVersionAment: docDetlArray?.filter((item) => item.docVer === items),
+        //     }
+        // })
+    }, [docDetlArray]);
+    console.log(docDetlInfpArray)
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -358,11 +405,10 @@ const EditDocUpload = ({ params }) => {
             category: Number(editDocumentState.category),
             subCategory: Number(editDocumentState.sub_category),
             group: Number(editDocumentState.group_mast),
-            docDate: format(new Date(editDocumentState.doc_date), "yyyy-MM-dd HH:mm"),
             docVersion: 1,
             docVersionAment: 0,
-            docVersionInfoEdit: 0,
-            docVersionDate: format(new Date(editDocumentState.doc_ver_date), "yyyy-MM-dd HH:mm"),
+            docVersionInfoEdit: Number(docVersionInfoEdit) + 10,
+            docVersionDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             docExpStart: format(new Date(editDocumentState.doc_exp_start), "yyyy-MM-dd"),
             docExpEnd: format(new Date(editDocumentState.doc_exp_end), "yyyy-MM-dd"),
             isRequiredExp: Boolean(editDocumentState.isRequiredExp) === true ? 1 : 0,
@@ -370,13 +416,49 @@ const EditDocUpload = ({ params }) => {
             isLegalDoc: Boolean(editDocumentState.isLegalDoc) === true ? 1 : 0,
             docRack: Number(editDocumentState.docRack),
             docCustodian: Number(editDocumentState.docCustodian),
-            userID: user,
-            docUpload: format(new Date(), "yyyy-MM-dd HH:mm")
+            docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
+            userID: user
         };
 
-        console.log(editDocumentState)
-        console.log(FormPostData)
-    }, [editDocumentState])
+        try {
+            const updateRes = await axiosApi.patch("/docMaster/updateDocMaster", FormPostData);
+            const { success } = updateRes.data;
+            if (success === 1) {
+                succesNofity("Document Updated Successfully");
+                await refetchDocInfoByID();
+                await queryClient.invalidateQueries(["getDocList"]);
+            }
+            console.log(updateRes)
+        } catch (error) {
+            console.log(error)
+            errorNofity("Something went wrong".error);
+        }
+
+    }, [editDocumentState, docVersionInfoEdit, docmntSlno])
+
+    const docUpdationState = useMemo(() => {
+        return {
+            doc_number,
+            doc_date,
+            docVer,
+            docVersionAment,
+            docVersionInfoEdit,
+            doc_ver_date,
+            isRequiredExp,
+            doc_exp_end,
+            doc_exp_start
+        }
+    }, [
+        doc_number,
+        doc_date,
+        docVer,
+        docVersionAment,
+        docVersionInfoEdit,
+        doc_ver_date,
+        isRequiredExp,
+        doc_exp_end,
+        doc_exp_start
+    ])
 
     return (
         <Box>
@@ -428,79 +510,63 @@ const EditDocUpload = ({ params }) => {
                                 sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
                                 {/* Docuemnt Header Information */}
-                                <Box className="flex p-2 rounded-md">
-                                    <Avatar size="lg" >
-                                        <MultiplePages color="rgba(var(--icon-primary))" />
-                                    </Avatar>
-                                    <Box className="flex flex-col ml-2 justify-end" >
-                                        <div
-                                            className="flex"
-                                            style={{
-                                                fontFamily: "var(--font-family)", lineHeight: '1.4rem',
-                                                fontWeight: 600,
-                                                fontSize: "1rem",
-                                                textTransform: "capitalize",
-                                                textAlign: "justify",
-                                                color: "rgba(var(--font-primary-white))"
-                                            }} >{doc_name}</div>
-                                        <div className="flex gap-2">
-                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document no : {doc_number} </div>
-                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document date : {doc_date} </div>
-                                            <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {'1.0.0'}</div>
-                                        </div>
+                                <Box className="flex p-2 rounded-md justify-between">
+                                    <Box className="flex flex-row">
+                                        <Avatar size="lg" >
+                                            <MultiplePages color="rgba(var(--icon-primary))" />
+                                        </Avatar>
+                                        <Box className="flex flex-col ml-2 justify-end" >
+                                            <div
+                                                className="flex"
+                                                style={{
+                                                    fontFamily: "var(--font-family)",
+                                                    lineHeight: '1.4rem',
+                                                    fontWeight: 600,
+                                                    fontSize: "1rem",
+                                                    textTransform: "capitalize",
+                                                    textAlign: "justify",
+                                                    color: "rgba(var(--font-primary-white))"
+                                                }} >{doc_name}</div>
+                                            <div className="flex gap-2">
+                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document no : {doc_number} </div>
+                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document date : {doc_date} </div>
+                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {'1.0.0'}</div>
+                                            </div>
+                                        </Box>
+                                    </Box>
+                                    <Box className="flex flex-row min-w-32 items-end ">
+                                        {
+                                            isSecure === true ?
+                                                <Box className="flex flex-row items-end gap-3" >
+                                                    <Box sx={{
+                                                        fontFamily: "var(--font-family)",
+                                                        fontWeight: 500,
+                                                        fontSize: "1rem",
+                                                        color: "rgba(var(--font-primary-white))"
+                                                    }} >Secure Doc</Box>
+                                                    <Lock height={35} width={35} color="rgba(var(--icon-primary))" />
+                                                </Box>
+                                                : <Box className="flex flex-row items-end gap-3">
+                                                    <Box sx={{
+                                                        fontFamily: "var(--font-family)",
+                                                        fontWeight: 500,
+                                                        fontSize: "1rem",
+                                                        color: "rgba(var(--font-primary-white))"
+                                                    }}>Normal Doc</Box>
+                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
+                                                </Box>
+                                        }
                                     </Box>
                                 </Box>
                                 <Divider sx={{ mb: 1, backgroundColor: "rgba(var(--border-primary))" }} />
-                                <Box sx={{ height: "calc(100vh - 28dvh)", overflowY: 'scroll' }}>
+                                <Box sx={{ height: "calc(100vh - 27dvh)", overflowY: 'scroll' }}>
                                     <Box className="flex flex-col mt-4 rounded-md pb-1 border-[0.1rem] mx-0"
                                         sx={{ borderColor: "rgba(var(--border-primary))", position: 'relative' }} >
                                         {/* Docuemnt Detailed Section */}
                                         <Box>
-                                            <Box className="flex p-1 pl-4 rounded-md"  >
-                                                <Box className="flex flex-1" >
-                                                    {/* Header */}
-                                                    <Avatar size="md" >
-                                                        <MultiplePages color="rgba(var(--icon-primary))" />
-                                                    </Avatar>
-                                                    <Box className="flex flex-col ml-2 justify-center" >
-                                                        <div
-                                                            className="flex"
-                                                            style={{
-                                                                fontFamily: "var(--font-family)", lineHeight: '1.4rem',
-                                                                fontWeight: 500,
-                                                                fontSize: "1rem",
-                                                                textTransform: "capitalize",
-                                                                textAlign: "justify",
-                                                                color: "rgba(var(--font-primary-white))"
-                                                            }} >Document Information</div>
-                                                    </Box>
-                                                </Box>
-                                                <Box className="flex flex-row items-center min-w-32">
-                                                    {
-                                                        isSecure === 1 ?
-                                                            <Box className="flex flex-row items-end gap-3" >
-                                                                <Box sx={{
-                                                                    fontFamily: "var(--font-family)",
-                                                                    fontWeight: 500,
-                                                                    fontSize: "1rem",
-                                                                    color: "rgba(var(--font-primary-white))"
-                                                                }} >Secure File</Box>
-                                                                <Lock height={35} width={35} color="rgba(var(--icon-primary))" />
-                                                            </Box>
-                                                            : <Box className="flex flex-row items-end gap-3">
-                                                                <Box sx={{
-                                                                    fontFamily: "var(--font-family)",
-                                                                    fontWeight: 500,
-                                                                    fontSize: "1rem",
-                                                                    color: "rgba(var(--font-primary-white))"
-                                                                }}>Open File</Box>
-                                                                <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
-                                                            </Box>
-                                                    }
-                                                </Box>
-                                            </Box>
-                                            <Divider sx={{ m: 0, mb: 0.5, backgroundColor: 'rgba(var(--border-primary))' }} />
-                                            <Box className="flex p-1 px-10 rounded-md">
+                                            {/* Header Section - Document Information */}
+                                            <DocEditHeaderSection label={"Document Information"} />
+                                            <Box className="flex p-1 px-10 rounded-md py-5">
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                         <CustomTypoPara label={doc_number} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
@@ -511,7 +577,7 @@ const EditDocUpload = ({ params }) => {
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                     </Box>
                                                     <Box className="flex flex-1 flex-row gap-2" >
-                                                        <CustomTypoPara label={'1.0.0'} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                        <CustomTypoPara label={docVer + '.' + docVersionAment + '.' + docVersionInfoEdit} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon}Document Version : </span>}
                                                             startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={doc_ver_date} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
@@ -561,32 +627,14 @@ const EditDocUpload = ({ params }) => {
                                                     </Box>
                                                 </Box>
                                             </Box>
-                                            <Divider sx={{ m: 0, mb: 0.5, backgroundColor: 'rgba(var(--border-primary))' }} />
                                         </Box>
+
+
                                         {/* Edit Document Section */}
-                                        <Box sx={{ position: 'relative', top: 0, zIndex: 100, backgroundColor: 'rgba(var(--bg-card))' }}  >
-                                            <Box>
-                                                <Box className="flex p-1 pl-4 rounded-md">
-                                                    {/* Header */}
-                                                    <Avatar size="md" >
-                                                        <MultiplePages color="rgba(var(--icon-primary))" />
-                                                    </Avatar>
-                                                    <Box className="flex flex-col ml-2 justify-center" >
-                                                        <div
-                                                            className="flex"
-                                                            style={{
-                                                                fontFamily: "var(--font-family)", lineHeight: '1.4rem',
-                                                                fontWeight: 500,
-                                                                fontSize: "1rem",
-                                                                textTransform: "capitalize",
-                                                                textAlign: "justify",
-                                                                color: "rgba(var(--font-primary-white))"
-                                                            }} >Edit / Updated the Document Information</div>
-                                                    </Box>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-                                            <Box className="flex p-1 px-10 rounded-md">
+                                        <Box sx={{ position: 'relative', top: 0, backgroundColor: 'rgba(var(--bg-card))' }}  >
+                                            {/* Header Section - Edit / Updated the Document Information */}
+                                            <DocEditHeaderSection label={"Edit / Update the Document Information"} />
+                                            <Box className="flex flex-col p-1 px-10 py-5">
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
                                                     <Box className="flex flex-1 flex-col gap-1" >
                                                         <Box className="flex flex-1 items-center justify-between py-[0.199rem] px-2">
@@ -804,16 +852,27 @@ const EditDocUpload = ({ params }) => {
                                                     </Box>
 
                                                 </Box>
+                                                <Box className="flex flex-1 flex-row mt-4 justify-end">
+                                                    <CommonMenuList
+                                                        handleSubmitButtonFun={handleUpdateDocument}
+                                                    // handleViewButtonFun={() => setValue("2")}
+                                                    />
+                                                </Box>
                                             </Box>
+                                            {/* <Divider sx={{ m: 0, mt: 2, backgroundColor: 'rgba(var(--border-primary))' }} /> */}
                                         </Box>
+
+                                        {/* doc expiry renew   */}
+                                        <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
+                                            <ExpiryRenewDoc {...docUpdationState} />
+                                        </Suspense>
+
+                                        {/* doc version revision   */}
+
+
                                     </Box>
                                 </Box>
-                                <Box className="flex flex-1 flex-row py-2 justify-end">
-                                    <CommonMenuList
-                                        handleSubmitButtonFun={handleUpdateDocument}
-                                    // handleViewButtonFun={() => setValue("2")}
-                                    />
-                                </Box>
+
                             </Grid>
                             <Grid
                                 size={{ xs: 12, sm: 12, md: 5, lg: 4, xl: 4 }}
@@ -821,9 +880,40 @@ const EditDocUpload = ({ params }) => {
                                 className="p-2 rounded-md"
                                 sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
                             >
-                                {docDetlInfpArray?.map((el, idx) => (
+                                {
+                                    docDetlInfpArray?.map((el, idx) => {
+                                        return (
+                                            <Fragment key={idx}>
+                                                <Box
+                                                    className="flex flex-1 flex-row rounded-md justify-between p-3 my-3"
+                                                    sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
+                                                >
+                                                    <div
+                                                        className="text-xs font-semibold"
+                                                        style={{
+                                                            color: 'rgba(var(--font-primary-white))',
+                                                            fontFamily: "var(--font-family)",
+                                                        }}
+                                                    >Version : {el.docVer}</div>
+                                                    <div className="text-xs font-semibold"
+                                                        style={{
+                                                            color: 'rgba(var(--font-primary-white))',
+                                                            fontFamily: "var(--font-family)",
+                                                        }}
+                                                    >Version Date : {el.docVerDate}</div>
+                                                </Box>
+                                                {
+                                                    el.docVersionAment?.map((el, idx) => (
+                                                        <FilleListCmp key={idx} data={el} />
+                                                    ))
+                                                }
+                                            </Fragment>
+                                        )
+                                    })
+                                }
+                                {/* {docDetlInfpArray?.map((el, idx) => (
                                     <FilleListCmp key={idx} data={el} />
-                                ))}
+                                ))} */}
                             </Grid>
                         </Grid>
                     </Box>

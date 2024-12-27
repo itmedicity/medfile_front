@@ -43,7 +43,7 @@ const DocuementList = () => {
         { field: "group_name", headerName: "Group", width: 200 },
         { field: "docDate", headerName: "Doc Date", width: 170, },
         { field: "docVersion", headerName: "Doc Version", width: 170 },
-    ], []);
+    ], [renderCmp]);
 
     const rows = useMemo(() => data, [data])
     const pagination = { page: 0, pageSize: 25 };

@@ -35,11 +35,7 @@ const FilleListCmp = ({ data }) => {
                 <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} fileLink={NasFileLink} />
             }
             <Box
-                className="flex   
-                rounded-md items-center justify-center cursor-pointer 
-                hover:bg-baseWhite/85 
-                bg-baseWhite/60
-                drop-shadow-md"
+                className="flex rounded-md items-center justify-center cursor-pointer hover:bg-baseWhite/85  bg-baseWhite/60 drop-shadow-md"
                 onClick={() => setOpenFile(true)}
             >
                 <img
