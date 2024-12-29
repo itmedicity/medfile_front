@@ -923,6 +923,4 @@ const EditDocUpload = ({ params }) => {
     );
 };
 
-
-
 export default memo(EditDocUpload);
