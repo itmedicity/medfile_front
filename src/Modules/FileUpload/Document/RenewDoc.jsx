@@ -35,7 +35,7 @@ import dummyImage from "../../../assets/pdf.png";
 import CommonMenuList from "../../../Components/CommonMenuList";
 
 
-const ExpiryRenewDoc = (props) => {
+const RenewDoc = (props) => {
 
     const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
@@ -89,7 +89,7 @@ const ExpiryRenewDoc = (props) => {
     return (
         <Box>
             {/* Document Expiry Updation */}
-            <Box>expiry document</Box>
+            <Box>Revise docuemnt</Box>
             <Box className="flex flex-1 flex-row border-[0.5px] p-2 rounded-md" >
                 <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                     <Box className="flex flex-auto">
@@ -199,4 +199,4 @@ const ExpiryRenewDoc = (props) => {
     )
 }
 
-export default ExpiryRenewDoc
+export default RenewDoc

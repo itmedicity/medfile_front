@@ -64,6 +64,7 @@ import FileListComponent from "./FileListComponent";
 import dummyImage from "../../../assets/pdf.png";
 import ExpiryRenewDoc from "./ExpiryRenewDoc";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
+import RenewDoc from "./RenewDoc";
 
 const EditDocUpload = ({ params }) => {
     const queryClient = useQueryClient();
@@ -862,14 +863,143 @@ const EditDocUpload = ({ params }) => {
                                             {/* <Divider sx={{ m: 0, mt: 2, backgroundColor: 'rgba(var(--border-primary))' }} /> */}
                                         </Box>
 
-                                        {/* doc expiry renew   */}
-                                        <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
-                                            <ExpiryRenewDoc {...docUpdationState} />
-                                        </Suspense>
-
-                                        {/* doc version revision   */}
 
 
+                                        <Box sx={{ position: 'relative', top: 0, backgroundColor: 'rgba(var(--bg-card))' }} >
+                                            {/* Header Section - Document Revision / Expired Document Revision */}
+                                            <DocEditHeaderSection label={"Document File UPdation / Expired Document Updation"} />
+                                            <Box className="flex p-1 px-10 flex-col">
+                                                <Box className="flex flex-1 flex-col rounded-md pb-1 gap-1 mt-4">
+                                                    <Box className="flex flex-1 flex-row gap-2" >
+                                                        <CustomTypoPara label={doc_number} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon} Document no : </span>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={doc_date} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender} Document date : </span>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                    </Box>
+                                                    <Box className="flex flex-1 flex-row gap-2" >
+                                                        <CustomTypoPara label={docVer + '.' + docVersionAment + '.' + docVersionInfoEdit} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon}Document Version : </span>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={doc_ver_date} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Calender}Version Date : </span>}
+                                                            startIconStyle={{ opacity: 0.8, }} />
+                                                    </Box>
+
+                                                    <Box className="flex flex-1 flex-col gap-2 p-4 mt-5 justify-center rounded-md"
+                                                        sx={{ border: 0.5, borderColor: "rgba(var(--border-primary))" }}
+                                                    >
+                                                        {/* Section for file expiry and updation */}
+                                                        <Box>
+                                                            {
+                                                                isRequiredExp === 1 ? (
+                                                                    <Box className="flex flex-1 flex-row gap-2" >
+                                                                        <Box className="flex flex-1 flex-row gap-2 items-center ">
+                                                                            <Calendar height={35} width={35} color="rgba(var(--color-pink),0.9)" />
+                                                                            <Box className="flex flex-1 flex-row gap-2 items-center " >
+                                                                                <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 500, fontSize: '0.9rem' }} >Expired on </Box>
+                                                                                <ArrowRight height={15} width={15} className="flex" />
+                                                                                <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 600, fontSize: '0.9rem', color: "rgba(var(--color-pink),0.9)" }} >{format(new Date(doc_exp_end), "do-LLLL-yyyy")}</Box>
+                                                                            </Box>
+                                                                        </Box>
+
+                                                                        <Box className="flex flex-1 flex-col gap-2 mt-3" >
+                                                                            {isValid(new Date(doc_exp_end)) && (new Date(doc_exp_end) < new Date()) ? (
+                                                                                <div className="flex flex-row gap-2 justify-end">
+                                                                                    <Button
+                                                                                        variant="outlined"
+                                                                                        sx={{
+                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
+                                                                                            color: 'rgba(var(--color-pink),0.8)'
+                                                                                        }}
+                                                                                        size="md"
+                                                                                        disabled={isRequiredExp === 1 ? false : true}
+                                                                                        onClick={() => { }}
+                                                                                    >
+                                                                                        Renew Expired Document
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        variant="outlined"
+                                                                                        sx={{
+                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
+                                                                                            color: 'rgba(var(--color-pink),0.8)'
+                                                                                        }}
+                                                                                        size="md"
+                                                                                        onClick={() => { }}
+                                                                                    >
+                                                                                        Revise Existing Document
+                                                                                    </Button>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div className="flex flex-row gap-2 justify-end">
+                                                                                    <Button
+                                                                                        variant="outlined"
+                                                                                        sx={{
+                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
+                                                                                            color: 'rgba(var(--color-pink),0.8)'
+                                                                                        }}
+                                                                                        size="md"
+                                                                                        disabled={isRequiredExp === 1 ? true : false}
+                                                                                        onClick={() => { }}
+                                                                                    >
+                                                                                        Renew Expired Document
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        variant="outlined"
+                                                                                        sx={{
+                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
+                                                                                            color: 'rgba(var(--color-pink),0.8)'
+                                                                                        }}
+                                                                                        size="md"
+                                                                                        onClick={() => { }}
+                                                                                    >
+                                                                                        Revise Existing Document
+                                                                                    </Button>
+                                                                                </div>
+                                                                            )
+                                                                            }
+                                                                        </Box>
+                                                                    </Box>
+                                                                ) : (
+                                                                    <Box className="flex flex-1 flex-row gap-2">
+                                                                        <Box className="flex flex-1 flex-row gap-2 items-end">
+                                                                            <CalendarXmark height={35} width={35} color="rgba(var(--color-pink),0.9)" />
+                                                                            <Box className="flex flex-1 flex-row gap-2 items-end" >
+                                                                                <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 600, fontSize: '0.9rem', color: "rgba(var(--color-pink),0.9)" }} >Document has no Expiry</Box>
+                                                                            </Box>
+                                                                        </Box>
+                                                                        <Box className="flex flex-row gap-2">
+                                                                            <Button
+                                                                                variant="outlined"
+                                                                                sx={{
+                                                                                    borderColor: "rgba(var(--color-pink),0.9)",
+                                                                                    color: 'rgba(var(--color-pink),0.8)'
+                                                                                }}
+                                                                                size="md"
+                                                                                onClick={() => { }}
+                                                                            >
+                                                                                Revise Document
+                                                                            </Button>
+                                                                        </Box>
+                                                                    </Box>
+                                                                )
+                                                            }
+                                                        </Box>
+
+                                                        {/* doc expiry renew   */}
+                                                        <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
+                                                            <ExpiryRenewDoc {...docUpdationState} />
+                                                            <RenewDoc {...docUpdationState} />
+                                                        </Suspense>
+
+                                                        {/* doc version revision   */}
+
+
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </Box>
                                     </Box>
                                 </Box>
 
