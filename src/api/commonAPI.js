@@ -342,3 +342,100 @@ export const getDocMasterLikeNameNonSecureOnly = async (name) => {
     return []
   }
 };
+
+
+export const getLocationMaster = async () => {
+  return await axiosApi.get("/locationMaster/selectLocationMaster").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getLocationMasterList = async () => {
+  return await axiosApi.get("/locationMaster/getSelectLocationMasterList")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.loc_slno,
+            label: item.loc_name.toUpperCase()
+          };
+        });
+      }
+    });
+};
+
+export const getRackMasterList = async () => {
+  return await axiosApi.get("/rackMaster/selectRackMaster").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getCustodianDepartmentMaster = async () => {
+  return await axiosApi.get("/custodianDepartment/selectCusDepartmentList").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getSelectCustodianDepartmentList = async () => {
+  return await axiosApi.get("/custodianDepartment/selectCusDepartment")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.cust_dept_slno,
+            label: item.cust_dept_name.toUpperCase()
+          };
+        });
+      }
+    });
+};
+
+export const getCustodianMasterList = async () => {
+  return await axiosApi.get("/custodianMaster/selectCustodianMasterList").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getRackMasterData = async () => {
+  return await axiosApi.get("/rackMaster/selectCmpRackMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.rac_slno,
+            label: item.rack.toUpperCase()
+          };
+        });
+      }
+    });
+};
+
+export const getSelectCustodianDepartmentData = async () => {
+  return await axiosApi.get("/custodianMaster/selectCustodianMaster")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.cust_slno,
+            label: item.cust_name.toUpperCase()
+          };
+        });
+      }
+    });
+};

@@ -4,6 +4,7 @@ import { Box, IconButton, Input, Typography } from '@mui/joy'
 import { baseColor, customInputHeight } from '../Constant/Constant'
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { PageEdit } from 'iconoir-react'
 
 const CustomInputWithLabel = ({
     placeholder,
@@ -15,10 +16,19 @@ const CustomInputWithLabel = ({
 }) => {
     return (
         <Box className="flex flex-1 flex-col" >
-            <Typography level='body-sm' sx={{ fontWeight: 600, opacity: 0.6, pl: 0.2 }} fontSize='0.7rem' >{labelName}</Typography>
+            <Typography sx={{
+                fontWeight: 600,
+                opacity: 0.9,
+                pl: 0.2,
+                fontFamily: 'var(--font-varient)',
+                color: 'rgba(var(--font-primary-white))'
+            }}
+                fontSize='0.7rem' >{labelName}</Typography>
             <Input
-                startDecorator={<StickyNote2Icon sx={{ color: '#5b6b79', opacity: 0.6 }} />}
-                endDecorator={<IconButton variant='soft' ><RefreshIcon sx={{ color: '#5b6b79', opacity: 0.6 }} /></IconButton>}
+                startDecorator={<PageEdit color='rgba(var(--icon-primary))' className='iconColor' />}
+                endDecorator={
+                    <RefreshIcon sx={{ color: 'rgba(var(--icon-primary))', }} className='iconColor' />
+                }
                 placeholder={placeholder}
                 size='sm'
                 value={values}
@@ -26,8 +36,29 @@ const CustomInputWithLabel = ({
                 variant='outlined'
                 type={type}
                 sx={{
-                    ...customInputHeight,
-                    ...sx,
+                    fontFamily: 'var(--font-varient)',
+                    fontSize: '0.950rem',
+                    fontWeight: '500',
+                    backgroundColor: 'rgba(var(--input-bg-color))',
+                    borderColor: 'rgba(var(--input-border-color))',
+                    color: 'rgba(var(--input-font-color))',
+                    borderWidth: '2.8px',
+                    borderRadius: '6px',
+                    "&.MuiInput-root": {
+                        "--Input-focusedHighlight": 'none',
+                        "--Input-focusedShadow": 'none',
+                    },
+                    ':hover': {
+                        backgroundColor: 'rgba(var(--input-hover-bg-color))',
+                        borderColor: 'rgba(var(--input-hover-border-color))',
+                        color: 'rgba(var(--input-hover-font-color))',
+                        '.iconColor': {
+                            color: 'rgba(var(--icon-green))',
+                        }
+                    },
+                    transition: 'none',
+                    // ...customInputHeight,
+                    // ...sx,
                 }}
             />
         </Box>

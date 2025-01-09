@@ -1,56 +1,89 @@
-import { Box } from "@mui/joy";
-import React, { memo } from "react";
-import { baseColor, screenHeight, screenWidth } from "../Constant/Constant";
+// @ts-nocheck
+import React, { memo, useEffect, useRef } from "react";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toolbar from "@mui/material/Toolbar";
+import { Outlet, useNavigate, } from "react-router-dom";
+import { useState } from "react";
+import "./Style.css";
 import Header from "../Layouts/Header";
 import DrawerWindow from "../Layouts/DrawerWindow";
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useCallback } from "react";
 
-const Home = () => {
-  const [drawerWidth, setdrawerWidth] = useState(240)
+function Home() {
 
-  const toggleDrawer = () => {
-    setdrawerWidth(drawerWidth === 240 ? 60 : 240);
-    // setOpen(display);
-  };
+  const [drawerWidth, setDrawerWidth] = useState(240);
+  const [dark, setDark] = useState(false);
+  // const drawerWidth = 240;
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleDrawerClose = useCallback(() => {
+    setIsClosing(true);
+    setMobileOpen(false);
+  }, []);
+
+  const handleChangeDarkMode = useCallback(() => {
+    setDark(!dark);
+    if (dark === true) {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+    } else {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+    }
+  }, [dark]);
+
+  // const handleDrawerTransitionEnd = () => {
+  //   setIsClosing(false);
+  // };
+
+  const handleDrawerToggle = useCallback(() => {
+    setDrawerWidth(drawerWidth === 0 ? 240 : 0);
+    setMobileOpen(drawerWidth === 0 ? true : false);
+    if (!isClosing) {
+    }
+  }, [drawerWidth]);
 
   return (
-    <Box
-      sx={{
-        // backgroundColor: baseColor.backGroundColor,
-        backgroundColor: baseColor.backGroundColor,
-        display: "flex",
-        flexDirection: "row",
-        height: screenHeight,
-      }}
-    >
-      {/* Drawer Start */}
-      <DrawerWindow drawerWidth={drawerWidth} />
-      {/* Drawer End */}
+    <Box sx={{ display: "flex", width: "100%", overscrollBehavior: "none" }}>
+      <CssBaseline />
 
-      {/* Content Start */}
+      {/* TOP APPLICATION BAR START HERE  */}
+      <Header
+        handleDrawerToggle={handleDrawerToggle}
+        drawerWidth={drawerWidth}
+        dark={dark}
+        handleChangeDarkMode={handleChangeDarkMode}
+      />
+      {/* TOP APPLICATION BAR END HERE  */}
+
+
+      {/* NAVIGATION BAR LEFT SIDE */}
+      <DrawerWindow
+        drawerWidth={drawerWidth}
+        handleDrawerClose={handleDrawerClose}
+      />
+
+      {/* MAIN CONTENT START  */}
       <Box
+        component="main"
+        className="bg-bgcommon"
         sx={{
-          display: 'flex',
-          // bgcolor: baseColor.backGroundColor,
-          bgcolor: '#eeeeee',
-          width: screenWidth - drawerWidth,
-          // flexGrow: 1,
-          flexDirection: "column",
-          // overflow: 'scroll',
-        }}>
-        <Box sx={{ display: 'flex' }} >
-          <Header toggleDrawer={toggleDrawer} drawerWidth={drawerWidth} />
-        </Box>
-        {/* inner contents start here */}
-        <Box className="h-full w-full" sx={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }} >
-          <Outlet />
-        </Box>
-        {/* inner content end here */}
+          flexGrow: 1,
+          p: "0.15rem",
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          height: "100%",
+          overscrollBehavior: "none",
+        }}
+      >
+        <Toolbar variant="dense" />
+        <Outlet />
       </Box>
-      {/* Content End */}
+      {/* MAIN CONTENT END  */}
     </Box>
   );
-};
+}
 
 export default memo(Home);

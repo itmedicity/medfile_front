@@ -39,7 +39,7 @@ export const customInputHeight = {
         xl: "33px",
     },
     "&.MuiInput-root": {
-        "--Input-focusedHighlight": baseColor.primarylight,
+        "--Input-focusedHighlight": 'none',
         "--Input-focusedShadow": 'none',
         "--Input-focusedThickness": '1.1px',
     },
@@ -63,6 +63,19 @@ export const isValidMobileNumber = (mobile) => {
 export const isValidOTPMobileNumber = (mobile) => {
     const regex = /^\d{12}$/;
     return regex.test(mobile);
+};
+
+export const isValidPassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    /*
+     * -> Minimum 6 characters
+     * -> At least one uppercase letter
+     * -> At least one lowercase letter
+     * -> At least one number
+     * -> At least one special character
+     * -> Password must contain at least one letter and one number
+     */
+    return passwordRegex.test(password);
 };
 
 export const succesNofity = (message) => toast.success(message, {

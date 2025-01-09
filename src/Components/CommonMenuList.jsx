@@ -8,7 +8,8 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const CommonMenuList = ({
     handleSubmitButtonFun,
-    handleViewButtonFun
+    handleViewButtonFun,
+    submitLabel
 }) => {
 
     const navigation = useNavigate()
@@ -17,26 +18,49 @@ const CommonMenuList = ({
         <>
             <IconButton
                 variant='outlined'
-                sx={{ mt: 1, mr: 1, fontWeight: 400 }}
+                sx={{
+                    mt: 1, mr: 1,
+                    fontWeight: 400,
+                    '&:hover': {
+                        borderColor: 'rgba(var(--icon-primary))',
+                        backgroundColor: 'transparent',
+                    }
+                }}
                 onClick={handleSubmitButtonFun}>
-                <Tooltip title="Click Here to Submit" arrow variant='soft' color='danger'>
-                    <QueueIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                <Tooltip title={submitLabel || "Click Here to Submit"} arrow variant='outlined'
+                    sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }} >
+                    <QueueIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                 </Tooltip>
             </IconButton>
             <IconButton
                 variant='outlined'
-                sx={{ mt: 1, mr: 1, fontWeight: 400 }}
+                sx={{
+                    mt: 1, mr: 1, fontWeight: 400,
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                        borderColor: 'rgba(var(--icon-primary))',
+                        backgroundColor: 'transparent',
+                    }
+                }}
                 onClick={handleViewButtonFun}>
-                <Tooltip title="Click Here to View" arrow variant='soft' color='danger'>
-                    <SearchIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                <Tooltip title="Click Here to View" arrow variant='outlined'
+                    sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                    <SearchIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                 </Tooltip>
             </IconButton>
             <IconButton
                 variant='outlined'
-                sx={{ mt: 1, mr: 1, fontWeight: 400 }}
+                sx={{
+                    mt: 1, mr: 1, fontWeight: 400,
+                    '&:hover': {
+                        borderColor: 'rgba(var(--icon-primary))',
+                        backgroundColor: 'transparent',
+                    }
+                }}
                 onClick={() => navigation(-1)}>
-                <Tooltip title="Back to Previous Page" arrow variant='soft' color='danger'>
-                    <CloseIcon sx={{ fontWeight: 400, opacity: 0.6, color: baseColor.fontPink }} />
+                <Tooltip title="Back to Previous Page" arrow variant='outlined'
+                    sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
+                    <CloseIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                 </Tooltip>
             </IconButton>
         </>

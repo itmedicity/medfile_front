@@ -1,37 +1,44 @@
 // @ts-nocheck
-import React, { useCallback, useState, memo } from "react";
-import { Box, Button, CircularProgress, Input, Typography } from "@mui/joy";
-import { Outlet, useNavigate } from "react-router-dom";
+import React, { useCallback, useState, memo, useEffect } from "react";
 import {
-  baseColor,
+  Box,
+  Button,
+  CircularProgress,
+  Input,
+  Typography,
+} from "@mui/joy";
+import { useNavigate } from "react-router-dom";
+import {
   errorNofity,
-  isValidMobileNumber,
   isValidOTPMobileNumber,
   sanitizeInput,
-  screenHeight,
   succesNofity,
   warningNofity,
 } from "../Constant/Constant";
-import icons from "../assets/icons.webp";
-import icon1 from "../assets/medivault01.png";
-import icon2 from "../assets/medivault02.png";
-import icon3 from "../assets/medivault03.png";
-import icon4 from "../assets/medivault04.png";
 
 // @ts-ignore
-import OTPInput, { ResendOTP } from "otp-input-react";
+import OtpInput from 'react-otp-input';
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import axios from "axios";
 import axiosApi from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
 
+import useAuth from "../hooks/useAuth";
+import { socket } from "../ws/socket";
+
+import { User, KeyBack } from 'iconoir-react'
+import Logo from "../assets/images/logo.png"
+
+
+
+
 const RoootLayouts = () => {
   // import functions
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
 
   // state mangement
   const [mobileNumber, setMobileNumber] = useState("");
@@ -40,6 +47,15 @@ const RoootLayouts = () => {
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false);
   const [loginwithUserCred, setloginwithUserCred] = useState(false);
+
+  useEffect(() => {
+    const message = localStorage.getItem("message");
+    if (message) {
+      warningNofity(message);
+      localStorage.removeItem("app_auth");
+      localStorage.removeItem("message");
+    }
+  }, [])
 
   // GENERATE OTP FUNCTION
   const generateOtp = useCallback(() => {
@@ -75,47 +91,60 @@ const RoootLayouts = () => {
 
   // VERIFY OTP FUNCTION
   const verifyOTPFunction = useCallback(() => {
-    const sanitizedOTP = sanitizeInput(OTP);
-    const mobNumber = sanitizeInput(mobileNumber);
+    try {
+      const sanitizedOTP = sanitizeInput(OTP);
+      const mobNumber = sanitizeInput(mobileNumber);
 
-    const slicedMobileNMumber = mobNumber.slice(2);
+      const slicedMobileNMumber = mobNumber.slice(2);
 
-    const postDataToVerifyOTP = {
-      otp: sanitizedOTP,
-      mobile: slicedMobileNMumber,
-    };
-
-    // after verify OTP page redirected to dashboard
-
-    axiosApi.post("/user/verifyOTP", postDataToVerifyOTP).then((res) => {
-      const { message, success, userInfo } = res.data;
+      const postDataToVerifyOTP = {
+        otp: sanitizedOTP,
+        mobile: slicedMobileNMumber,
+        method: 2 // otp method
+      };
 
       // after verify OTP page redirected to dashboard
-      if (success === 0) {
-        errorNofity(message); // database error
-      } else if (success === 1) {
-        warningNofity(message); // incorrected OTP
-      } else if (success === 2) {
-        succesNofity(message); // OTP Verified
-        const { user_slno, name, token, login_type, tokenValidity } =
-          JSON.parse(userInfo);
-        const authData = {
-          authNo: btoa(user_slno),
-          authName: btoa(name),
-          authToken: token,
-          authType: btoa(login_type),
-          authTimeStamp: getTime(new Date(tokenValidity)),
-        };
-        localStorage.setItem("app_auth", JSON.stringify(authData));
-        setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-          navigate("/Home/Dashboard", { replace: true });
-        }, 2000);
-      } else {
-        errorNofity(message);
-      }
-    });
+
+      axiosApi.post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
+        .then((res) => {
+          const { message, success, userInfo } = res.data;
+
+          // after verify OTP page redirected to dashboard
+          if (success === 0) {
+            errorNofity(message); // database error
+          } else if (success === 1) {
+            warningNofity(message); // incorrected OTP
+          } else if (success === 2) {
+            succesNofity(message); // OTP Verified
+            const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
+            const authData = {
+              authNo: btoa(user_slno),
+              authName: btoa(name),
+              authType: btoa(login_type),
+              authTimeStamp: getTime(new Date(tokenValidity)),
+            };
+
+            setAuth((prev) => {
+              return {
+                ...prev,
+                accessToken: authData.authToken,
+                userInfo: authData,
+              };
+            });
+            socket.emit("login", { user_slno });  // EMIT THE USER LOGIN EVENT TO SOCKET
+            localStorage.setItem("app_auth", JSON.stringify(authData));
+            setOpen(true);
+            setTimeout(() => {
+              setOpen(false);
+              navigate("/Home/Dashboard", { replace: true });
+            }, 2000);
+          } else {
+            errorNofity(message);
+          }
+        });
+    } catch (error) {
+      errorNofity(error);
+    }
   }, [OTP, mobileNumber]);
 
   // RESEND OTP FUNCTION
@@ -134,98 +163,164 @@ const RoootLayouts = () => {
     setloginwithUserCred(false);
   }, []);
 
-  // render function for regerate OTP button
+  const [top, setTop] = useState(85);
+  const handleChange = () => {
+    setTop((prev) => prev === 85 ? 15 : 85);
+  }
 
-  const renderButton = (buttonProps) => {
-    return buttonProps.remainingTime !== 0 ? (
-      <Typography level="body-xs" className="p-5 text-[#001C30]">
-        Resend Authorisation code in {buttonProps.remainingTime} sec
-      </Typography>
-    ) : (
-      <Box
-        tabIndex={2}
-        {...buttonProps}
-        onClick={resendOTPFunction}
-        className="pt-5 font-semibold text-[#001C30] cursor-pointer text-sm"
-      >
-        {" "}
-        Regenerate OTP
-      </Box>
-    );
-  };
 
-  const renderTime = () => {
-    return <span></span>;
-  };
+  /*****USER BASED AUTHENTICATION*******/
+  const [userState, setUserState] = useState({
+    userName: "",
+    passWord: ""
+  });
+
+  const handleChangeUser = (e) => {
+    setUserState({
+      ...userState,
+      [e.target.name]: sanitizeInput(e.target.value)
+    })
+  }
+
+  const handleLoginButton = useCallback(async () => {
+    try {
+
+      const postData = {
+        userName: userState.userName,
+        passWord: userState.passWord,
+        method: 3 // user credentials auth method
+      }
+
+      const result = await axiosApi.post("/user/checkUserCres", postData, { withCredentials: true })
+      console.log(result.data)
+
+      const { message, success, userInfo } = result.data;
+
+      if (success === 0) {
+        errorNofity(message); // database error
+      } else if (success === 1) {
+        warningNofity(message); // incorrected OTP
+      } else if (success === 2) {
+        succesNofity(message); // OTP Verified
+        const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
+        const authData = {
+          authNo: btoa(user_slno),
+          authName: btoa(name),
+          authType: btoa(login_type),
+          authTimeStamp: getTime(new Date(tokenValidity)),
+        };
+
+        setAuth((prev) => {
+          return {
+            ...prev,
+            accessToken: authData.authToken,
+            userInfo: authData,
+          };
+        });
+        socket.emit("login", { user_slno });  // EMIT THE USER LOGIN EVENT TO SOCKET
+        localStorage.setItem("app_auth", JSON.stringify(authData));
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+          navigate("/Home/Dashboard", { replace: true });
+        }, 2000);
+      } else {
+        errorNofity(message);
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }, [userState])
 
   return (
-    <Box
-      className="flex flex-grow flex-grow-1 flex-col justify-center items-center bg-gradient-to-r from-[#80AF81] to-[#D6EFD8]"
-      sx={{ height: screenHeight }}
+    <Box className="flex flex-col justify-center items-center w-full h-screen "
+      sx={{ backgroundColor: 'rgba(253, 253, 253)' }}
     >
       <ToastContainer />
       <CustomBackDrop setOpen={setOpen} open={open} />
+      {/* <ScreenCheck /> */}
       <Box
-        className="flex border w-[85%]  sm:w-[75%] md:w-[60%] lg:w-[34rem] xl:[30%] 2xl:[30%] h-96 drop-shadow-lg shadow-lg bg-[#edede9] flex-col p-4 gap-2"
         sx={{
-          backgroundColor: baseColor.secondarylight,
-          borderColor: baseColor.secondary,
-          borderTopLeftRadius: "20px",
-          borderTopRightRadius: "60px",
-          borderBottomLeftRadius: "80px",
-          borderBottomRightRadius: "40px",
+          position: "relative",
+          minHeight: '55%',
+          maxWidth: "470px",
+          width: "100%",
+          borderRadius: '30px',
+          overflow: 'hidden',
+          outline: 'none',
+          bgcolor: 'rgba(0,125,196,0.6)',
+          boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+          border: '1px solid rgba(0,125,196,1)',
         }}
       >
-        <Box className="flex h-32 mb-1 justify-center">
-          {/* <img alt="icons" src={icon1} className="w-15 sm:w-18 md:w-25 lg:w-31 h-28" /> */}
-          {/* <img alt="icons" src={icon2} className="w-15 sm:w-18 md:w-25 lg:w-31 h-28" /> */}
-          {/* <img alt="icons" src={icon3} className="w-15 sm:w-18 md:w-25 lg:w-31 h-28" /> */}
-          <img
-            alt="icons"
-            src={icon4}
-            className="w-15 sm:w-18 md:w-25 lg:w-50 h-32"
-          />
-          {/* <Box className="flex items-end" > */}
-          {/* <Typography level="h1" textAlign="start" sx={{ color: baseColor.primary, fontSize: { xs: "2.5rem", md: "2.5rem", lg: "3rem" } }} >MediVault</Typography> */}
-          {/* </Box> */}
-        </Box>
-
-        {loginwithUserCred === false ? (
-          onclickGenerateOTPbtn ? (
+        <Box
+          sx={{
+            minHeight: '100%',
+            maxWidth: "470px",
+            width: "100%",
+            bgcolor: 'rgba(0,125,196,0.6)',
+            borderRadius: '30px 30px 30px 30px',
+            boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+            overflow: 'hidden',
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
+          }}
+        >
+          <Box className="h-20 p-4 flex justify-center items-center text-white">
+            <button onClick={handleChange}
+              style={{
+                fontFamily: 'var(--font-varient)',
+                color: 'white',
+                fontWeight: 600
+              }}
+            >sign in with otp</button>
+          </Box>
+          {onclickGenerateOTPbtn ? (
             // {/* OTP Verification form start here */}
-            <Box className="flex flex-col justify-center">
+            <Box className="flex flex-1 flex-col ">
+              <Box className="flex justify-center items-end" >
+                <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+                <Box className="flex float-start pb-2" sx={{ color: 'white', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+              </Box>
               <Typography
                 level="body-sm"
-                sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                className="text-green-900"
+                sx={{
+                  color: "rgba(255,255,255, 0.8)",
+                  textAlign: "center",
+                  pb: 1,
+                }}
               >
                 Verify your Phone number
               </Typography>
-              <OTPInput
+              <OtpInput
                 value={OTP}
                 onChange={setOTP}
-                autoFocus
-                OTPLength={6}
-                otpType="number"
-                disabled={false}
-                secure={false}
-                className="flex items-center justify-center gap-2"
-                inputClassName="!mr-0 py-5 !w-[2.5rem] rounded-lg outline-1 outline-[#508D4E] text-[#001C30] text-xl"
+                numInputs={6}
+                renderInput={(props) => <input {...props} />}
+                containerStyle="flex items-center justify-center gap-2"
+                inputStyle="!mr-0 py-[0.4rem] !w-[2.4rem] rounded-lg outline-1 outline-[#53b6e7] text-[#001C30] text-xl"
               />
-              <Box className="flex pt-1 flex-1 justify-center mt-4">
+              <Box className="flex pt-1 justify-center mt-4">
                 <Button
                   onClick={verifyOTPFunction}
                   size="md"
                   variant="outlined"
-                  color="neutral"
-                  className="w-[17.5rem] h-10 "
+                  // color="neutral"
+                  className="w-[17.5rem] h-10"
                   sx={{
-                    color: baseColor.primary,
-                    borderColor: baseColor.primary,
+                    color: "white",
+                    borderColor: "#53b6e7",
                     borderRadius: 12,
                     "&:hover": {
-                      borderColor: baseColor.primary,
-                      backgroundColor: baseColor.primarylight,
-                      transition: "all 0.5s ease-in-out",
+                      color: "#fff",
+                      borderColor: "#53b6e7",
+                      backgroundColor: "#53b6e7",
+                      transition: "all 0.3s ease-in-out",
                     },
                   }}
                 >
@@ -233,53 +328,43 @@ const RoootLayouts = () => {
                 </Button>
               </Box>
               <Box>
-                <ResendOTP
-                  onResendClick={function () {}}
-                  className="flex"
-                  style={{
-                    color: baseColor.primary,
-                    fontSize: "1rem",
-                    fontWeight: "500",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                  maxTime={12000}
-                  onTimerComplete={() => setonclickGenerateOTPbtn(false)}
-                  timeInterval={1000}
-                  renderButton={renderButton}
-                  renderTime={renderTime}
-                />
+                {/* RESEND OTP FUNCTION HERE */}
               </Box>
             </Box>
           ) : (
             // {/* OTP verification form end here */}
-            // {/* Phone Input start here */}
-            <Box className="flex flex-1 flex-col ">
-              <Box className="flex flex-1 items-center flex-col  ">
+            <Box className="flex flex-1 flex-col p-4 items-center ">
+              <Box className="flex justify-center items-end" >
+                <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+                <Box className="flex float-start pb-2" sx={{ color: 'white', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+              </Box>
+              <Box className="flex items-center flex-col  ">
                 <Typography
-                  level="body-sm"
-                  sx={{ color: baseColor.primary, textAlign: "center", pb: 1 }}
+                  level="body-md"
+                  fontFamily="Roboto"
+                  sx={{ color: "white", fontFamily: 'var(--font-varient)' }}
                 >
-                  Verify your Phone number
+                  Enter your user credentials
                 </Typography>
                 <Box>
                   <PhoneInput
                     country={"in"}
                     onlyCountries={["in"]}
-                    autoFormat
-                    // alwaysDefaultMask={true}
-                    // containerStyle={{ height: 50 }}
+                    autoFormat={true}
+                    disableDropdown={true}
                     inputStyle={{
                       height: 50,
                       width: 300,
-                      borderColor: baseColor.primary,
+                      border: "1px solid rgba(0,125,196,1)",
                       borderRadius: 10,
+                      opacity: 1,
                     }}
                     buttonStyle={{
                       borderRadius: 10,
                       height: 50,
+                      opacity: 0.8,
                       overflow: "hidden",
-                      borderColor: baseColor.primary,
+                      border: "1px solid rgba(0,125,196,1)",
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
                     }}
@@ -288,18 +373,14 @@ const RoootLayouts = () => {
                   />
                 </Box>
                 <Box
-                  className="flex mt-2 border border-[#507a4f] drop-shadow-lg justify-center items-center"
+                  className="flex mt-2 border drop-shadow-lg justify-center items-center"
                   sx={{
                     width: 300,
                     height: 50,
                     borderRadius: 10,
                     cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: baseColor.ultralight,
-                      transition: "all 0.5s ease-in-out",
-                    },
-                    color: baseColor.primaryfont,
-                    backgroundColor: baseColor.primarylight,
+                    color: "rgba(0,125,196,1)",
+                    backgroundColor: "#fff",
                     fontWeight: 500,
                     fontSize: "0.9rem",
                   }}
@@ -310,71 +391,89 @@ const RoootLayouts = () => {
               </Box>
               {loading && (
                 <>
-                  <Box className="flex flex-1 justify-center items-center">
+                  <Box className="flex justify-center items-center mt-1">
                     <CircularProgress
                       sx={{
+                        color: "rgba(216,75,154,1)",
                         paddingX: "0.8rem",
                         "--CircularProgress-size": "18px",
                         "--CircularProgress-trackThickness": "1px",
                         "--CircularProgress-progressThickness": "2px",
                       }}
                     />
-                    <div className="text-center font-semibold text-sm">
+                    <div className="text-center font-semibold text-sm " style={{ color: "rgba(255,255,255,0.8)" }}>
                       validating login credential
                     </div>
                   </Box>
                 </>
               )}
-              <Box
-                className="flex flex-1 justify-end items-end"
-                sx={{ fontSize: "0.9rem" }}
-              >
-                <Box
-                  onClick={loginwithCredentials}
-                  sx={{
-                    cursor: "pointer",
-                    color: baseColor.primary,
-                    fontWeight: 600,
-                    ":hover": {
-                      color: baseColor.primarylight,
-                      transition: "all 0.5s ease-in-out",
-                    },
-                  }}
-                >
-                  login with user credentials
-                </Box>
-              </Box>
             </Box>
-            // {/* Phone Input end here */}
-          )
-        ) : (
+          )}
+        </Box>
+        {/* USER CREDENTIALS BASED LOGIN MODAL */}
+        <Box
+          sx={{
+            top: `${top}%`,
+            position: 'absolute',
+            minHeight: '85%',
+            maxWidth: "470px",
+            width: "100%",
+            bgcolor: 'rgba(255,255,255)',
+            borderRadius: '30px 30px',
+            transition: 'top 0.5s ease-in-out',
+            boxShadow: "0 -5px 10px rgba(0, 0, 0, 0.1)",
+            overflow: 'hidden',
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
+          }}
+        >
           <Box
-            className="flex flex-col gap-2"
-            sx={{
-              // backgroundColor: baseColor.secondary,
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="h-20 p-4 flex justify-center items-center text-white"
           >
-            <Box className="flex justify-center w-[60%] flex-col">
+            <button onClick={handleChange}
+              style={{
+                backgroundColor: 'white',
+                fontFamily: 'var(--font-varient)',
+                color: 'rgba(0,125,196,1)',
+                fontWeight: 600
+              }}
+            >sign in with credentials</button>
+          </Box>
+          <Box className="flex justify-center items-end" >
+            <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
+            <Box className="flex float-start pb-2" sx={{ color: 'rgba(0,125,196,1)', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
+          </Box>
+          <Box
+            className="flex flex-1 flex-col gap-1 px-14 "
+            sx={{ width: "100%", }}
+          >
+            <Box className="flex justify-center flex-col">
               <Typography
                 sx={{
-                  color: baseColor.primary,
+                  color: 'rgba(0,125,196,0.6)',
+                  fontFamily: "var(--font-varient)",
                   fontSize: 12,
                   fontWeight: 600,
-                  pl: 0.5,
+                  pl: 0,
                 }}
               >
-                Mobile Number
+                User Name
               </Typography>
               <Input
                 fullWidth
-                type="number"
+                startDecorator={<User color="rgba(216,75,154,1)" />}
+                type="text"
+                name="userName"
+                value={userState.username}
+                onChange={handleChangeUser}
+                placeholder="enter your username"
+                variant="outlined"
                 sx={{
+                  fontFamily: "var(--font-varient)",
+                  border: "1px solid rgba(0,125,196,0.6)",
                   "&::before": {
-                    border: "1.5px solid var(--Input-focusedHighlight)",
+                    border: "0.5px solid rgba(216,75,154,0.6)",
                     transform: "scaleX(0)",
                     left: "2.5px",
                     right: "2.5px",
@@ -391,29 +490,36 @@ const RoootLayouts = () => {
                 }}
               />
             </Box>
-            <Box className="flex flex-col justify-center w-[60%]">
+            <Box className="flex flex-col justify-center ">
               <Typography
                 sx={{
-                  color: baseColor.primary,
+                  color: 'rgba(0,125,196,0.6)',
+                  fontFamily: "var(--font-varient)",
                   fontSize: 12,
                   fontWeight: 600,
-                  pl: 0.5,
                 }}
               >
                 Password
               </Typography>
               <Input
                 type="password"
+                startDecorator={<KeyBack color="rgba(216,75,154,1)" />}
                 fullWidth
+                name="passWord"
+                value={userState.passWord}
+                onChange={handleChangeUser}
+                placeholder="enter your password"
                 sx={{
+                  border: "1px solid rgba(0,125,196,0.6)",
                   "&::before": {
-                    border: "1.5px solid var(--Input-focusedHighlight)",
+                    border: "0.5px solid rgba(216,75,154,0.6)",
                     transform: "scaleX(0)",
                     left: "2.5px",
                     right: "2.5px",
                     bottom: 0,
                     top: "unset",
-                    transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                    transition:
+                      "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
                     borderRadius: 0,
                     borderBottomLeftRadius: "64px 20px",
                     borderBottomRightRadius: "64px 20px",
@@ -424,55 +530,33 @@ const RoootLayouts = () => {
                 }}
               />
             </Box>
-            <Box className="flex flex-col flex-1  items-end  w-[60%] ">
+            <Box className="flex flex-col">
               <Box
-                className="flex border  px-8 m-1 py-[0.1rem] rounded-[13px] drop-shadow-lg"
+                className="flex border rounded-[5px] py-2 my-1 items-center justify-center"
                 sx={{
-                  backgroundColor: baseColor.primarylight,
+                  backgroundColor: 'rgba(0,125,196,0.6)',
                   cursor: "pointer",
-                  ":hover": {
-                    backgroundColor: baseColor.ultralight,
-                    transition: "all 0.5s ease-in-out",
-                  },
+                  border: "1px solid rgba(0,125,196,0.6)",
                 }}
+                onClick={handleLoginButton}
               >
                 <Typography
                   level="body-md"
                   fontWeight={600}
                   sx={{
-                    color: baseColor.primaryfont,
-                    borderColor: baseColor.primary,
+                    color: "white",
+                    fontFamily: "var(--font-varient)",
+                    textAlign: "center",
                   }}
                 >
                   Login
                 </Typography>
               </Box>
             </Box>
-            <Box
-              className="flex flex-1 w-[100%] justify-end pr-5"
-              onClick={handleReturnToOTPLoginPage}
-              sx={{}}
-            >
-              <Typography
-                sx={{
-                  color: baseColor.primary,
-                  fontSize: 12,
-                  fontWeight: 600,
-                  textAlign: "right",
-                  cursor: "pointer",
-                  ":hover": {
-                    color: baseColor.primarylight,
-                    transition: "all 0.5s ease-in-out",
-                  },
-                }}
-              >
-                Login with OTP
-              </Typography>
-            </Box>
           </Box>
-        )}
+        </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 export default memo(RoootLayouts);
