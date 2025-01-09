@@ -229,8 +229,6 @@ const EditDocUpload = ({ params }) => {
         isLegalDoc
     } = editDocumentState;
 
-    console.log(isRequiredExp)
-
     // GET THE DOCUEMNT DETAILS
 
     const {
@@ -281,7 +279,6 @@ const EditDocUpload = ({ params }) => {
         //     }
         // })
     }, [docDetlArray]);
-    console.log(docDetlInfpArray)
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -440,7 +437,7 @@ const EditDocUpload = ({ params }) => {
     const docUpdationState = useMemo(() => {
         return {
             doc_number,
-            doc_date,
+            doc_date: docData?.doc_date,
             docVer,
             docVersionAment,
             docVersionInfoEdit,
@@ -451,7 +448,7 @@ const EditDocUpload = ({ params }) => {
         }
     }, [
         doc_number,
-        doc_date,
+        docData?.doc_date,
         docVer,
         docVersionAment,
         docVersionInfoEdit,
@@ -460,6 +457,9 @@ const EditDocUpload = ({ params }) => {
         doc_exp_end,
         doc_exp_start
     ])
+
+
+    const [renDoc, setRenDoc] = useState(null)
 
     return (
         <Box>
@@ -915,20 +915,9 @@ const EditDocUpload = ({ params }) => {
                                                                                         }}
                                                                                         size="md"
                                                                                         disabled={isRequiredExp === 1 ? false : true}
-                                                                                        onClick={() => { }}
+                                                                                        onClick={() => setRenDoc(false)}
                                                                                     >
                                                                                         Renew Expired Document
-                                                                                    </Button>
-                                                                                    <Button
-                                                                                        variant="outlined"
-                                                                                        sx={{
-                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
-                                                                                            color: 'rgba(var(--color-pink),0.8)'
-                                                                                        }}
-                                                                                        size="md"
-                                                                                        onClick={() => { }}
-                                                                                    >
-                                                                                        Revise Existing Document
                                                                                     </Button>
                                                                                 </div>
                                                                             ) : (
@@ -940,19 +929,7 @@ const EditDocUpload = ({ params }) => {
                                                                                             color: 'rgba(var(--color-pink),0.8)'
                                                                                         }}
                                                                                         size="md"
-                                                                                        disabled={isRequiredExp === 1 ? true : false}
-                                                                                        onClick={() => { }}
-                                                                                    >
-                                                                                        Renew Expired Document
-                                                                                    </Button>
-                                                                                    <Button
-                                                                                        variant="outlined"
-                                                                                        sx={{
-                                                                                            borderColor: "rgba(var(--color-pink),0.9)",
-                                                                                            color: 'rgba(var(--color-pink),0.8)'
-                                                                                        }}
-                                                                                        size="md"
-                                                                                        onClick={() => { }}
+                                                                                        onClick={() => setRenDoc(true)}
                                                                                     >
                                                                                         Revise Existing Document
                                                                                     </Button>
@@ -977,9 +954,9 @@ const EditDocUpload = ({ params }) => {
                                                                                     color: 'rgba(var(--color-pink),0.8)'
                                                                                 }}
                                                                                 size="md"
-                                                                                onClick={() => { }}
+                                                                                onClick={() => setRenDoc(true)}
                                                                             >
-                                                                                Revise Document
+                                                                                Revise Existing Document
                                                                             </Button>
                                                                         </Box>
                                                                     </Box>
@@ -989,8 +966,8 @@ const EditDocUpload = ({ params }) => {
 
                                                         {/* doc expiry renew   */}
                                                         <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
-                                                            <ExpiryRenewDoc {...docUpdationState} />
-                                                            <RenewDoc {...docUpdationState} />
+                                                            {renDoc === true && <RenewDoc {...docUpdationState} />}
+                                                            {renDoc === false && <ExpiryRenewDoc {...docUpdationState} />}
                                                         </Suspense>
 
                                                         {/* doc version revision   */}

@@ -33,9 +33,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FileListComponent from "./FileListComponent";
 import dummyImage from "../../../assets/pdf.png";
 import CommonMenuList from "../../../Components/CommonMenuList";
+import CustomCheckBoxWithLabel from '../../../Components/CustomCheckBoxWithLabel';
 
 
 const ExpiryRenewDoc = (props) => {
+
+    console.log(props)
 
     const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
@@ -84,16 +87,14 @@ const ExpiryRenewDoc = (props) => {
         );
     };
 
-
-
     return (
-        <Box>
+        <Box className="flex flex-1 flex-col border-[0.5px] p-2 rounded-md gap-1" >
             {/* Document Expiry Updation */}
-            <Box>expiry document</Box>
+            <Box>Renew Expired Document</Box>
             <Box className="flex flex-1 flex-row border-[0.5px] p-2 rounded-md" >
-                <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
-                    <Box className="flex flex-auto">
-                        <Box className="flex flex-col flex-auto">
+                <Box className="flex flex-col flex-1 py-[0.1rem] gap-2">
+                    <Box className="flex flex-row gap-6" >
+                        <Box className="flex flex-col">
                             <Typography
                                 level="body-sm"
                                 sx={{
@@ -106,34 +107,65 @@ const ExpiryRenewDoc = (props) => {
                                     color: 'rgba(var(--font-primary-white))'
                                 }}
                             >
-                                Doc Expiry From Date
+                                Document Date
                             </Typography>
                             <CustomDateFeild
-                                date={doc_exp_start}
-                                setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_start", value: date } })}
+                                date={doc_date}
+                                setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_date", value: date } })}
+                            />
+                        </Box>
+                        <Box className="flex flex-1 items-end justify-between pb-[0.088rem]">
+                            <CustomCheckBoxWithLabel
+                                label="Is Validity Required for this Document"
+                                checkBoxValue={isRequiredExp}
+                            // handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isRequiredExp", value: e.target.checked } })}
                             />
                         </Box>
                     </Box>
-                    <Box className="flex flex-auto">
-                        <Box className="flex flex-col flex-auto">
-                            <Typography
-                                level="body-sm"
-                                sx={{
-                                    fontWeight: 600,
-                                    fontFamily: "var(--font-varient)",
-                                    opacity: 0.8,
-                                    paddingLeft: "0.36rem",
-                                    lineHeight: "1.0rem",
-                                    fontSize: "0.81rem",
-                                    color: 'rgba(var(--font-primary-white))'
-                                }}
-                            >
-                                Doc Expiry To Date
-                            </Typography>
-                            <CustomDateFeild
-                                date={doc_exp_end}
-                                setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_end", value: date } })}
-                            />
+                    <Box className="flex flex-1 flex-row gap-2">
+                        <Box className="flex flex-auto">
+                            <Box className="flex flex-col">
+                                <Typography
+                                    level="body-sm"
+                                    sx={{
+                                        fontWeight: 600,
+                                        fontFamily: "var(--font-varient)",
+                                        opacity: 0.8,
+                                        paddingLeft: "0.36rem",
+                                        lineHeight: "1.0rem",
+                                        fontSize: "0.81rem",
+                                        color: 'rgba(var(--font-primary-white))'
+                                    }}
+                                >
+                                    Doc Expiry From Date
+                                </Typography>
+                                <CustomDateFeild
+                                    date={doc_exp_start}
+                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_start", value: date } })}
+                                />
+                            </Box>
+                        </Box>
+                        <Box className="flex flex-auto">
+                            <Box className="flex flex-col">
+                                <Typography
+                                    level="body-sm"
+                                    sx={{
+                                        fontWeight: 600,
+                                        fontFamily: "var(--font-varient)",
+                                        opacity: 0.8,
+                                        paddingLeft: "0.36rem",
+                                        lineHeight: "1.0rem",
+                                        fontSize: "0.81rem",
+                                        color: 'rgba(var(--font-primary-white))'
+                                    }}
+                                >
+                                    Doc Expiry To Date
+                                </Typography>
+                                <CustomDateFeild
+                                    date={doc_exp_end}
+                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_end", value: date } })}
+                                />
+                            </Box>
                         </Box>
                     </Box>
                 </Box>

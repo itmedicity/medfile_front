@@ -8,7 +8,8 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const CommonMenuList = ({
     handleSubmitButtonFun,
-    handleViewButtonFun
+    handleViewButtonFun,
+    submitLabel
 }) => {
 
     const navigation = useNavigate()
@@ -26,7 +27,7 @@ const CommonMenuList = ({
                     }
                 }}
                 onClick={handleSubmitButtonFun}>
-                <Tooltip title="Click Here to Submit" arrow variant='outlined'
+                <Tooltip title={submitLabel || "Click Here to Submit"} arrow variant='outlined'
                     sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }} >
                     <QueueIcon sx={{ fontWeight: 400, color: 'rgba(var(--icon-primary))' }} />
                 </Tooltip>
