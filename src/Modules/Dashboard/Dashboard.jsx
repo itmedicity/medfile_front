@@ -27,6 +27,10 @@ import axiosApi from "../../Axios/Axios";
 
 const localData = localStorage.getItem("app_auth");
 const credValue = atob(JSON.parse(localData)?.authType);
+const printerAccess = atob(JSON.parse(localData)?.printeraccess);
+
+
+// console.log("credValue", credValue);
 
 const Dashboard = () => {
 
@@ -66,7 +70,7 @@ const Dashboard = () => {
     error: allDocError,
   } = useQuery({
     queryKey: ["getAllDoc"],
-    queryFn: credValue === 1 ? getDocAll : getnonSecureDoconly,
+    queryFn: Number(credValue) === 1 ? getnonSecureDoconly : getDocAll,
     staleTime: Infinity,
   });
 
@@ -78,9 +82,10 @@ const Dashboard = () => {
   } = useQuery({
     queryKey: ["getDocNameSearch"],
     queryFn: () =>
-      credValue === 1
-        ? getDocMasterLikeNameNonSecureOnly(searchParm)
-        : getDocMasterLikeName(searchParm),
+      Number(credValue) === 1
+
+        ? getDocMasterLikeName(searchParm)
+        : getDocMasterLikeNameNonSecureOnly(searchParm),
     enabled: !!searchParm,
     staleTime: Infinity,
   });
@@ -237,7 +242,7 @@ const Dashboard = () => {
               className="flex flex-1 bg-tablebody/40"
               data={tableData}
               fixedHeaderContent={() => <TableHeaderVirtue />}
-              itemContent={(index, data) => <TableContentVirtue data={data} />}
+              itemContent={(index, data) => <TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />}
             />
           </Box>
         </Grid>

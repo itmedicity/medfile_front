@@ -68,7 +68,11 @@ const FileUpload = () => {
   // const [docType, setDocType] = useState(0)
   const queryClient = useQueryClient();
   const userData = localStorage.getItem("app_auth");
+  const userType = atob(JSON.parse(userData)?.authType);
   const user = atob(JSON.parse(userData)?.authNo);
+
+  // console.log("userType", userType);
+
 
   // GET UNIQUE DOCUMENT NUMBER
   const {
@@ -139,6 +143,7 @@ const FileUpload = () => {
     docRack,
     docCustodian
   } = documentState;
+
 
   const handleDocumentState = useCallback((e) => {
     setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
@@ -866,7 +871,7 @@ const FileUpload = () => {
             <Suspense
               fallback={<CustomBackDropWithOutState message={"Loading..."} />}
             >
-              <DocuementList />
+              <DocuementList userType={userType} />
             </Suspense>
           </TabPanel>
         </TabContext>

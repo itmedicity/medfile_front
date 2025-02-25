@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ListSubheader } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import { NavArrowRight } from 'iconoir-react'
+import { GoogleDocs, Journal, NavArrowRight, PrivacyPolicy } from 'iconoir-react'
 import { useCallback } from "react";
 import { useMemo } from "react";
 import {
@@ -39,11 +39,12 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
         return [
             { menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "File Search", text: "/Home/FileSearch", icon: <DocMagnifyingGlass height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { menu: "Doc Approval", text: "/Home/FileSearch", icon: <PrivacyPolicy height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
         ]
     }, [])
+
 
     const drawer = useMemo(() => (
         <div>
@@ -99,6 +100,9 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                                         transform: "translateX(2px)",
                                         color: "rgba(var(--drawer-font-color))",
                                     },
+                                    "& .marqueeSpan": {
+                                        animation: "marquee 5s linear infinite", // Start the marquee animation on hover
+                                    },
                                 },
                             }}
                         >
@@ -114,20 +118,44 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                             >
                                 {val.icon}
                             </ListItemIcon>
-                            <Typography
-                                noWrap
-                                className="hoverClass text-fontsecondarywhite "
-                                sx={{
-                                    display: "flex",
-                                    fontFamily: "var(--font-varient)",
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                    transition: "transform 0.3s ease",
-                                    transform: "translateX(0)",
+
+                            <span
+                                className="marqueeSpan"
+                                style={{
+                                    display: "inline-block",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
                                 }}
                             >
-                                {val.menu}
-                            </Typography>
+                                <Typography
+                                    noWrap
+                                    className="hoverClass text-fontsecondarywhite "
+                                    sx={{
+                                        display: "flex",
+                                        fontFamily: "var(--font-varient)",
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                        transition: "transform 10s ease",
+                                        transform: "translateX(0)",
+                                    }}
+                                >
+                                    {val.menu}
+                                </Typography>
+                            </span>
+
+
+                            {val.menu.length > 16 ? <style>
+                                {`
+      @keyframes marquee {
+        100% { transform: translateX(100%); }
+        20% { transform: translateX(0%); }
+      }
+    `}
+                            </style>
+                                :
+
+                                null
+                            }
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -154,7 +182,6 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                         width: drawerWidth,
                         transition: "width 0.5s",
                         backgroundColor: "rgba(var(--bg-drawer))",
-                        // backgroundColor: "rgba(var(--color-blue))",
                     },
                 }}
                 onClose={handleDrawerClose}

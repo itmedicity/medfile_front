@@ -34,17 +34,18 @@ import FileListComponent from "./FileListComponent";
 import dummyImage from "../../../assets/pdf.png";
 import CommonMenuList from "../../../Components/CommonMenuList";
 import CustomCheckBoxWithLabel from '../../../Components/CustomCheckBoxWithLabel';
+import axiosApi from '../../../Axios/Axios';
+import { QueryClient } from 'react-query';
 
 
 const ExpiryRenewDoc = (props) => {
-
-    console.log(props)
 
     const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
 
     const {
+        doc_id,
         doc_number,
         doc_date,
         docVer,
@@ -53,11 +54,26 @@ const ExpiryRenewDoc = (props) => {
         doc_ver_date,
         isRequiredExp,
         doc_exp_end,
-        doc_exp_start
+        doc_exp_start,
+        user
     } = props;
 
+    const [message, setMessage] = useState("");
+    const [open, setOpen] = useState(false);
+
+    const [renewExpDoc, setRenExpDoc] = useState({
+        ren_exp_doc_date: doc_date,
+        ren_exp_isRequiredExp: isRequiredExp,
+        ren_exp_doc_exp_start: doc_exp_start,
+        ren_Exp_doc_exp_end: doc_exp_end,
+    })
+
     const handleDocumentUpdateChange = useCallback((e) => {
-    }, []);
+        setRenExpDoc({ ...renewExpDoc, [e.target.name]: e.target.value });
+    }, [renewExpDoc]);
+
+    const { ren_exp_doc_date, ren_exp_isRequiredExp, ren_exp_doc_exp_start, ren_Exp_doc_exp_end } = renewExpDoc
+    // console.log("123renewExpDoc", renewExpDoc);
 
 
     /********* FILE UPLOAD SECTION START ********/
@@ -87,6 +103,102 @@ const ExpiryRenewDoc = (props) => {
         );
     };
 
+
+    const handleUpdateDocument = useCallback(async () => {
+        if (!ren_exp_doc_date || !ren_exp_doc_exp_start || !ren_Exp_doc_exp_end) {
+            warningNofity('Renew Expired Document Date, Start Date and End Date cannot be empty' || 'An error has occurred')
+            return
+        }
+
+        if (!isValid(new Date(ren_exp_doc_date))) {
+            warningNofity('Invalid Renew Expired Document Date' || 'An error has occurred')
+            return
+        }
+
+        if (!isValid(new Date(ren_exp_doc_exp_start))) {
+            warningNofity('Invalid Renew Expired Document Start Date' || 'An error has occurred')
+            return
+        }
+
+        if (!isValid(new Date(ren_Exp_doc_exp_end))) {
+            warningNofity('Invalid Renew Expired Document End Date' || 'An error has occurred')
+            return
+        }
+
+        const UpdateData = {
+            ren_docID: Number(doc_id),
+            docNumber: doc_number,
+            ren_doc_date: format(new Date(renewExpDoc.ren_exp_doc_date), "yyyy-MM-dd HH:mm"),
+            ren_isRequiredExp: Number(renewExpDoc.ren_exp_isRequiredExp),
+            ren_doc_exp_start: format(new Date(renewExpDoc.ren_exp_doc_exp_start), "yyyy-MM-dd HH:mm"),
+            ren_doc_exp_end: format(new Date(renewExpDoc.ren_Exp_doc_exp_end), "yyyy-MM-dd HH:mm"),
+            ren_docVersion: Number(docVer) + 1,
+            // ren_docVersionAment: Number(docVersionAment) + 10,
+            ren_docVersionAment: Number(docVersionAment),
+            ren_userID: Number(user),
+            ren_docUpload: format(new Date(), "yyyy-MM-dd HH:mm"),
+            ren_docVersionInfoEdit: Number(docVersionInfoEdit),
+            ren_docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
+            // ren_doc_ver_date: format(new Date(doc_ver_date), "yyyy-MM-dd HH:mm")
+            ren_doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
+            updateDocMaster: 0
+        }
+
+        // console.log("UpdateData", UpdateData);
+
+        const formData = new FormData();
+
+        formData.append("postData", JSON.stringify(UpdateData));
+        files.forEach((file) => {
+            formData.append("file", new Blob([file], { type: file.type }), file.name || "file");
+        });
+
+        formData.append('file', files);
+
+        try {
+            const response = await axiosApi.patch("/docMaster/updateRenewDocument", formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            const { success, message } = await response.data;
+            // console.log("success, message ", success, message);
+
+            if (success === 0) {
+                // setFiles([]);
+                // errorNofity(message);
+                setMessage(message);
+                setOpen(true);
+            } else if (success === 2) {
+                setMessage(message);
+                setOpen(true);
+                // warningNofity(message);
+            } else if (success === 1) {
+                setMessage(message);
+                setOpen(true);
+                // succesNofity(message);
+                QueryClient.invalidateQueries(["getDocumentNumber", "getDocList"]);
+                resetForm()
+            } else {
+                setMessage(message);
+                setOpen(true);
+                // warningNofity(message);
+            }
+        } catch (error) {
+            setMessage("An error has occurred: " + error);
+            setOpen(true);
+        }
+
+    }, [renewExpDoc, ren_exp_doc_date, ren_exp_doc_exp_start, ren_Exp_doc_exp_end, docVer, docVersionAment, docVersionInfoEdit, files, user])
+
+
+    const resetForm = useCallback(() => {
+        setFiles([]);
+    }, [setFiles])
+
+
     return (
         <Box className="flex flex-1 flex-col border-[0.5px] p-2 rounded-md gap-1" >
             {/* Document Expiry Updation */}
@@ -110,14 +222,14 @@ const ExpiryRenewDoc = (props) => {
                                 Document Date
                             </Typography>
                             <CustomDateFeild
-                                date={doc_date}
-                                setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_date", value: date } })}
+                                date={ren_exp_doc_date}
+                                setDate={(date) => handleDocumentUpdateChange({ target: { name: "ren_exp_doc_date", value: date } })}
                             />
                         </Box>
                         <Box className="flex flex-1 items-end justify-between pb-[0.088rem]">
                             <CustomCheckBoxWithLabel
                                 label="Is Validity Required for this Document"
-                                checkBoxValue={isRequiredExp}
+                                checkBoxValue={ren_exp_isRequiredExp}
                             // handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isRequiredExp", value: e.target.checked } })}
                             />
                         </Box>
@@ -140,8 +252,8 @@ const ExpiryRenewDoc = (props) => {
                                     Doc Expiry From Date
                                 </Typography>
                                 <CustomDateFeild
-                                    date={doc_exp_start}
-                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_start", value: date } })}
+                                    date={ren_exp_doc_exp_start}
+                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "ren_exp_doc_exp_start", value: date } })}
                                 />
                             </Box>
                         </Box>
@@ -162,8 +274,8 @@ const ExpiryRenewDoc = (props) => {
                                     Doc Expiry To Date
                                 </Typography>
                                 <CustomDateFeild
-                                    date={doc_exp_end}
-                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "doc_exp_end", value: date } })}
+                                    date={ren_Exp_doc_exp_end}
+                                    setDate={(date) => handleDocumentUpdateChange({ target: { name: "ren_Exp_doc_exp_end", value: date } })}
                                 />
                             </Box>
                         </Box>
@@ -222,8 +334,10 @@ const ExpiryRenewDoc = (props) => {
 
             <Box className="flex flex-1 flex-row justify-end">
                 <CommonMenuList
-                // handleSubmitButtonFun={handleUpdateDocument}
+                    handleSubmitButtonFun={handleUpdateDocument}
                 // handleViewButtonFun={() => setValue("2")}
+
+
                 />
             </Box>
         </Box>

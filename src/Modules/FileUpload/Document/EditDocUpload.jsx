@@ -66,7 +66,7 @@ import ExpiryRenewDoc from "./ExpiryRenewDoc";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
 import RenewDoc from "./RenewDoc";
 
-const EditDocUpload = ({ params }) => {
+const EditDocUpload = ({ refetchDocList, params }) => {
     const queryClient = useQueryClient();
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
@@ -127,6 +127,8 @@ const EditDocUpload = ({ params }) => {
     });
 
     const docData = useMemo(() => data, [data]);
+    // console.log("docData", docData);
+
 
     useEffect(() => {
         if (docData) {
@@ -169,23 +171,6 @@ const EditDocUpload = ({ params }) => {
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
                 uploadUserName: docData?.name,
                 isLegalDoc: docData?.isLegalDoc === 1 ? true : false,
-
-                // docNumber: docData?.doc_number,
-                // docName: docData?.doc_name,
-                // docDes: docData?.doc_desc,
-                // docType: docData?.doc_type,
-                // docSubType: docData?.doc_sub_type,
-                // institute: docData?.institute,
-                // course: docData?.course,
-                // category: docData?.category,
-                // subCategory: docData?.sub_category,
-                // group: docData?.group_mast,
-                // docDate: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "yyyy-MM-dd HH:mm"),
-                // docVersionDate: new Date(docData?.doc_ver_date),
-                // docExpStart: new Date(docData?.doc_exp_start),
-                // docExpEnd: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
-                // isRequiredExp: docData?.isRequiredExp === 1 ? true : false,
-                // isSecure: docData?.isSecure === 1 ? true : false,
             }));
         }
     }, [docData]);
@@ -243,6 +228,8 @@ const EditDocUpload = ({ params }) => {
         staleTime: Infinity
     });
 
+    // console.log("docDetlArray", docDetlArray);
+
     const docDetlInfpArray = useMemo(() => {
         if (!docDetlArray || !Array.isArray(docDetlArray) || docDetlArray.length === 0) {
             console.warn("docDetlArray is empty or not valid.");
@@ -269,15 +256,7 @@ const EditDocUpload = ({ params }) => {
                 };
             });
 
-        // return [...new Set(docDetlArray?.map((item) => item.docVer))].map((items) => {
-        //     return {
-        //         docVer: items,
-        //         docAment: docDetlArray?.filter((item) => item.docVer === items)[0].docVer_amentment,
-        //         docInfo: docDetlArray?.filter((item) => item.docVer === items)[0].dovVer_infoAment,
-        //         docVerDate: format(new Date(docDetlArray?.filter((item) => item.docVer === items)[0].docVerDate), "dd-MM-yyyy HH:mm"),
-        //         docVersionAment: docDetlArray?.filter((item) => item.docVer === items),
-        //     }
-        // })
+
     }, [docDetlArray]);
 
     const handleModelOpen = async () => {
@@ -353,16 +332,6 @@ const EditDocUpload = ({ params }) => {
             return;
         }
 
-        // if (isValid(new Date(editDocumentState.doc_date)) === false) {
-        //     warningNofity("Document Date cannot be empty");
-        //     return;
-        // }
-
-        // if (isValid(new Date(editDocumentState.doc_ver_date)) === false) {
-        //     warningNofity("Document Version Date cannot be empty");
-        //     return;
-        // }
-
         if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
             warningNofity(
                 "Document Expiry Start Date cannot be empty || Valid Date is required"
@@ -415,7 +384,8 @@ const EditDocUpload = ({ params }) => {
             docRack: Number(editDocumentState.docRack),
             docCustodian: Number(editDocumentState.docCustodian),
             docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
-            userID: user
+            userID: user,
+            docActiveStatus: 0
         };
 
         try {
@@ -426,9 +396,9 @@ const EditDocUpload = ({ params }) => {
                 await refetchDocInfoByID();
                 await queryClient.invalidateQueries(["getDocList"]);
             }
-            console.log(updateRes)
+            // console.log(updateRes)
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             errorNofity("Something went wrong".error);
         }
 
@@ -444,7 +414,10 @@ const EditDocUpload = ({ params }) => {
             doc_ver_date,
             isRequiredExp,
             doc_exp_end,
-            doc_exp_start
+            doc_exp_start,
+            user: user,
+            doc_id,
+
         }
     }, [
         doc_number,
@@ -455,11 +428,13 @@ const EditDocUpload = ({ params }) => {
         doc_ver_date,
         isRequiredExp,
         doc_exp_end,
-        doc_exp_start
+        doc_exp_start,
+        user, doc_id
     ])
 
 
     const [renDoc, setRenDoc] = useState(null)
+
 
     return (
         <Box>
@@ -897,7 +872,7 @@ const EditDocUpload = ({ params }) => {
                                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                                         <Box className="flex flex-1 flex-row gap-2 items-center ">
                                                                             <Calendar height={35} width={35} color="rgba(var(--color-pink),0.9)" />
-                                                                            <Box className="flex flex-1 flex-row gap-2 items-center " >
+                                                                            <Box className="flex flex-1 flex-row gap-2 items-center " color="rgba(var(--color-pink),0.9)">
                                                                                 <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 500, fontSize: '0.9rem' }} >Expired on </Box>
                                                                                 <ArrowRight height={15} width={15} className="flex" />
                                                                                 <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 600, fontSize: '0.9rem', color: "rgba(var(--color-pink),0.9)" }} >{format(new Date(doc_exp_end), "do-LLLL-yyyy")}</Box>
@@ -966,8 +941,8 @@ const EditDocUpload = ({ params }) => {
 
                                                         {/* doc expiry renew   */}
                                                         <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
-                                                            {renDoc === true && <RenewDoc {...docUpdationState} />}
-                                                            {renDoc === false && <ExpiryRenewDoc {...docUpdationState} />}
+                                                            {renDoc === true && <RenewDoc refetchDocDetl={refetchDocDetl} {...docUpdationState} />}
+                                                            {renDoc === false && <ExpiryRenewDoc refetchDocDetl={refetchDocDetl}  {...docUpdationState} />}
                                                         </Suspense>
 
                                                         {/* doc version revision   */}
@@ -1011,16 +986,14 @@ const EditDocUpload = ({ params }) => {
                                                 </Box>
                                                 {
                                                     el.docVersionAment?.map((el, idx) => (
-                                                        <FilleListCmp key={idx} data={el} />
+                                                        <FilleListCmp key={idx} data={el} refetchDocDetl={refetchDocDetl} />
                                                     ))
                                                 }
                                             </Fragment>
                                         )
                                     })
                                 }
-                                {/* {docDetlInfpArray?.map((el, idx) => (
-                                    <FilleListCmp key={idx} data={el} />
-                                ))} */}
+
                             </Grid>
                         </Grid>
                     </Box>

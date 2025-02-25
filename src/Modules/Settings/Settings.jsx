@@ -1,9 +1,8 @@
-import { Box, Divider, Typography } from '@mui/joy'
+import { Box, Typography } from '@mui/joy'
 import Grid from '@mui/material/Grid2'
 import React from 'react'
 import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { baseColor } from '../../Constant/Constant'
 import DefaultPageLayout from '../../Components/DefaultPageLayout'
 
 const Settings = () => {
@@ -24,7 +23,10 @@ const Settings = () => {
         { menuSlno: 900, menuName: 'Rack Master', menuCodeName: 'RackMaster' },
         { menuSlno: 1000, menuName: 'Location Master', menuCodeName: 'LocationMaster' },
         { menuSlno: 1100, menuName: 'Custodian Master', menuCodeName: 'CustodianMaster' },
-        { menuSlno: 1100, menuName: 'Custodian Department', menuCodeName: 'CustodianDepartment' },
+        { menuSlno: 1200, menuName: 'user Type Master', menuCodeName: 'UserTypeMaster' },
+        { menuSlno: 1300, menuName: 'Custodian Department', menuCodeName: 'CustodianDepartment' },
+        { menuSlno: 1400, menuName: 'Module Group Master', menuCodeName: 'ModuleGroupMaster' },
+        { menuSlno: 1500, menuName: 'Menu Name Master', menuCodeName: 'MenuNameMaster' },
     ]
 
     return (

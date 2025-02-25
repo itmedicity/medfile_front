@@ -265,6 +265,30 @@ export const getDocumentList = async () => {
   });
 };
 
+
+
+export const getNonSecDocumentList = async () => {
+  return await axiosApi.get("/docMaster/getNonSecDocMaster").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data?.map((item) => {
+        return {
+          id: item.doc_slno,
+          docDate: format(new Date(item.doc_date), "dd-MM-yyyy HH:mm:ss"),
+          docVersion: format(
+            new Date(item.doc_ver_date),
+            "dd-MM-yyyy HH:mm:ss"
+          ),
+          ...item,
+        };
+      });
+    }
+  });
+};
+
+
+
+
 export const getDocInforByID = async (id) => {
   return await axiosApi.get(`/docMaster/getDocMasterById/${id}`).then((res) => {
     const { success, data } = res.data;
@@ -439,3 +463,46 @@ export const getSelectCustodianDepartmentData = async () => {
       }
     });
 };
+
+export const getAllSuperUsers = async () => {
+  return await axiosApi.get(`/user/getSuperUsers`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getAllUsers = async () => {
+  return await axiosApi.get(`/user/getAllUser`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const userTypes = async () => {
+  return await axiosApi.get(`/UserTypeMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1 && Array.isArray(data)) {
+      return data.map(item => ({
+        value: item.user_type_slno,
+        label: item.user_type
+      }));
+    }
+  });
+};
+
+export const getModules = async () => {
+  return await axiosApi.get(`/ModuleNameMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1 && Array.isArray(data)) {
+      return data.map(item => ({
+        value: item.module_slno,
+        label: item.module_name
+      }));
+    }
+  });
+};
+

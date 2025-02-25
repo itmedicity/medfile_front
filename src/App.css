@@ -60,6 +60,9 @@
   --list-hover-font-color: 78, 78, 78;
 
   --modal-bg-color: 255, 255, 255;
+  --icon-approve-clr : 12, 130, 47;
+  --icon-notapprove-clr : 191, 21, 38;
+  --typo-clr:64, 64, 66;
 }
 
 .dark {
@@ -124,4 +127,8 @@
   --list-hover-font-color: 78, 78, 78;
 
   --modal-bg-color: 19, 21, 22;
+  --icon-approve-clr : 54, 247, 77;
+  --icon-notapprove-clr :242, 22, 51;
+  --typo-clr:242, 240, 240;
+
 }

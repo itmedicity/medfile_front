@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import { getDocumentList } from "../../../api/commonAPI";
+import { getDocumentList, getNonSecDocumentList } from "../../../api/commonAPI";
 import { useQuery } from "@tanstack/react-query";
 import { errorNofity } from "../../../Constant/Constant";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
@@ -11,20 +11,33 @@ import { format } from "date-fns";
 import { Box } from "@mui/joy";
 import EditDocUpload from "./EditDocUpload";
 
-const DocuementList = () => {
+const DocuementList = ({ userType }) => {
+
+    // const { isLoading, data, error } = useQuery({
+    //     queryKey: ["getDocList"],
+    //     queryFn: getDocumentList,
+    //     refetchOnWindowFocus: false
+    // });
+
+    const [tableData, setTableData] = useState([]);
 
     const { isLoading, data, error } = useQuery({
         queryKey: ["getDocList"],
-        queryFn: getDocumentList,
+        queryFn: Number(userType) === 1 ? getNonSecDocumentList : getDocumentList,
+        staleTime: Infinity,
         refetchOnWindowFocus: false
     });
+
+    useEffect(() => {
+        if (data) {
+            setTableData(data);
+        }
+    }, [data]);
 
     if (isLoading) <CustomBackDropWithOutState message={"Loading..."} />;
     if (error) errorNofity(error);
 
-    const renderCmp = useCallback((params) => (<EditDocUpload {...{ params }} />), []);
-
-    // type: 'actions', width: 100,  renderCell: (params) => (<EditDocUpload {...{ params }} />) 
+    const renderCmp = useCallback((params) => (<EditDocUpload  {...{ params }} />), []);
 
     const columns = useMemo(() => [
         { field: "actions", headerName: 'Actions', width: 100, type: 'actions', renderCell: renderCmp },
@@ -45,7 +58,7 @@ const DocuementList = () => {
         { field: "docVersion", headerName: "Doc Version", width: 170 },
     ], [renderCmp]);
 
-    const rows = useMemo(() => data, [data])
+    const rows = useMemo(() => tableData, [tableData])
     const pagination = { page: 0, pageSize: 25 };
     const paginationModel = useMemo(() => pagination, [pagination]);
 
@@ -59,7 +72,6 @@ const DocuementList = () => {
                 initialState={{ pagination: { paginationModel } }}
                 pageSizeOptions={[25, 50, 75, 100]}
                 columnHeaderHeight={35}
-                // checkboxSelection
                 sx={{
                     display: 'flex',
                     border: 0.5,
@@ -68,13 +80,11 @@ const DocuementList = () => {
                     '&.MuiDataGrid-root .MuiDataGrid-row--borderBottom': {
                         backgroundColor: 'rgba(var(--font-darkGrey))',
                         color: 'rgba(var(--font-primary-white))',
-                        // borderColor: 'red',
                     },
                     '& .MuiDataGrid-columnHeaderTitle': {
                         color: 'rgba(var(--color-white))',
                     },
                 }}
-            // onRowClick={(e) => console.log(e)}
             />
         </Box>
     );

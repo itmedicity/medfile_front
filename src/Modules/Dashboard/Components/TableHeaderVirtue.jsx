@@ -1,9 +1,7 @@
 import React from 'react'
 import { memo } from 'react'
-import { baseColor } from '../../../Constant/Constant'
 import { Box } from '@mui/joy'
 import PanoramaOutlinedIcon from "@mui/icons-material/PanoramaOutlined";
-import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 
@@ -14,26 +12,26 @@ const TableHeaderVirtue = () => {
         >
             <th>
                 <Box className="flex justify-center w-16">
-                    {/* <GppGoodIcon
+                    <GppGoodIcon
                         sx={{ fontSize: { sm: "1.1rem", lg: "1.1rem" } }}
                         color="success"
-                    /> */}
+                    />
                 </Box>
             </th>
             <th>
                 <Box className="flex justify-center w-16">
-                    {/* <PanoramaOutlinedIcon
+                    <PanoramaOutlinedIcon
                         sx={{ fontSize: { sm: "1.1rem", lg: "1.1rem" } }}
                         color="success"
-                    /> */}
+                    />
                 </Box>
             </th>
             <th>
                 <Box className="flex justify-center w-16">
-                    {/* <LocalPrintshopOutlinedIcon
+                    <LocalPrintshopOutlinedIcon
                         sx={{ fontSize: { sm: "1.1rem", lg: "1.1rem" } }}
                         color="success"
-                    /> */}
+                    />
                 </Box>
             </th>
             <th>

@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { memo } from 'react'
 import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel'
 import { IconButton, Radio, RadioGroup, Tooltip } from '@mui/joy'
-import { errorNofity, isValidMobileNumber, isValidPassword, sanitizeInput, screenWidth, succesNofity, validateEmail, warningNofity } from '../../../Constant/Constant'
+import { errorNofity, isValidMobileNumber, isValidPassword, sanitizeInput, succesNofity, validateEmail, warningNofity } from '../../../Constant/Constant'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
 import { useNavigate } from 'react-router-dom'
-import { loginType, passwordValidity, signInLimit, userStatus } from '../../../Constant/Data'
+import { passwordValidity, signInLimit, userStatus } from '../../../Constant/Data'
 import { useState } from 'react'
 import { useCallback } from 'react'
 import axiosApi from '../../../Axios/Axios'
@@ -18,10 +18,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import CustomeCheckBox from '../../../Components/CustomeCheckBox'
 import { Box } from '@mui/material'
 import { addDays, format } from 'date-fns'
+import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getAllUsers, userTypes } from '../../../api/commonAPI'
+import { Edit } from 'iconoir-react'
 
+const UserList = lazy(() => import('../../../Components/CustomTable'));
 
 const UserCreation = () => {
     const navigation = useNavigate()
+    const queryClient = useQueryClient()
     const [userManagemt, setUserManagemt] = useState({
         name: '',
         mobile: '',
@@ -32,107 +38,109 @@ const UserCreation = () => {
         user_Status: 0,
         signIn_Limit: 0,
         setOndayLogin: "N",
-        loginMethod: 1
+        loginMethod: 1,
+        printerUsability: "N",
+        user_slno: 0,
+        signInLimit: 0
     })
-
+    const [viewtable, setViewTable] = useState(0)
+    const [editData, setEditData] = useState(0)
     const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authNo)
 
-    const { name, mobile, email, password, login_Type, password_Validity, user_Status, signIn_Limit, setOndayLogin, loginMethod } = userManagemt;
+    const { data: AllUserList } = useQuery({
+        queryKey: ["userList"],
+        queryFn: getAllUsers,
+        staleTime: Infinity,
+    });
+    const { data: userType } = useQuery({
+        queryKey: ["userTypeList"],
+        queryFn: userTypes,
+        staleTime: Infinity,
+    });
+
+    const { name, mobile, email, password, login_Type, password_Validity, user_Status, signIn_Limit, setOndayLogin, loginMethod, printerUsability } = userManagemt;
 
     const handleChange = (e) => {
         setUserManagemt({ ...userManagemt, [e.target.name]: sanitizeInput(e.target.value) })
     }
 
     const handleSubmitUserManagment = useCallback(async (e) => {
-        e.preventDefault()
-
-        if (userManagemt.name === '') {
-            warningNofity('Name Of the User cannot be empty')
-            return
-        }
-
-        if (userManagemt.mobile === '') {
-            warningNofity('Mobile Number cannot be empty')
-            return
-        }
-
-        if (userManagemt.mobile !== '' && isValidMobileNumber(Number(userManagemt.mobile)) === false) {
-            warningNofity('Mobile Number must be 10 digit')
-            return
-        }
-
-        if (userManagemt.email === '') {
-            warningNofity('Email cannot be empty')
-            return
-        }
-
-        if (userManagemt.email !== '' && !validateEmail(userManagemt.email)) {
-            warningNofity('A Valid email address is required')
-            return
-        }
-
-        if (userManagemt.password === '') {
-            warningNofity('Password cannot be empty')
-            return
-        }
-
-        if (userManagemt.password !== '' && isValidPassword(userManagemt.password) === false) {
-            warningNofity('Password must contain minimum 6 char - At least one uppercase letter - At least one lowercase letter - At least one number - At least one special character')
-            return
-        }
-
-        if (Number(userManagemt.password_Validity) === 0 || userManagemt.password_Validity === '') {
-            warningNofity('Select Maximum Password Age Limit')
-            return
-        }
-
-        if (Number(userManagemt.signIn_Limit) === 0 || userManagemt.signIn_Limit === '') {
-            warningNofity('Select Maximum Sign In Limit')
-            return
-        }
-
-        if (userManagemt.login_Type === 0 || userManagemt.login_Type === '') {
-            warningNofity('Login Type cannot be empty')
-            return
-        }
-
-        if (userManagemt.user_Status === 0 || userManagemt.user_Status === '') {
-            warningNofity('User Status cannot be empty')
-            return
-        }
-
-        const postData = {
+        e.preventDefault();
+        const requestData = {
             name: userManagemt.name.trim(),
             mobile: userManagemt.mobile.trim(),
             email: userManagemt.email.trim(),
             login_Type: Number(userManagemt.login_Type),
             password: userManagemt.password,
             password_Validity: Number(userManagemt.password_Validity),
-            password_validity_expiry_date: format(addDays(new Date(), Number(userManagemt.password_Validity)), 'yyyy-MM-dd HH:mm:ss'),
             user_Status: Number(userManagemt.user_Status),
-            signIn_Limit: Number(userManagemt.signIn_Limit),
+            signIn_Limit_per_day: Number(userManagemt.signIn_Limit),
             setOndayLogin: userManagemt.setOndayLogin,
             loginMethod: Number(userManagemt.loginMethod),
-            created_by: loggedUser,
-            lastPasswordChangeDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-        }
+            printerUsability: userManagemt.printerUsability,
+        };
 
-        const postRegisterUser = await axiosApi.post('/user/insertUser', postData)
+        try {
+            let response;
+            if (editData === 0) {
+                // console.log("insert");
+                if (userManagemt.name.trim() === '') {
+                    warningNofity('Name Of the User cannot be empty');
+                    return;
+                }
 
-        if (postRegisterUser.status !== 200) {
-            errorNofity('Something went wrong. Please try again later')
-            return
-        }
+                if (userManagemt.mobile.trim() === '' || !isValidMobileNumber(Number(userManagemt.mobile))) {
+                    warningNofity('Mobile Number must be 10 digits');
+                    return;
+                }
 
-        if (postRegisterUser.status === 200) {
-            const { success, message } = postRegisterUser.data;
+                if (userManagemt.email.trim() === '' || !validateEmail(userManagemt.email)) {
+                    warningNofity('A valid email address is required');
+                    return;
+                }
 
-            if (success !== 1) {
-                warningNofity(message)
-                return
+                if (userManagemt.password.trim() === '' || !isValidPassword(userManagemt.password)) {
+                    warningNofity('Password must meet complexity requirements');
+                    return;
+                }
+
+                // Create new user
+                requestData.created_by = Number(loggedUser);
+                requestData.lastPasswordChangeDate = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+                requestData.password_validity_expiry_date = format(addDays(new Date(), Number(userManagemt.password_Validity)), 'yyyy-MM-dd HH:mm:ss');
+                // console.log("insert", requestData);
+
+                response = await axiosApi.post('/user/insertUser', requestData);
+            } else {
+                // console.log("edit");
+
+
+                const patchdata = {
+                    name: userManagemt.name.trim(),
+                    mobile: userManagemt.mobile.trim(),
+                    email: userManagemt.email.trim(),
+                    login_Type: Number(userManagemt.login_Type),
+                    password: userManagemt.password,
+                    password_Validity: Number(userManagemt.password_Validity),
+                    user_Status: Number(userManagemt.user_Status),
+                    signIn_Limit: Number(userManagemt.signInLimit),
+                    setOndayLogin: userManagemt.setOndayLogin,
+                    loginMethod: Number(userManagemt.loginMethod),
+                    printerUsability: userManagemt.printerUsability,
+                    user_slno: userManagemt.user_slno,
+                    edit_user: Number(loggedUser),
+                    edit_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                };
+                // console.log("patchdata", patchdata);
+
+                response = await axiosApi.patch(`/user/editUser`, patchdata);
             }
+            const { success, message } = response.data;
+            // console.log("response.data", response.data);
+
             if (success === 1) {
-                succesNofity(message)
+                queryClient.invalidateQueries(['userList'])
+                succesNofity(message);
                 setUserManagemt({
                     name: '',
                     mobile: '',
@@ -143,11 +151,43 @@ const UserCreation = () => {
                     user_Status: 0,
                     signIn_Limit: 0,
                     setOndayLogin: "N",
-                    loginMethod: 1
-                })
+                    loginMethod: 1,
+                    printerUsability: "N",
+                    user_slno: 0,
+                    signInLimit: 0
+                });
+                setEditData(0);
+            } else {
+                warningNofity(message);
             }
+        } catch (error) {
+            errorNofity('Error occurred while processing the request.');
         }
-    }, [userManagemt])
+    }, [userManagemt, editData, loggedUser, queryClient]);
+
+
+    const viewuserList = useCallback(() => {
+        setViewTable(1)
+    }, [])
+
+    const EditBtn = useCallback((item) => {
+        setEditData(1);
+        setUserManagemt({
+            user_slno: item.user_slno || 0,
+            name: item.name || "",
+            mobile: item.mobile || "",
+            email: item.email || "",
+            password: item.password || "",
+            login_Type: item.login_type || 0,
+            password_Validity: item.password_validity || 0,
+            user_Status: item.user_status || 0,
+            signIn_Limit: item.sign_in_per_day_limit || 0,
+            setOndayLogin: item.is_limited_user === "N" ? "N" : "Y",
+            loginMethod: item.login_method_allowed || 1,
+            printerUsability: item.printer_access === "N" ? "N" : "Y",
+            signInLimit: item.signInLimit
+        });
+    }, []);
 
     return (
         <DefaultPageLayout label="User Management" >
@@ -199,12 +239,13 @@ const UserCreation = () => {
                         handleChangeSelect={(e, val) => handleChange({ target: { name: 'signIn_Limit', value: val } })}
                         placeholder={"Select Number Of Sign In Per Days Limit"}
                     />
+
                     <CustomSelectWithLabel
                         labelName='Login User Type'
-                        dataCollection={loginType}
+                        dataCollection={userType}
                         values={Number(login_Type)}
                         handleChangeSelect={(e, val) => handleChange({ target: { name: 'login_Type', value: val } })}
-                        placeholder={"Select Login User Type"}
+                        placeholder={"Login User Type"}
                     />
                     <CustomSelectWithLabel
                         labelName='User Status'
@@ -213,7 +254,16 @@ const UserCreation = () => {
                         handleChangeSelect={(e, val) => handleChange({ target: { name: 'user_Status', value: val } })}
                         placeholder={"Select User Status"}
                     />
-                    <Box className="flex flex-row" >
+                    <Box className="flex flex-row gap-2" >
+                        <CustomeCheckBox
+                            values={printerUsability === "N" ? false : true}
+                            color={'danger'}
+                            lable={'Printer Usability'}
+                            handleChangeChecked={(e) => handleChange({
+                                target: { name: 'printerUsability', value: e.target.checked ? "Y" : "N" }
+                            })}
+                        />
+
                         <CustomeCheckBox
                             values={setOndayLogin === "N" ? false : true}
                             color={'danger'}
@@ -265,6 +315,7 @@ const UserCreation = () => {
                                     backgroundColor: 'transparent',
                                 }
                             }}
+                            onClick={viewuserList}
                         >
                             <Tooltip title="Click Here to View" arrow variant='outlined'
                                 sx={{ color: 'rgba(var(--icon-primary))', backgroundColor: 'transparent' }}>
@@ -290,6 +341,35 @@ const UserCreation = () => {
                     </Box>
                 </Box >
             </MasterPageLayout >
+            {viewtable === 1 ? <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
+                <UserList tableHeaderCol={['Action', 'Slno', 'Name', 'Mobile', 'Email', 'LogIn Type', 'Validity', 'SigIn Limit', 'One Day Log', 'SignIn Per Day', 'Log Method', 'Printer', 'Status']} >
+                    {
+                        AllUserList?.map((item, idx) => (
+                            <tr key={idx}>
+                                <td ><Edit onClick={() => EditBtn(item)} style={{
+                                    color: "rgba(var(--color-pink))",
+                                    ":hover": {
+                                        color: "grey",
+                                        // border: "rgba(var(--color-pink))",
+                                    }, p: 0.5
+                                }} /></td>
+                                <td>{idx + 1}</td>
+                                <td>{item?.name?.toUpperCase()}</td>
+                                <td>{item?.mobile}</td>
+                                <td sx={{ width: "100%" }}>{item?.email}</td>
+                                <td>{item?.login_type === 1 ? "Admin" : "Super Admit"}</td>
+                                <td>{item?.password_validity}</td>
+                                <td>{item?.sign_in_per_day_limit}</td>
+                                <td>{item?.is_limited_user}</td>
+                                <td>{item?.sign_in_per_day_count}</td>
+                                <td>{item?.login_method_allowed}</td>
+                                <td>{item?.printer_access === null || item?.printer_access === "N" ? "Denied" : "Accessible"}</td>
+                                <td>{item?.user_status === 1 ? "Active" : item?.user_status === 2 ? "Inactive" : "Suspented"}</td>
+                            </tr>
+                        ))
+                    }
+                </UserList>
+            </Suspense> : null}
         </DefaultPageLayout >
     )
 }
