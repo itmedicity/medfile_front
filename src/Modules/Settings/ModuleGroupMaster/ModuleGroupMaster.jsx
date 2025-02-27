@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react'
+import React, { lazy, memo, Suspense, useCallback, useState } from 'react'
 import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import { Box, IconButton, Tooltip } from '@mui/joy'
@@ -11,11 +11,14 @@ import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel';
 import { userStatus } from '../../../Constant/Data';
 import axiosApi from '../../../Axios/Axios';
-import { getModules } from '../../../api/commonAPI'
+import { getModuleMast, getModules } from '../../../api/commonAPI'
 import { useQuery } from '@tanstack/react-query';
 import CustomCheckBoxWithLabel from '../../../Components/CustomCheckBoxWithLabel';
+import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState';
 
 const ModuleGroupMaster = () => {
+
+    const ModuleMasterList = lazy(() => import('../../../Components/CustomTable'));
 
     const navigation = useNavigate()
     // const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authNo)
@@ -37,13 +40,21 @@ const ModuleGroupMaster = () => {
     });
     // console.log("moduleNameList", moduleNameList);
 
+    const { data: moduleMastList } = useQuery({
+        queryKey: ["moduleMast"],
+        queryFn: getModuleMast,
+        staleTime: Infinity,
+    });
+
+    console.log("moduleMastList", moduleMastList);
+
     const [selectedModules, setSelectedModules] = useState({});
 
     const handleDocumentState = (event) => {
         const { name, value } = event.target;
         setSelectedModules((prevState) => ({
             ...prevState,
-            [name]: value, // Update the module's checked state
+            [name]: value === false ? 0 : 1, // Update the module's checked state
         }));
     };
 
@@ -61,10 +72,15 @@ const ModuleGroupMaster = () => {
         }
         const postdata = {
             module_grp_name: moduleGrpDetails?.module_grp_name,
-            module_grp_status: moduleGrpDetails?.module_grp_status,
+            module_grp_status: Number(moduleGrpDetails?.module_grp_status),
+            module_slno: selectedModules
         }
+        console.log("postdata", postdata);
+
         const response = await axiosApi.post('/ModuleGroupMaster/insertModuleGroup', postdata)
         const { message, success } = response.data;
+        console.log(" message, success ", message, success);
+
         if (success === 1) {
             succesNofity(message)
             setModuleGrpDetails({
@@ -72,12 +88,13 @@ const ModuleGroupMaster = () => {
                 module_grp_name: '',
                 module_grp_status: 0
             });
+            setSelectedModules({})
         }
         else {
             warningNofity(message)
         }
 
-    }, [moduleGrpDetails])
+    }, [moduleGrpDetails, selectedModules])
 
     const viewuserList = useCallback(() => {
         setViewTable(1)
@@ -101,7 +118,7 @@ const ModuleGroupMaster = () => {
                                 <CustomCheckBoxWithLabel
                                     key={index} // Ensure a unique key
                                     label={val.label}
-                                    checkBoxValue={val.label}
+                                    checkBoxValue={selectedModules[val.label] || false}
                                     handleCheckBoxValue={(e) =>
                                         handleDocumentState({ target: { name: val.label, value: e.target.checked } })
                                     }
@@ -171,8 +188,22 @@ const ModuleGroupMaster = () => {
                     </Box>
                 </Box >
             </MasterPageLayout >
+            {viewtable === 1 ?
+                <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
+                    <ModuleMasterList tableHeaderCol={['Action', 'Sub Type Name', 'Sub Type Status']} >
+                        {
+                            moduleMastList?.map((item, idx) => (
+                                <tr key={idx}>
+                                    <td>{item.mgro_slno}</td>
+                                    <td>{item.module_grp_name?.toUpperCase()}</td>
+                                    <td>{item.module_slno}</td>
+                                    <td>{item.module_grp_status}</td>
+                                </tr>
+                            ))
+                        }
+                    </ModuleMasterList>
+                </Suspense> : null}
         </DefaultPageLayout >
     )
 }
-
 export default memo(ModuleGroupMaster) 

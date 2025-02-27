@@ -506,3 +506,18 @@ export const getModules = async () => {
   });
 };
 
+export const getModuleMast = async () => {
+  return await axiosApi.get(`/ModuleGroupMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+    // if (success === 1 && Array.isArray(data)) {
+    //   return data.map(item => ({
+    //     value: item.module_slno,
+    //     label: item.module_name
+    //   }));
+    // }
+  });
+};
+
