@@ -29,7 +29,6 @@ import { socket } from "../ws/socket";
 import { User, KeyBack } from 'iconoir-react'
 import Logo from "../assets/images/logo.png"
 
-
 const RoootLayouts = () => {
   // import functions
   const navigate = useNavigate();

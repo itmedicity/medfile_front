@@ -190,7 +190,7 @@ const ModuleGroupMaster = () => {
             </MasterPageLayout >
             {viewtable === 1 ?
                 <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                    <ModuleMasterList tableHeaderCol={['Action', 'Sub Type Name', 'Sub Type Status']} >
+                    <ModuleMasterList tableHeaderCol={['Action', 'Module Name', 'Sub Type Status']} >
                         {
                             moduleMastList?.map((item, idx) => (
                                 <tr key={idx}>
