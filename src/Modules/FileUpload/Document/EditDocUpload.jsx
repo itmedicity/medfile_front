@@ -65,6 +65,7 @@ import dummyImage from "../../../assets/pdf.png";
 import ExpiryRenewDoc from "./ExpiryRenewDoc";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
 import RenewDoc from "./RenewDoc";
+import CommonRightBasedMenus from "../../../Components/CommonRightBasedMenus";
 
 const EditDocUpload = ({ refetchDocList, params }) => {
     const queryClient = useQueryClient();
@@ -75,6 +76,9 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
     const userData = localStorage.getItem("app_auth");
     const user = atob(JSON.parse(userData)?.authNo);
+    const userType = atob(JSON.parse(userData)?.authType);
+
+    // console.log("userType", userType);
 
     const [open, setOpen] = useState(false);
 
@@ -829,7 +833,12 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
                                                 </Box>
                                                 <Box className="flex flex-1 flex-row mt-4 justify-end">
-                                                    <CommonMenuList
+                                                    {/* <CommonMenuList
+                                                        handleSubmitButtonFun={handleUpdateDocument}
+                                                    // handleViewButtonFun={() => setValue("2")}
+                                                    /> */}
+                                                    <CommonRightBasedMenus
+                                                        userType={userType}
                                                         handleSubmitButtonFun={handleUpdateDocument}
                                                     // handleViewButtonFun={() => setValue("2")}
                                                     />

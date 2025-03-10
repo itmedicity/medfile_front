@@ -1,127 +1,99 @@
 import React, { lazy, memo, Suspense, useCallback, useState } from 'react'
 import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
-import { Box, IconButton, Tooltip, Typography } from '@mui/joy'
+import { Box, IconButton, Tooltip } from '@mui/joy'
 import CloseIcon from '@mui/icons-material/Close';
 import QueueIcon from '@mui/icons-material/Queue';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { sanitizeInput, succesNofity, warningNofity } from '../../../Constant/Constant';
 import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
+import CustomInputWithLabel from '../../../Components/CustomInputWithLabel';
 import { userStatus } from '../../../Constant/Data';
 import axiosApi from '../../../Axios/Axios';
-import { getModuleMast, getModules, userTypes } from '../../../api/commonAPI'
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import CustomCheckBoxWithLabel from '../../../Components/CustomCheckBoxWithLabel';
-import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState';
+import { getAllModules } from '../../../api/commonAPI';
 import { Edit } from 'iconoir-react'
+import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState';
 
-const ModuleGroupMaster = () => {
+const ModuleNameMaster = () => {
+
     const queryClient = useQueryClient()
 
-    const ModuleMasterList = lazy(() => import('../../../Components/CustomTable'));
+    const ModuleList = lazy(() => import('../../../Components/CustomTable'));
 
     const navigation = useNavigate()
 
+    const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authNo)
+
     const [viewtable, setViewTable] = useState(0)
     const [editData, setEditData] = useState(0)
-    const [moduleGrpDetails, setModuleGrpDetails] = useState({
-        module_grp_slno: 0,
-        module_grp_status: 0,
-        user_type: 0
+    const [moduleDetails, setmoduleDetails] = useState({
+        module_slno: 0,
+        module_name: '',
+        module_status: 0
     })
+    const { module_name, module_status } = setmoduleDetails
 
-    const { module_grp_status, user_type } = moduleGrpDetails
-
-    const { data: moduleNameList } = useQuery({
-        queryKey: ["moduleList"],
-        queryFn: getModules,
+    const { data: AllmoduleNameList } = useQuery({
+        queryKey: ["AllmoduleList"],
+        queryFn: getAllModules,
         staleTime: Infinity,
     });
-
-    const { data: moduleMastList } = useQuery({
-        queryKey: ["moduleMast"],
-        queryFn: getModuleMast,
-        staleTime: Infinity,
-    });
-
-    const { data: userType } = useQuery({
-        queryKey: ["userTypeList"],
-        queryFn: userTypes,
-        staleTime: Infinity,
-    });
-
-    const [selectedModules, setSelectedModules] = useState({});
-
-    const handleDocumentState = (event) => {
-        const { name, value } = event.target;
-        setSelectedModules((prevState) => ({
-            ...prevState,
-            [name]: value === false ? 0 : 1, // Update the module's checked state
-        }));
-    };
-
 
     const handleChange = (e) => {
-        setModuleGrpDetails({ ...moduleGrpDetails, [e.target.name]: sanitizeInput(e.target.value) })
+        setmoduleDetails({ ...moduleDetails, [e.target.name]: sanitizeInput(e.target.value) })
     }
 
     const handleSubmitUserManagment = useCallback(async (e) => {
         e.preventDefault();
         if (editData === 0) {
-            if (moduleGrpDetails.user_type?.length === 0) {
+            if (moduleDetails.module_name === '') {
                 warningNofity('Name Of the Module cannot be empty');
                 return;
             }
             const postdata = {
-                module_user_type: Number(moduleGrpDetails?.user_type),
-                module_grp_status: Number(moduleGrpDetails?.module_grp_status),
-                module_slno: selectedModules
+                module_name: moduleDetails?.module_name,
+                module_status: moduleDetails?.module_status
             }
-            const response = await axiosApi.post('/ModuleGroupMaster/insertModuleGroup', postdata)
+            const response = await axiosApi.post('/ModuleNameMaster/insertModuleName', postdata)
             const { message, success } = response.data;
             if (success === 1) {
-                queryClient.invalidateQueries(['moduleMast'])
+                queryClient.invalidateQueries(['AllmoduleList'])
                 succesNofity(message)
-                setModuleGrpDetails({
-                    module_grp_slno: 0,
-                    user_type: 0,
-                    module_grp_status: 0
+                setmoduleDetails({
+                    module_slno: 0,
+                    module_name: '',
+                    module_status: 0
                 });
-                setSelectedModules({})
             }
             else {
                 warningNofity(message)
             }
         }
         else {
-            if (moduleGrpDetails.user_type?.length === 0) {
-                warningNofity('Name Of the Module cannot be empty');
-                return;
+            const postdata = {
+                module_slno: moduleDetails?.module_slno,
+                module_name: moduleDetails?.module_name,
+                module_status: moduleDetails?.module_status
+
             }
-            const patchdata = {
-                module_grp_slno: moduleGrpDetails?.module_grp_slno,
-                module_user_type: Number(moduleGrpDetails?.user_type),
-                module_grp_status: Number(moduleGrpDetails?.module_grp_status),
-                module_slno: selectedModules
-            }
-            const response = await axiosApi.patch('/ModuleGroupMaster/editModuleGroup', patchdata)
+            const response = await axiosApi.patch('/UserTypeMaster/editUserType', postdata)
             const { message, success } = response.data;
             if (success === 1) {
-                queryClient.invalidateQueries(['moduleMast'])
+                queryClient.invalidateQueries(['AllmoduleList'])
                 succesNofity(message)
-                setModuleGrpDetails({
-                    module_grp_slno: 0,
-                    user_type: 0,
-                    module_grp_status: 0,
+                setmoduleDetails({
+                    module_slno: 0,
+                    module_name: '',
+                    module_status: 0
                 });
-                setSelectedModules({})
             }
             else {
                 warningNofity(message)
             }
         }
-    }, [moduleGrpDetails, editData, queryClient, selectedModules])
+    }, [moduleDetails, editData, queryClient, loggedUser])
 
     const viewuserList = useCallback(() => {
         setViewTable(1)
@@ -129,50 +101,31 @@ const ModuleGroupMaster = () => {
 
     const EditBtn = useCallback((item) => {
         setEditData(1);
-        setModuleGrpDetails({
-            module_grp_slno: item.mgro_slno,
-            user_type: item.module_user_type,
-            module_grp_status: item.module_grp_status
+        setmoduleDetails({
+            module_slno: item?.module_slno,
+            module_name: item?.module_name,
+            module_status: item?.module_status
         });
-        setSelectedModules(item.module_slno || {});
-    }, []);
-
+    }, [setEditData, setmoduleDetails]);
 
     return (
-        <DefaultPageLayout label="Module Group Master" >
+        <DefaultPageLayout label="Module Name Master" >
             <MasterPageLayout>
                 <Box className="flex flex-col gap-1" >
-                    <CustomSelectWithLabel
-                        labelName='User Type'
-                        dataCollection={userType}
-                        values={Number(user_type)}
-                        handleChangeSelect={(e, val) => handleChange({ target: { name: 'user_type', value: val } })}
-                        placeholder={"User Type"}
+                    <CustomInputWithLabel
+                        handleInputChange={(e) => handleChange({ target: { name: 'module_name', value: e.target.value } })}
+                        values={module_name}
+                        placeholder="Enter Module Name"
+                        labelName='Module Name'
+                        type="text"
                     />
-
-                    <Box> <Typography sx={{ fontSize: 15 }}>Module Names</Typography>
-                        <Box className="flex flex-1 items-center justify-between py-[0.199rem] px-2 ">
-                            {moduleNameList?.map((val, index) => (
-                                <CustomCheckBoxWithLabel
-                                    key={index} // Ensure a unique key
-                                    label={val.label}
-                                    checkBoxValue={selectedModules[val.label] || false}
-                                    handleCheckBoxValue={(e) =>
-                                        handleDocumentState({ target: { name: val.label, value: e.target.checked } })
-                                    }
-                                />
-                            ))}
-                        </Box>
-                    </Box>
-
                     <CustomSelectWithLabel
-                        labelName='Module Group Status'
+                        labelName='Module Status'
                         dataCollection={userStatus}
-                        values={Number(module_grp_status)}
-                        handleChangeSelect={(e, val) => handleChange({ target: { name: 'module_grp_status', value: val } })}
-                        placeholder={"Module Group Status"}
+                        values={Number(module_status)}
+                        handleChangeSelect={(e, val) => handleChange({ target: { name: 'module_status', value: val } })}
+                        placeholder={"Module Status"}
                     />
-
                     <Box>
                         <IconButton
                             variant='outlined'
@@ -228,9 +181,9 @@ const ModuleGroupMaster = () => {
             </MasterPageLayout >
             {viewtable === 1 ?
                 <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                    <ModuleMasterList tableHeaderCol={['Action', 'Slno', 'Module Group User', 'Sub Type Status']} >
+                    <ModuleList tableHeaderCol={['Action', 'Slno', 'Module Name', 'Status']} >
                         {
-                            moduleMastList?.map((item, idx) => (
+                            AllmoduleNameList?.map((item, idx) => (
                                 <tr key={idx}>
                                     <td ><Edit onClick={() => EditBtn(item)} style={{
                                         color: "rgba(var(--color-pink))",
@@ -239,14 +192,16 @@ const ModuleGroupMaster = () => {
                                         }, p: 0.5
                                     }} /></td>
                                     <td>{idx + 1}</td>
-                                    <td>{userType.find(type => type.value === item?.module_user_type)?.label || 'Unknown User'}</td>
-                                    <td>{item?.module_grp_status === 1 ? "Active" : item?.module_grp_status === 2 ? "Inactive" : "Suspented"}</td>
+                                    <td>{item?.module_name?.toUpperCase()}</td>
+                                    <td>{item?.module_status === 1 ? "Active" : item?.module_status === 2 ? "Inactive" : "Suspented"}</td>
                                 </tr>
                             ))
                         }
-                    </ModuleMasterList>
+                    </ModuleList>
                 </Suspense> : null}
         </DefaultPageLayout >
     )
 }
-export default memo(ModuleGroupMaster) 
+
+export default memo(ModuleNameMaster)
+

@@ -24,7 +24,7 @@ import {
 } from "../../Constant/Constant";
 import CustomInput from "../../Components/CustomInput";
 import Clock from "react-live-clock";
-import { getDocNumber } from "../../api/commonAPI";
+import { getDocNumber, userWiseSettingsRights } from "../../api/commonAPI";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import CustomBackDropWithOutState from "../../Components/CustomBackDropWithOutState";
 import { customDocNumber } from "../../Function/CommonFunction";
@@ -61,6 +61,7 @@ import { PageStar, TaskList, PrivacyPolicy } from 'iconoir-react'
 import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
 import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
+import CommonRightBasedMenus from "../../Components/CommonRightBasedMenus";
 
 const DocuementList = lazy(() => import("./Document/DocuementList"));
 
@@ -70,8 +71,6 @@ const FileUpload = () => {
   const userData = localStorage.getItem("app_auth");
   const userType = atob(JSON.parse(userData)?.authType);
   const user = atob(JSON.parse(userData)?.authNo);
-
-  // console.log("userType", userType);
 
 
   // GET UNIQUE DOCUMENT NUMBER
@@ -84,11 +83,45 @@ const FileUpload = () => {
     queryFn: getDocNumber,
   });
 
+  //user rights
+  const { data: userSettings } = useQuery({
+    queryKey: ['getuserSettings', userType],
+    queryFn: () => userWiseSettingsRights(userType),
+    enabled: !!userType,
+  });
+
+  const [menurights, setMenurights] = useState([])
+
+  const tabs = [
+    {
+      menuSlno: 1,
+      label: "Create New Document",
+      value: "1",
+      icon: <PageStar color="rgba(var(--color-white))" />,
+    },
+    {
+      menuSlno: 2,
+      label: "Document Approval",
+      value: "2",
+      icon: <PrivacyPolicy color="rgba(var(--color-white))" />,
+    },
+  ];
+
+
+  useEffect(() => {
+    let array = tabs?.filter((value) => {
+      return userSettings?.find((val) => {
+        return value.menuSlno === val.menu_slno;
+      })
+    });
+    setMenurights(array)
+  }, [userSettings])
+
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   // TAB HANDLER STATE
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState("");
   const handleChange = (event, newValue) => setValue(newValue);
 
   // CUSTOM DOC NUMBER
@@ -428,7 +461,7 @@ const FileUpload = () => {
         </Snackbar>
         {/* <ToastContainer /> */}
         <TabContext value={value}>
-          <Box sx={{ border: 0, borderBottom: 1.5, borderColor: "rgba(var(--tab-border-color))", borderBottomColor: 'divider', borderWidth: 2 }}>
+          {/* <Box sx={{ border: 0, borderBottom: 1.5, borderColor: "rgba(var(--tab-border-color))", borderBottomColor: 'divider', borderWidth: 2 }}>
             <TabList
               onChange={handleChange}
               aria-label="lab API tabs example"
@@ -485,6 +518,52 @@ const FileUpload = () => {
                   },
                 }}
               />
+            </TabList>
+          </Box> */}
+          <Box
+            sx={{
+              border: 0,
+              borderBottom: 1.5,
+              borderColor: "rgba(var(--tab-border-color))",
+              borderBottomColor: "divider",
+              borderWidth: 2,
+            }}
+          >
+            <TabList
+              onChange={handleChange}
+              aria-label="lab API tabs example"
+              sx={{
+                minHeight: 0,
+                "& .MuiTabs-indicator": {
+                  backgroundColor: "rgba(var(--logo-pink))",
+                },
+              }}
+              className="flex justify-end items-center "
+            >
+              {menurights.map((tab, index) => (
+                <Tab
+                  key={index}
+                  icon={tab.icon}
+                  label={tab.label}
+                  value={tab.value}
+                  iconPosition="start"
+                  sx={{
+                    display: "flex",
+                    minHeight: 0,
+                    textTransform: "none",
+                    color: "rgba(var(--color-white),0.9)",
+                    bgcolor: "rgba(var(--tab-color),0.8)",
+                    borderRadius: 1,
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
+                    minWidth: "15%",
+                    "&.Mui-selected": {
+                      color: "rgba(var(--color-white))",
+                      bgcolor: "rgba(var(--tab-color))",
+                    },
+                  }}
+                />
+              ))}
             </TabList>
           </Box>
           <TabPanel value="1" className="overflow-scroll" sx={{ p: 1 }} >
@@ -806,7 +885,12 @@ const FileUpload = () => {
 
                   {/* SUBMIT BUTTON SECTION */}
                   <Box className="flex flex-1 flex-row py-2 justify-end">
-                    <CommonMenuList
+                    {/* <CommonMenuList
+                      handleSubmitButtonFun={handleDocInformationSubmit}
+                      handleViewButtonFun={() => setValue("2")}
+                    /> */}
+                    <CommonRightBasedMenus
+                      userType={userType}
                       handleSubmitButtonFun={handleDocInformationSubmit}
                       handleViewButtonFun={() => setValue("2")}
                     />

@@ -506,18 +506,52 @@ export const getModules = async () => {
   });
 };
 
+export const getAllModules = async () => {
+  return await axiosApi.get(`/ModuleNameMaster/selectAllModules`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data
+    }
+  });
+};
 export const getModuleMast = async () => {
   return await axiosApi.get(`/ModuleGroupMaster/getdatas`).then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data;
     }
-    // if (success === 1 && Array.isArray(data)) {
-    //   return data.map(item => ({
-    //     value: item.module_slno,
-    //     label: item.module_name
-    //   }));
-    // }
+  });
+};
+export const getuserType = async () => {
+  return await axiosApi.get(`/UserTypeMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+export const getMenuNames = async () => {
+  return await axiosApi.get(`/MenuNameMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
   });
 };
 
+export const getUserModules = async (module_name) => {
+  return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${module_name}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data ? data : [];
+    }
+  });
+};
+export const userWiseSettingsRights = async (loggedUser) => {
+  return await axiosApi.get(`/UserGroupRightMaster/userWiseSettingsRights/${loggedUser}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data ? data : [];
+    }
+  });
+};

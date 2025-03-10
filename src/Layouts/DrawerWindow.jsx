@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { memo } from "react";
+import { ListSubheader } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -9,42 +9,59 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { HomeAltSlimHoriz, NavArrowRight, PageSearch, PrivacyPolicy, Settings, ShieldUpload } from 'iconoir-react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { ListSubheader } from "@mui/material";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import { GoogleDocs, Journal, NavArrowRight, PrivacyPolicy } from 'iconoir-react'
-import { useCallback } from "react";
-import { useMemo } from "react";
-import {
-    HomeAltSlimHoriz,
-    ShieldUpload,
-    PageSearch,
-    Settings,
-    DocMagnifyingGlass
-} from 'iconoir-react'
+import { getUserModules } from '../api/commonAPI';
 
 const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
     const navigation = useNavigate()
 
+    const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authType)
+
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [arr, setarr] = useState([]);
 
     const handleListItemClick = useCallback((event, index, route) => {
         setSelectedIndex(index);
         navigation(route);
     }, []);
 
+    // const id = EmpauthId();
+    const { data: allmoduleitem } = useQuery({
+        queryKey: ['getallmoduleitem', loggedUser],
+        queryFn: () => getUserModules(loggedUser),
+        enabled: !!loggedUser,
+    });
+
     const drawerMenu = useMemo(() => {
         return [
-            { menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "Doc Approval", text: "/Home/FileSearch", icon: <PrivacyPolicy height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 1, menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 2, menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 3, menu: "Doc Approval", text: "/Home/FileSearch", icon: <PrivacyPolicy height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 4, menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 5, menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
         ]
     }, [])
 
+    const module_slno = allmoduleitem?.[0]?.module_slno;
+    const allmoduleArray = module_slno
+        ? Object.entries(module_slno).map(([menu, status]) => ({
+            menu,
+            status,
+        }))
+        : [];
+
+    useEffect(() => {
+        let array = drawerMenu?.filter((value) => {
+            return allmoduleArray?.find((val) => {
+                return value.menu === val.menu;
+            })
+        });
+        setarr(array)
+    }, [drawerMenu, allmoduleitem])
 
     const drawer = useMemo(() => (
         <div>
@@ -66,7 +83,7 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                     </ListSubheader>
                 }
             >
-                {drawerMenu?.map((val, index) => (
+                {arr?.map((val, index) => (
                     <ListItem
                         key={index}
                         disablePadding
@@ -162,7 +179,7 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
             </List>
             <Divider />
         </div>
-    ), [selectedIndex, handleListItemClick])
+    ), [selectedIndex, arr, handleListItemClick])
 
     return (
         <Box

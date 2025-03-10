@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react'
+import React, { lazy, memo, Suspense, useCallback, useState } from 'react'
 import DefaultPageLayout from '../../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../../Components/MasterPageLayout'
 import { Box, IconButton, Tooltip } from '@mui/joy'
@@ -11,16 +11,21 @@ import CustomSelectWithLabel from '../../../Components/CustomSelectWithLabel'
 import CustomInputWithLabel from '../../../Components/CustomInputWithLabel';
 import { userStatus } from '../../../Constant/Data';
 import axiosApi from '../../../Axios/Axios';
-import { userTypes } from '../../../api/commonAPI';
-import { useQuery } from '@tanstack/react-query';
+import { getMenuNames, getModules } from '../../../api/commonAPI';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Edit } from 'iconoir-react'
+import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOutState';
 
 const MenuNameMaster = () => {
 
     const navigation = useNavigate()
-    // const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authNo)
+
+    const queryClient = useQueryClient()
+
+    const MenuNameList = lazy(() => import('../../../Components/CustomTable'));
 
     const [viewtable, setViewTable] = useState(0)
-
+    const [editData, setEditData] = useState(0)
     const [MenuNames, setMenuNames] = useState({
         Menu_slno: 0,
         Menu_name: '',
@@ -30,9 +35,15 @@ const MenuNameMaster = () => {
 
     const { Menu_name, Menu_status, module_name } = MenuNames
 
-    const { data: userType } = useQuery({
-        queryKey: ["userTypeList"],
-        queryFn: userTypes,
+    const { data: getmodulelist } = useQuery({
+        queryKey: ["modulelist"],
+        queryFn: getModules,
+        staleTime: Infinity,
+    });
+
+    const { data: fetchMenus } = useQuery({
+        queryKey: ["GetMenuNames"],
+        queryFn: getMenuNames,
         staleTime: Infinity,
     });
 
@@ -42,36 +53,68 @@ const MenuNameMaster = () => {
 
     const handleSubmitUserManagment = useCallback(async (e) => {
         e.preventDefault();
-        if (MenuNames.Menu_name.trim() === '') {
-            warningNofity('Name Of the Module Group cannot be empty');
-            return;
+        if (editData === 0) {
+            if (MenuNames.Menu_name.trim() === '') {
+                warningNofity('Name Of the Module Group cannot be empty');
+                return;
+            }
+            const postdata = {
+                Menu_name: MenuNames?.Menu_name,
+                Menu_status: Number(MenuNames?.Menu_status),
+                module_name: MenuNames?.module_name,
+            }
+            const response = await axiosApi.post('/MenuNameMaster/insertMenuName', postdata)
+            const { message, success } = response.data;
+            if (success === 1) {
+                queryClient.invalidateQueries(['GetMenuNames'])
+                succesNofity(message)
+                setMenuNames({
+                    Menu_slno: 0,
+                    Menu_name: '',
+                    module_name: '',
+                    Menu_status: 0
+                });
+            }
+            else {
+                warningNofity(message)
+            }
+        } else {
+            const postdata = {
+                Menu_slno: MenuNames?.Menu_slno,
+                Menu_name: MenuNames?.Menu_name,
+                Menu_status: Number(MenuNames?.Menu_status),
+                module_name: MenuNames?.module_name,
+            }
+            const response = await axiosApi.patch('/MenuNameMaster/editMenuName', postdata)
+            const { message, success } = response.data;
+            if (success === 1) {
+                queryClient.invalidateQueries(['GetMenuNames'])
+                succesNofity(message)
+                setMenuNames({
+                    Menu_slno: 0,
+                    Menu_name: '',
+                    module_name: '',
+                    Menu_status: 0
+                });
+            }
+            else {
+                warningNofity(message)
+            }
         }
-        const postdata = {
-            Menu_name: MenuNames?.Menu_name,
-            Menu_status: MenuNames?.Menu_status,
-            module_name: MenuNames?.module_name,
-        }
-        // console.log("postdata", postdata);
-        const response = await axiosApi.post('/MenuNameMaster/insertMenuName', postdata)
-        const { message, success } = response.data;
-        // console.log(" message, success", message, success);
-        if (success === 1) {
-            succesNofity(message)
-            setMenuNames({
-                Menu_slno: 0,
-                Menu_name: '',
-                module_name: '',
-                Menu_status: 0
-            });
-        }
-        else {
-            warningNofity(message)
-        }
-
-    }, [MenuNames])
+    }, [MenuNames, queryClient, editData])
 
     const viewuserList = useCallback(() => {
         setViewTable(1)
+    }, [])
+
+    const EditBtn = useCallback((item) => {
+        setEditData(1)
+        setMenuNames({
+            Menu_slno: item?.menu_slno,
+            Menu_name: item?.menu_name,
+            module_name: item?.menu_module,
+            Menu_status: parseInt(item?.menu_status)
+        });
     }, [])
 
     return (
@@ -86,8 +129,8 @@ const MenuNameMaster = () => {
                         type="text"
                     />
                     <CustomSelectWithLabel
-                        labelName='module Names'
-                        dataCollection={userType}
+                        labelName='Module Names'
+                        dataCollection={getmodulelist}
                         values={Number(module_name)}
                         handleChangeSelect={(e, val) => handleChange({ target: { name: 'module_name', value: val } })}
                         placeholder={"Select Module Names"}
@@ -154,6 +197,27 @@ const MenuNameMaster = () => {
                     </Box>
                 </Box >
             </MasterPageLayout >
+            {viewtable === 1 ?
+                <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
+                    <MenuNameList tableHeaderCol={['Action', 'Slno', 'Menu Nme', 'Module ', 'Status']} >
+                        {
+                            fetchMenus?.map((item, idx) => (
+                                <tr key={idx}>
+                                    <td ><Edit onClick={() => EditBtn(item)} style={{
+                                        color: "rgba(var(--color-pink))",
+                                        ":hover": {
+                                            color: "grey",
+                                        }, p: 0.5
+                                    }} /></td>
+                                    <td>{idx + 1}</td>
+                                    <td>{item?.menu_name?.toUpperCase()}</td>
+                                    <td>{getmodulelist.find(module => module.value === item?.menu_module)?.label || 'Unknown Module'}</td>
+                                    <td>{Number(item?.menu_status) === 1 ? "Active" : Number(item?.menu_status) === 2 ? "Inactive" : "Suspented"}</td>
+                                </tr>
+                            ))
+                        }
+                    </MenuNameList>
+                </Suspense> : null}
         </DefaultPageLayout >
     )
 }

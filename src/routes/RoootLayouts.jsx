@@ -208,7 +208,6 @@ const RoootLayouts = () => {
 
         };
 
-
         setAuth((prev) => {
           return {
             ...prev,

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Box, Button, Input, Skeleton } from "@mui/joy";
 import Grid from "@mui/material/Grid2";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { Fragment, memo, useCallback, useEffect, useState } from "react";
 import {
   baseColor,
   sanitizeInput,
@@ -24,13 +24,11 @@ import TableContentVirtue from "./Components/TableContentVirtue";
 import { ToastContainer } from "react-toastify";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import axiosApi from "../../Axios/Axios";
+import DocCatagoryDetails from "./DocumentCategory/DocCatagoryDetails";
 
 const localData = localStorage.getItem("app_auth");
 const credValue = atob(JSON.parse(localData)?.authType);
 const printerAccess = atob(JSON.parse(localData)?.printeraccess);
-
-
-// console.log("credValue", credValue);
 
 const Dashboard = () => {
 
@@ -50,6 +48,9 @@ const Dashboard = () => {
   ];
   const [tableData, setTableData] = useState([]);
   const [searchParm, setSearchParm] = useState("");
+  const [view, SetView] = useState(0);
+  const [catDetails, SetCatDetails] = useState([])
+  const [DocName, setDocName] = useState("");
 
   //GET THE DASH BOARD COUNT
   const {
@@ -124,130 +125,136 @@ const Dashboard = () => {
     setSearchParm("");
   };
 
-
   return (
-    <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
-      <ToastContainer />
-      <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-        {/* Dash board container start */}
-        {docTypeLoding === true || docTypeError ? (
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-            <Skeleton
-              variant="rectangular"
-              sx={{ height: "100%" }}
-              animation="wave"
-            />
-          </Grid>
-        ) : (
-          docTypeData?.map((val, idx) => (
-            <DashBoadTile
-              key={idx}
-              index={idx}
-              color={color}
-              documentName={val.doc_type_master_name}
-              count={val.COUNT}
-            />
-          ))
-        )}
-        {/* Dash board container end here */}
-
-        {/* SEARCH ENGINE HERE */}
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-          <Box className="flex mt-0 justify-center">
-            {/* <AutocompletedMainSearch /> */}
-            <Input
-              startDecorator={
-                <SearchOutlinedIcon
-                  sx={{ color: "rgba(var(--icon-primary))" }}
+    <Fragment>
+      {view === 1 ? <DocCatagoryDetails SetView={SetView} view={view} catDetails={catDetails} SetCatDetails={SetCatDetails} DocName={DocName} /> :
+        <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
+          <ToastContainer />
+          <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+            {/* Dash board container start */}
+            {docTypeLoding === true || docTypeError ? (
+              <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+                <Skeleton
+                  variant="rectangular"
+                  sx={{ height: "100%" }}
+                  animation="wave"
                 />
-              }
-              onChange={(e) => setSearchParm(e.target.value)}
-              endDecorator={
-                <Button
-                  startDecorator={<ContentPasteSearchOutlinedIcon />}
-                  onClick={handleSearchFun}
+              </Grid>
+            ) : (
+              docTypeData?.map((val, idx) => (
+                <DashBoadTile
+                  key={idx}
+                  index={idx}
+                  color={color}
+                  documentName={val.doc_type_master_name}
+                  count={val.COUNT}
+                  typeSlno={val.doc_type_slno}
+                  SetView={SetView} view={view} catDetails={catDetails} SetCatDetails={SetCatDetails} setDocName={setDocName}
+
+                />
+              ))
+            )}
+            {/* Dash board container end here */}
+
+            {/* SEARCH ENGINE HERE */}
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+              <Box className="flex mt-0 justify-center">
+                {/* <AutocompletedMainSearch /> */}
+                <Input
+                  startDecorator={
+                    <SearchOutlinedIcon
+                      sx={{ color: "rgba(var(--icon-primary))" }}
+                    />
+                  }
+                  onChange={(e) => setSearchParm(e.target.value)}
+                  endDecorator={
+                    <Button
+                      startDecorator={<ContentPasteSearchOutlinedIcon />}
+                      onClick={handleSearchFun}
+                      sx={{
+                        backgroundColor: "rgba(var(--color-pink),0.8)",
+                        ":hover": {
+                          backgroundColor: "rgba(var(--color-pink))",
+                        },
+                      }}
+                    >
+                      Search
+                    </Button>
+                  }
                   sx={{
-                    backgroundColor: "rgba(var(--color-pink),0.8)",
-                    ":hover": {
-                      backgroundColor: "rgba(var(--color-pink))",
+                    width: {
+                      xs: "90%",
+                      sm: "80%",
+                      md: "60%",
+                      lg: "50%",
+                      xl: "40%",
                     },
+                    "--Input-radius": "40px",
+                    "--Input-gap": "10px",
+                    "--Input-placeholderOpacity": 1,
+                    "--Input-focusedThickness": "1px",
+                    "--Input-minHeight": "53px",
+                    "--Input-paddingInline": "27px",
+                    "--Input-decoratorChildHeight": "42px",
+                    "&.MuiInput-root": {
+                      "--Input-focusedHighlight": "rgba(var(--border-secondary))",
+                    },
+                    backgroundColor: "rgba(var(--bg-card))",
+                    border: "1px solid rgba(var(--border-primary))",
+                    transition: "Input-focusedHighlight 0.5s ease-in-out",
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    ml: 2,
+                    "--Button-radius": "40px",
                   }}
                 >
-                  Search
-                </Button>
-              }
-              sx={{
-                width: {
-                  xs: "90%",
-                  sm: "80%",
-                  md: "60%",
-                  lg: "50%",
-                  xl: "40%",
-                },
-                "--Input-radius": "40px",
-                "--Input-gap": "10px",
-                "--Input-placeholderOpacity": 1,
-                "--Input-focusedThickness": "1px",
-                "--Input-minHeight": "53px",
-                "--Input-paddingInline": "27px",
-                "--Input-decoratorChildHeight": "42px",
-                "&.MuiInput-root": {
-                  "--Input-focusedHighlight": "rgba(var(--border-secondary))",
-                },
-                backgroundColor: "rgba(var(--bg-card))",
-                border: "1px solid rgba(var(--border-primary))",
-                transition: "Input-focusedHighlight 0.5s ease-in-out",
-              }}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                ml: 2,
-                "--Button-radius": "40px",
-              }}
-            >
-              <Button
-                startDecorator={<RefreshIcon />}
-                onClick={handleClearTable}
+                  <Button
+                    startDecorator={<RefreshIcon />}
+                    onClick={handleClearTable}
+                    sx={{
+                      height: "45px",
+                      backgroundColor: "rgba(var(--color-pink),0.8)",
+                      ":hover": {
+                        backgroundColor: "rgba(var(--color-pink))",
+                      },
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+              <Box
+                className="flex justify-center items-center"
                 sx={{
-                  height: "45px",
-                  backgroundColor: "rgba(var(--color-pink),0.8)",
-                  ":hover": {
-                    backgroundColor: "rgba(var(--color-pink))",
-                  },
+                  height: "calc(100vh - 290px)",
+                  backgroundColor: "rgba(var(--bg-card))",
+                  width: "100%",
+                  // mt: 0.5,
+                  // padding: "0.1rem",
+                  // border: "1px solid rgba(var(--border-primary))",
                 }}
               >
-                Clear
-              </Button>
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-          <Box
-            className="flex justify-center items-center"
-            sx={{
-              height: "calc(100vh - 290px)",
-              backgroundColor: "rgba(var(--bg-card))",
-              width: "100%",
-              // mt: 0.5,
-              // padding: "0.1rem",
-              // border: "1px solid rgba(var(--border-primary))",
-            }}
-          >
-            <TableVirtuoso
-              style={{ height: "100%", width: "100%" }}
-              className="flex flex-1 bg-tablebody/40"
-              data={tableData}
-              fixedHeaderContent={() => <TableHeaderVirtue />}
-              itemContent={(index, data) => <TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />}
-            />
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
+                <TableVirtuoso
+                  style={{ height: "100%", width: "100%" }}
+                  className="flex flex-1 bg-tablebody/40"
+                  data={tableData}
+                  fixedHeaderContent={() => <TableHeaderVirtue />}
+                  itemContent={(index, data) => <TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      }
+    </Fragment>
   );
 };
 
