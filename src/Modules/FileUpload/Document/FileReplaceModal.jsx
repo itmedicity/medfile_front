@@ -217,7 +217,7 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
                 size="sm"
                 sx={{
                     width: screenWidth - 500,
-                    height: screenHeight,
+                    // height: screenHeight,
                     p: 1,
                     backgroundColor: "rgba(var(--modal-bg-color))",
                     transition: "all 0.5s ease-in-out",
@@ -378,10 +378,13 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
                     </Box>
 
                     <Box className="flex flex-1 flex-row justify-end ">
-                        <CommonMenuList
-                            submitLabel={"Click here to renew Document"}
-                            handleSubmitButtonFun={handleReplaceDoc}
-                        />
+                        <Box>
+                            <CommonMenuList
+                                submitLabel={"Click here to renew Document"}
+                                handleSubmitButtonFun={handleReplaceDoc}
+                            />
+                        </Box>
+
                     </Box>
                 </Box>
 

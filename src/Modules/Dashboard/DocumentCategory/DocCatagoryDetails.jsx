@@ -1,120 +1,88 @@
-import React, { memo, useEffect, useState } from 'react'
-import DefaultPageLayout from '../../../Components/DefaultPageLayout'
-import { Box } from '@mui/joy'
-import { List } from 'iconoir-react'
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
-import Tab, { tabClasses } from '@mui/joy/Tab';
-import GradingIcon from '@mui/icons-material/Grading';
-import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import React, { memo, useCallback, useState } from 'react';
+import { Box, Divider, Typography } from '@mui/joy';
+import { useQuery } from '@tanstack/react-query';
+import { getSelectCategoryNameList } from '../../../api/commonAPI';
+import CategoryBasedDashboard from '../../../Components/CategoryBasedDashboard';
+import SubCategoryDetails from './SubCategoryDetails';
 
-const DocCatagoryDetails = ({ SetView, view, catDetails, SetCatDetails, DocName }) => {
-    const [index, setIndex] = useState(0);
-    const [viewData, SetViewData] = useState(0)
+const DocCatagoryDetails = ({ SetView, catDetails, DocName }) => {
 
-    const colors = ['primary', 'success', 'warning', 'danger']
+    const [dtlView, SetDtlView] = useState(0)
+    const [catSlno, SetCatSlno] = useState(0)
 
-    const approvedFiles = catDetails?.filter((val) => val.apprvl_status === 1);
-    const NotApprovedFiles = catDetails?.filter((val) => val.apprvl_status === 0);
+    const { data: docCatList } = useQuery({
+        queryKey: ["getDocCatList"],
+        queryFn: getSelectCategoryNameList
+    });
 
-    console.log("viewData", viewData);
-    // console.log("approvedFiles", approvedFiles);
-    // console.log("NotApprovedFiles", NotApprovedFiles);
-
-    // useEffect(() => {
-    //     if (index === 0 && index !== 1 && index !== 2) {
-    //         SetViewData(catDetails)
-    //     }
-    //     else if (index === 1 && index !== 0 && index !== 2) {
-    //         SetViewData(approvedFiles)
-    //     }
-    //     else if (index === 2 && index !== 1 && index !== 0) {
-    //         SetViewData(NotApprovedFiles)
-    //     }
-    // }, [index, catDetails, approvedFiles, NotApprovedFiles])
-
+    const ViewDetails = useCallback((e) => {
+        const catno = Number(e)
+        SetCatSlno(catno)
+        SetDtlView(1)
+    }, [])
 
     return (
         <div>
-            <DefaultPageLayout label={DocName !== null || DocName !== undefined || DocName?.length !== 0 ? DocName : "Document Type"} >
-                <Box
-                    sx={{
-                        flexGrow: 1,
-                        m: -3,
-                        p: 4,
-                        bgcolor: `${'var(--colors-index)'}.500`,
-                    }}
-                    style={{ '--colors-index': colors[index] }}
-                >
-                    <Tabs
-                        size="lg"
-                        aria-label="Bottom Navigation"
-                        value={index}
-                        onChange={(event, value) => setIndex(value)}
-                        sx={(theme) => ({
-                            p: 1,
-                            mx: 'auto',
-                            boxShadow: theme.shadow.sm,
-                            '--joy-shadowChannel': theme.vars.palette[colors[index]].darkChannel,
-                            [`& .${tabClasses.root}`]: {
-                                py: 1,
-                                flex: 1,
-                                transition: '0.3s',
-                                fontWeight: 'md',
-                                fontSize: 'md',
-                                [`&:not(.${tabClasses.selected}):not(:hover)`]: {
-                                    opacity: 0.7,
-                                },
-                            },
+            {dtlView === 1 ? <Box sx={{ height: '100vh', flex: 1, bgcolor: 'rgba(var(--bg-common))' }}>
+                <SubCategoryDetails
+                    dtlView={dtlView} SetView={SetDtlView} catSlno={catSlno} SetCatSlno={SetCatSlno} catDetails={catDetails} />
+            </Box> :
+                <CategoryBasedDashboard SetView={SetView} label={DocName || "Document Type"}>
+                    <Box sx={{ display: "flex", width: "100%", flexDirection: "row", gap: 1, mt: 0, p: 1, flexWrap: "wrap", alignContent: "center", mx: "auto" }}>
+                        {docCatList?.map((category) => {
+                            const filteredDocs = catDetails?.filter(doc => category.value === doc.category);
+                            const docCount = filteredDocs?.length || 0;
+                            return (
+                                <Box
+                                    key={category.value}
+                                    onClick={() => ViewDetails(category.value)}
+                                    sx={{
+                                        height: 115,
+                                        width: "19.5%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        // backgroundColor: "#C7D9DD",
+                                        // backgroundColor: "#748B9C",
+                                        // backgroundColor: "#C5D3E8",
+                                        // backgroundColor: "#222831",
+                                        overflow: 'hidden',
+                                        flexWrap: 'wrap',
+                                        boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.1)",
+                                        cursor: "pointer",
+                                        borderRadius: 5,
+                                        border: 1,
+                                        borderColor: "#607274",
+                                        bgcolor: "rgba(var(--bg-common))",
+                                    }}
+                                >
+                                    <Box sx={{ p: 1, display: "flex", flexDirection: "column", flex: 1 }}>
+                                        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                                            <Typography
+                                                sx={{
+                                                    wordBreak: 'break-word',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'normal',
+                                                    display: 'block',
+                                                    // color: "rgb(var(--bg-box-typo))",
+                                                    color: 'rgba(var(--font-primary-white))'
+                                                }}
+                                            >
+                                                {category.label}
+                                            </Typography>
+                                        </Box>
+                                        <Divider />
+                                        <Box sx={{ mt: 1.5 }}>
+                                            <Typography sx={{ fontSize: "30px", color: 'rgba(var(--font-primary-white))', }}>{docCount}</Typography>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            );
                         })}
-                    >
-                        <TabList
-                            variant="plain"
-                            size="sm"
-                            disableUnderline
-                            sx={{ borderRadius: 'lg', p: 0 }}
-                        >
-                            <Tab
-                                disableIndicator
-                                orientation="horizontal"
-                                {...(index === 0 && { color: colors[0] })}
-                                onClick={() => {
-                                    setIndex(1);
-                                }}
-                            >
-                                <ListItemDecorator>
-                                    <List />
-                                </ListItemDecorator>
-                                All Documents
-                            </Tab>
-                            <Tab
-                                disableIndicator
-                                orientation="horizontal"
-                                {...(index === 1 && { color: colors[1] })}
-                            >
-                                <ListItemDecorator>
-                                    <GradingIcon />
-                                </ListItemDecorator>
-                                Approved
-                            </Tab>
-                            <Tab
-                                disableIndicator
-                                orientation="horizontal"
-                                {...(index === 2 && { color: colors[2] })}
-                            >
-                                <ListItemDecorator>
-                                    <HourglassBottomIcon />
-                                </ListItemDecorator>
-                                Waiting for Approval
-                            </Tab>
-                        </TabList>
-                    </Tabs>
-                </Box>
-            </DefaultPageLayout>
-        </div>
-    )
-}
+                    </Box>
+                </CategoryBasedDashboard>
+            }
+        </div >
+    );
+};
 
-export default memo(DocCatagoryDetails)
-
+export default memo(DocCatagoryDetails);

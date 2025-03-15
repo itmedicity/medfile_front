@@ -555,3 +555,12 @@ export const userWiseSettingsRights = async (loggedUser) => {
     }
   });
 };
+
+export const SubCategoryById = async (catSlno) => {
+  return await axiosApi.get(`/docSubCategoryName/getSubCategoryById/${catSlno}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data
+    }
+  });
+};

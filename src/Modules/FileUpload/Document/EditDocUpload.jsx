@@ -68,6 +68,7 @@ import RenewDoc from "./RenewDoc";
 import CommonRightBasedMenus from "../../../Components/CommonRightBasedMenus";
 
 const EditDocUpload = ({ refetchDocList, params }) => {
+
     const queryClient = useQueryClient();
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
@@ -131,7 +132,6 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     });
 
     const docData = useMemo(() => data, [data]);
-    // console.log("docData", docData);
 
 
     useEffect(() => {

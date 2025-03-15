@@ -237,9 +237,6 @@ const Dashboard = () => {
                   height: "calc(100vh - 290px)",
                   backgroundColor: "rgba(var(--bg-card))",
                   width: "100%",
-                  // mt: 0.5,
-                  // padding: "0.1rem",
-                  // border: "1px solid rgba(var(--border-primary))",
                 }}
               >
                 <TableVirtuoso

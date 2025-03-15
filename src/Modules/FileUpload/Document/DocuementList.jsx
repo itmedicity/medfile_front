@@ -65,6 +65,27 @@ const DocuementList = ({ userType }) => {
     return (
         <Box sx={{ height: '80vh', overflow: 'hidden', width: '100%', maxWidth: '100vw', }}>
             <ToastContainer />
+            {/* <DataGrid
+                rows={rows}
+                columns={columns}
+                rowHeight={35}
+                initialState={{ pagination: { paginationModel } }}
+                pageSizeOptions={[25, 50, 75, 100]}
+                columnHeaderHeight={35}
+                sx={{
+                    display: 'flex',
+                    border: 0.5,
+                    borderColor: 'rgba(var(--border-primary))',
+                    color: 'rgba(var(--font-primary-white))',
+                    '&.MuiDataGrid-root .MuiDataGrid-row--borderBottom': {
+                        backgroundColor: 'rgba(var(--font-darkGrey))',
+                        color: 'rgba(var(--font-primary-white))',
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        color: 'rgba(var(--color-white))',
+                    },
+                }}
+            /> */}
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -84,6 +105,17 @@ const DocuementList = ({ userType }) => {
                     '& .MuiDataGrid-columnHeaderTitle': {
                         color: 'rgba(var(--color-white))',
                     },
+                    // Styling the pagination dropdown button (page size options)
+                    '& .MuiTablePagination-select': {
+                        color: 'rgba(var(--font-primary-white))',  // Change the text color
+                        backgroundColor: 'rgba(var(--background-dropdown))',  // Change background color
+                        '&:hover': {
+                            backgroundColor: 'rgba(var(--background-hover-dropdown))', // Background color on hover
+                        },
+                    },
+                    '& .MuiTablePagination-selectIcon': {
+                        color: 'rgba(var(--icon-color))', // Change the icon color
+                    }
                 }}
             />
         </Box>

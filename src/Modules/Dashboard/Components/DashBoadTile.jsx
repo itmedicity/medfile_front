@@ -33,7 +33,7 @@ const DashBoadTile = ({ color, index, documentName, count, typeSlno, SetView, Se
                         width: "100%",
                     }}
                 >
-                    <Box className="flex flex-row" sx={{ height: 115, cursor: 'pointer', backgroundColor: "pink" }} onClick={ViewCategoryDetails}>
+                    <Box className="flex flex-row" sx={{ height: 115, cursor: 'pointer' }} onClick={ViewCategoryDetails}>
                         <Box
                             className="flex flex-col"
                             sx={{

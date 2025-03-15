@@ -1,7 +1,7 @@
 import { Box, IconButton, Tooltip } from "@mui/joy";
 import React, { Fragment, memo, useCallback } from "react";
 import FileLink from "../../../assets/images/pdfSvg2.svg";
-import { NAS_FOLDER } from "../../../Constant/Static";
+import { NAS_FLDR } from "../../../Constant/Static";
 import { useState } from "react";
 import FileDisplayModal from "./FileDisplayModal";
 import { BinMinusIn, PageEdit } from 'iconoir-react'
@@ -27,9 +27,10 @@ const FilleListCmp = ({ data, refetchDocDetl }) => {
         // docVer_amentment,
         // dovVer_infoAment,
     } = data
-    const NasFileLink = `${NAS_FOLDER}${doc_number}/${filename}`
+    // const NasFileLink = `${NAS_FOLDER}${doc_number}/${filename}`
     // console.log("docActiveStatus,doc_number", docActiveStatus, doc_number);
 
+    const NasFileLink = `${NAS_FLDR}${doc_number}/${filename}`
 
     const [openFile, setOpenFile] = useState(false)
     const [editModal, setEditModal] = useState(false)

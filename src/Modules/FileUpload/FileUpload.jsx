@@ -177,7 +177,6 @@ const FileUpload = () => {
     docCustodian
   } = documentState;
 
-
   const handleDocumentState = useCallback((e) => {
     setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
   }, [documentState]);
@@ -748,7 +747,7 @@ const FileUpload = () => {
                       </Box>
                     </>
                   ) : null}
-                  <Box className="flex flex-1 flex-col">
+                  {/* <Box className="flex flex-1 flex-col">
                     <SelectCmpCategoryNameList
                       label={"Category Name List"}
                       handleChange={(e, element) => handleDocumentState({ target: { name: "category", value: element }, })}
@@ -766,7 +765,27 @@ const FileUpload = () => {
                       }
                       value={subCategory}
                     />
+                  </Box> */}
+                  <Box className="flex flex-1 flex-col">
+                    <SelectCmpCategoryNameList
+                      label={"Category Name List"}
+                      handleChange={(e, element) => handleDocumentState({
+                        target: { name: "category", value: element }
+                      })}
+                      value={category} // Ensure category is the correct type
+                    />
                   </Box>
+                  <Box className="flex flex-1 flex-col">
+                    <SelectSubCategoryMater
+                      label={"Sub Category Master"}
+                      catSlno={category ? Number(category) : 0} // Ensure category is a valid number
+                      handleChange={(e, element) => handleDocumentState({
+                        target: { name: "subCategory", value: element }
+                      })}
+                      value={subCategory} // Ensure subCategory is the correct type
+                    />
+                  </Box>
+
                   <Box className="flex flex-1 flex-col">
                     <SelectGroupMaster
                       label={"Group Master"}
