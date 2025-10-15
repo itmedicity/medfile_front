@@ -102,6 +102,7 @@ const RoootLayouts = () => {
       axiosApi.post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
         .then((res) => {
           const { message, success, userInfo } = res.data;
+          // console.log(userInfo, "userInfo");
 
           // after verify OTP page redirected to dashboard
           if (success === 0) {
@@ -110,13 +111,16 @@ const RoootLayouts = () => {
             warningNofity(message); // incorrected OTP
           } else if (success === 2) {
             succesNofity(message); // OTP Verified
-            const { user_slno, name, login_type, tokenValidity, printer_access } = JSON.parse(userInfo);
+            const { user_slno, name, login_type, tokenValidity, printer_access, accessToken } = JSON.parse(userInfo);
+            // console.log(accessToken, "accessToken");
+
             const authData = {
               authNo: btoa(user_slno),
               authName: btoa(name),
               authType: btoa(login_type),
               authTimeStamp: getTime(new Date(tokenValidity)),
-              printeraccess: btoa(printer_access)
+              printeraccess: btoa(printer_access),
+              authToken: btoa(accessToken)
             };
 
             setAuth((prev) => {
@@ -237,7 +241,7 @@ const RoootLayouts = () => {
     <Box className="flex flex-col justify-center items-center w-full h-screen "
       sx={{ backgroundColor: 'rgba(253, 253, 253)' }}
     >
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <CustomBackDrop setOpen={setOpen} open={open} />
       {/* <ScreenCheck /> */}
       <Box

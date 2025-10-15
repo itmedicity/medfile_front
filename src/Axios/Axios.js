@@ -26,6 +26,8 @@ axiosApi.interceptors.response.use(
     },
     async (error) => {
         const localData = localStorage.getItem("app_auth");
+        // console.log(localData, "localData");
+
         const userSlno = atob(JSON.parse(localData)?.authNo);
         const originalRequest = error.config;
         // Check if the error is due to an expired token

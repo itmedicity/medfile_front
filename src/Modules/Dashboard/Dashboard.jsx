@@ -91,34 +91,75 @@ const Dashboard = () => {
     staleTime: Infinity,
   });
 
+  // const handleSearchFun = useCallback(() => {
+  //   let searchContent = sanitizeInput(searchParm?.trim());
+  //   let stringLength = searchContent?.length;
+  //   if (stringLength < 5) {
+  //     warningNofity("Search parameter must be greater than 5 letter");
+  //     return;
+  //   }
+  //   if (
+  //     searchContent !== undefined ||
+  //     searchContent !== null ||
+  //     searchContent !== "" ||
+  //     stringLength > 5
+  //   ) {
+  //     refetch();
+  //   }
+  // }, [searchParm, refetch]);
+
   const handleSearchFun = useCallback(() => {
-    let searchContent = sanitizeInput(searchParm?.trim());
-    let stringLength = searchContent?.length;
-    if (stringLength < 5) {
-      warningNofity("Search parameter must be greater than 5 letter");
-      return;
-    }
-    if (
-      searchContent !== undefined ||
-      searchContent !== null ||
-      searchContent !== "" ||
-      stringLength > 5
-    ) {
-      refetch();
+    try {
+      let searchContent = sanitizeInput(searchParm?.trim());
+      let stringLength = searchContent?.length;
+
+      if (stringLength < 5) {
+        warningNofity("Search parameter must be greater than 5 letter");
+        return;
+      }
+
+      if (
+        searchContent !== undefined &&
+        searchContent !== null &&
+        searchContent !== "" &&
+        stringLength > 5
+      ) {
+        refetch();
+      }
+    } catch (error) {
+      console.error("Error occurred during search:", error);
+      // Optionally notify the user about the error
+      warningNofity("An unexpected error occurred. Please try again.");
     }
   }, [searchParm, refetch]);
 
-  useEffect(() => {
-    if (allDocData) {
-      setTableData(allDocData);
-    }
-  }, [allDocData]);
 
+  // useEffect(() => {
+  //   if (allDocData) {
+  //     setTableData(allDocData);
+  //   }
+  //   else {
+  //     setTableData([])
+  //   }
+  // }, [allDocData]);
+
+  // useEffect(() => {
+  //   if (docNameData) {
+  //     setTableData(docNameData);
+  //   }
+  //   else {
+  //     setTableData([])
+  //   }
+  // }, [docNameData]);
   useEffect(() => {
-    if (docNameData) {
+    if (searchParm && docNameData) {
       setTableData(docNameData);
+    } else if (allDocData) {
+      setTableData(allDocData);
+    } else {
+      setTableData([]);
     }
-  }, [docNameData]);
+  }, [allDocData, docNameData, searchParm]);
 
   const handleClearTable = () => {
     setTableData(allDocData);
@@ -129,7 +170,7 @@ const Dashboard = () => {
     <Fragment>
       {view === 1 ? <DocCatagoryDetails SetView={SetView} view={view} catDetails={catDetails} SetCatDetails={SetCatDetails} DocName={DocName} /> :
         <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
-          <ToastContainer />
+          {/* <ToastContainer /> */}
           <Grid container spacing={1} sx={{ flexGrow: 1 }}>
             {/* Dash board container start */}
             {docTypeLoding === true || docTypeError ? (
@@ -234,17 +275,42 @@ const Dashboard = () => {
               <Box
                 className="flex justify-center items-center"
                 sx={{
-                  height: "calc(100vh - 290px)",
+                  height: "calc(100vh - 290px)", // Fixed height
                   backgroundColor: "rgba(var(--bg-card))",
                   width: "100%",
                 }}
               >
-                <TableVirtuoso
+                {/* <TableVirtuoso
                   style={{ height: "100%", width: "100%" }}
                   className="flex flex-1 bg-tablebody/40"
                   data={tableData}
                   fixedHeaderContent={() => <TableHeaderVirtue />}
-                  itemContent={(index, data) => <TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />}
+                  itemContent={(index, data) => (
+                    <TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />
+                  )}
+                /> */}
+                <TableVirtuoso
+                  // className="w-full h-full bg-tablebody/40"
+                  style={{ height: "100%", width: "100%" }}
+                  className="flex flex-1 bg-tablebody/40"
+                  data={tableData}
+                  components={{
+                    Table: (props) => <table {...props} />,
+                    TableHead: (props) => <thead {...props} />,
+                    TableRow: (props) => <tr {...props} />,
+                  }}
+                  fixedHeaderContent={() => (
+                    <thead>
+                      <TableHeaderVirtue />
+                    </thead>
+                  )}
+                  itemContent={(index, data) => (
+                    <TableContentVirtue
+                      data={data}
+                      credValue={credValue}
+                      printerAccess={printerAccess}
+                    />
+                  )}
                 />
               </Box>
             </Grid>

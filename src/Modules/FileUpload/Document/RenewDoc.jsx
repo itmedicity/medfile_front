@@ -77,6 +77,7 @@ const RenewDoc = (props) => {
     })
 
 
+
     const handleDocumentUpdateChange = useCallback((e) => {
         setRenDoc({ ...renewDoc, [e.target.name]: e.target.value });
     }, [renewDoc]);
@@ -93,6 +94,10 @@ const RenewDoc = (props) => {
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
         // setFiles(newFiles);
     };
+
+    const resetForm = useCallback(() => {
+        setFiles([]);
+    }, [setFiles])
 
     const handleError = useCallback((error, file) => {
         const { code } = error;
@@ -206,9 +211,7 @@ const RenewDoc = (props) => {
 
     }, [queryClient, doc_date, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end, doc_exp_end, doc_exp_start, files, doc_number, renewDoc, resetForm, docVer, docVersionAment, user, doc_id, docVersionInfoEdit])
 
-    const resetForm = useCallback(() => {
-        setFiles([]);
-    }, [setFiles])
+
 
 
     return (

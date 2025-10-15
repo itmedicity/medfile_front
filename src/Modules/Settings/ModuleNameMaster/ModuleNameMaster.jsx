@@ -33,7 +33,7 @@ const ModuleNameMaster = () => {
         module_name: '',
         module_status: 0
     })
-    const { module_name, module_status } = setmoduleDetails
+    const { module_name, module_status } = moduleDetails
 
     const { data: AllmoduleNameList } = useQuery({
         queryKey: ["AllmoduleList"],
@@ -78,7 +78,7 @@ const ModuleNameMaster = () => {
                 module_status: moduleDetails?.module_status
 
             }
-            const response = await axiosApi.patch('/UserTypeMaster/editUserType', postdata)
+            const response = await axiosApi.patch('/ModuleNameMaster/editModuleName', postdata)
             const { message, success } = response.data;
             if (success === 1) {
                 queryClient.invalidateQueries(['AllmoduleList'])

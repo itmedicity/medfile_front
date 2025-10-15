@@ -28,8 +28,10 @@ import DocEditHeaderSection from "../Components/DocEditHeaderSection";
 
 const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => {
 
-    const {
+    // console.log("data:");
 
+    const {
+        docd_slno,// document slno
         doc_id,//document id
         doc_number,//document number
         originalname,//original file name
@@ -122,6 +124,7 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
 
 
         const UpdateData = {
+            document_slno: Number(docd_slno),
             ren_docID: Number(doc_id),
             docNumber: doc_number,
             ren_doc_date: format(new Date(renewDoc.ren_doc_date), "yyyy-MM-dd HH:mm"),
@@ -194,7 +197,7 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
         }
 
 
-    }, [files, docVer, docVer_amentment, dovVer_infoAment, doc_number, doc_id, docCreateUser, renewDoc, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end])
+    }, [files, docVer, docVer_amentment, docd_slno, dovVer_infoAment, doc_number, doc_id, docCreateUser, renewDoc, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end])
 
 
     return (

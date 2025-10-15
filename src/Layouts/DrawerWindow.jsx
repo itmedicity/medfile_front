@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { HomeAltSlimHoriz, NavArrowRight, PageSearch, PrivacyPolicy, Settings, ShieldUpload } from 'iconoir-react';
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserModules } from '../api/commonAPI';
+import { getUserModules, userWiseSettingsRights } from '../api/commonAPI';
 
 const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
@@ -36,6 +36,8 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
         enabled: !!loggedUser,
     });
 
+
+
     const drawerMenu = useMemo(() => {
         return [
             { module_slno: 1, menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
@@ -54,10 +56,11 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
         }))
         : [];
 
+
     useEffect(() => {
         let array = drawerMenu?.filter((value) => {
             return allmoduleArray?.find((val) => {
-                return value.menu === val.menu;
+                return value.menu === val.menu && val.status === 1;
             })
         });
         setarr(array)
@@ -163,14 +166,13 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
                             {val.menu.length > 16 ? <style>
                                 {`
-      @keyframes marquee {
-        100% { transform: translateX(100%); }
-        20% { transform: translateX(0%); }
-      }
-    `}
+                                @keyframes marquee {
+                                  100% { transform: translateX(100%); }
+                                  20% { transform: translateX(0%); }
+                                }
+                              `}
                             </style>
                                 :
-
                                 null
                             }
                         </ListItemButton>

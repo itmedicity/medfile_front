@@ -10,7 +10,7 @@ import "./App.css";
 import { AuthProvider } from "./Context/AuthProvider";
 import ErrorElement from "./Pages/ErrorElement";
 import { socket } from "./ws/socket";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 // Main Modules
 const Dashboard = lazy(() => import("./Modules/Dashboard/Dashboard.jsx"));
@@ -162,6 +162,7 @@ function App() {
   {/* <CustomBackDropWithOutState message={"Loading..."} /> */ }
   return (
     <QueryClientProvider client={queryClient}>
+      <ToastContainer />
       <AuthProvider>
         <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />}>
           <RouterProvider router={routes} />

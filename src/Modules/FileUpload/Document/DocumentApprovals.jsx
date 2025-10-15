@@ -68,6 +68,7 @@ import RenewDoc from "./RenewDoc";
 import ApprovalDocList from "./ApprovalDocList";
 import QueueIcon from '@mui/icons-material/Queue';
 import { Tooltip } from "@mui/material";
+import JSZip from "jszip";
 
 const DocumentApprovals = ({ params }) => {
     const queryClient = useQueryClient();
@@ -119,7 +120,10 @@ const DocumentApprovals = ({ params }) => {
         uploadUserName: "",
         uploadDate: "",
         isLegalDoc: false,
-        apprvl_status: 0
+        apprvl_status: 0,
+        short_name: '',
+        lifelong_validity: 0,
+        days_torenew: 0
     });
 
     //    GET THE DATA USING THE DOCUMENT ID USING THE REACT QERY
@@ -175,7 +179,10 @@ const DocumentApprovals = ({ params }) => {
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
                 uploadUserName: docData?.name,
                 isLegalDoc: docData?.isLegalDoc === 1 ? true : false,
-                apprvl_status: docData?.apprvl_status
+                apprvl_status: docData?.apprvl_status,
+                short_name: docData?.short_name,
+                lifelong_validity: docData?.lifelong_validity === 1 ? "YES" : "NO",
+                days_torenew: docData?.days_torenew,
             }));
         }
     }, [docData]);
@@ -216,8 +223,67 @@ const DocumentApprovals = ({ params }) => {
         uploadUser,
         uploadDate,
         uploadUserName,
-        isLegalDoc, apprvl_status
+        isLegalDoc, apprvl_status,
+        short_name,
+        lifelong_validity,
+        days_torenew
     } = editDocumentState;
+
+    // fetching files
+
+    const [UploadedImagesall, setUploadedImagesall] = useState([])
+
+
+    useEffect(() => {
+        const getImage = async (doc_number) => {
+            try {
+                const result = await axiosApi.get(`/docMaster/getFilesall/${doc_number}`, {
+                    responseType: 'blob'
+                });
+
+                const contentType = result.headers['content-type'] || '';
+                if (contentType?.includes('application/json')) {
+                    return;
+                } else {
+                    const zip = await JSZip.loadAsync(result.data);
+                    // Extract image files (e.g., .jpg, .png)
+                    const imageEntries = Object.entries(zip.files).filter(
+                        ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+                    );
+                    const imagePromises = imageEntries.map(async ([filename, fileObj]) => {
+                        // Get the original blob (no type)
+                        const originalBlob = await fileObj.async('blob');
+                        // Determine MIME type based on filename extension (or any other logic)
+                        let mimeType = '';
+                        if (filename.endsWith('.pdf')) {
+                            mimeType = 'application/pdf';
+                        } else if (filename.endsWith('.png')) {
+                            mimeType = 'image/png';
+                        } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                            mimeType = 'image/jpeg';
+                        } else {
+                            mimeType = 'application/octet-stream'; // fallback
+                        }
+                        // Recreate blob with correct type
+                        const blobWithType = new Blob([originalBlob], { type: mimeType });
+                        // Create URL from new blob
+                        const url = URL.createObjectURL(blobWithType);
+                        return { imageName: filename, url, blob: blobWithType };
+                    });
+                    const images = await Promise.all(imagePromises);
+                    setUploadedImagesall(images)
+                }
+            } catch (error) {
+                console.error('Error fetching or processing images:', error);
+            }
+        }
+        getImage(doc_number)
+    }, [doc_number])
+
+
+
+
+
 
     // GET THE DOCUEMNT DETAILS
 
@@ -232,7 +298,6 @@ const DocumentApprovals = ({ params }) => {
         enabled: false,
         staleTime: Infinity
     });
-
     // console.log("docDetlArray", docDetlArray);
 
     const docDetlInfpArray = useMemo(() => {
@@ -256,15 +321,38 @@ const DocumentApprovals = ({ params }) => {
             .sort(([verA], [verB]) => verB.localeCompare(verA)) // Descending order
             .map(([docVer, items]) => {
                 const firstItem = items[0];
+
+                const enrichedItems = items.map(itm => {
+                    const matchedUpload = UploadedImagesall.find(uploaded => uploaded.imageName === itm.filename);
+                    return {
+                        docActiveStatus: itm.docActiveStatus,
+                        docCreateUser: itm.docCreateUser,
+                        docCreatedDate: itm.docCreatedDate,
+                        docVer: itm.docVer,
+                        docVerDate: itm.docVerDate,
+                        docVer_amentment: itm.docVer_amentment,
+                        doc_id: itm.doc_id,
+                        doc_number: itm.doc_number,
+                        docd_slno: itm.docd_slno,
+                        dovVer_infoAment: itm.dovVer_infoAment,
+                        filename: itm.filename,
+                        mimetype: itm.mimetype,
+                        name: itm.name,
+                        originalname: itm.originalname,
+                        url: matchedUpload?.url,
+                        imageName: matchedUpload?.imageName,
+                        type: matchedUpload?.blob?.type
+
+                    };
+                });
+
                 return {
                     docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
                     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
-                    docVersionAment: items,
+                    docVersionAment: enrichedItems,
                 };
             });
-
-
-    }, [docDetlArray]);
+    }, [docDetlArray, UploadedImagesall]);
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -404,6 +492,19 @@ const DocumentApprovals = ({ params }) => {
                                             <DocEditHeaderSection label={"Document Information"} />
                                             <Box className="flex p-1 px-10 rounded-md py-5">
                                                 <Box className="flex flex-1 flex-col mt-1 rounded-md pb-1 gap-1">
+
+                                                    {/* <Box className="flex flex-1 flex-row gap-x-1" >
+                                                   </Box> */}
+                                                    <Box className="flex flex-1 flex-row gap-x-1" >
+                                                        <CustomTypoPara label={short_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Short Name : </span>} startIconStyle={{ opacity: 0.8, }} />
+
+                                                        <CustomTypoPara label={lifelong_validity} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Lifelong Validity: </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={days_torenew} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Days To Renew : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                    </Box>
+
                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                         <CustomTypoPara label={doc_number} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{PinIcon} Document no : </span>}
@@ -460,6 +561,7 @@ const DocumentApprovals = ({ params }) => {
                                                             <CustomTypoPara label={uploadDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created Date : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
+
                                                     </Box>
                                                 </Box>
                                             </Box>

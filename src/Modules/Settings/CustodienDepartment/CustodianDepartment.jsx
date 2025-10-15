@@ -16,7 +16,9 @@ import { lazy } from 'react'
 import axiosApi from '../../../Axios/Axios'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { getCustodianDepartmentMaster } from '../../../api/commonAPI'
+import { getCustodianDepartmentMaster, gethrmDeptDetails } from '../../../api/commonAPI'
+import SelectCmpCustodienDept from '../../../Components/SelectCmpCustodienDept'
+import CustodialDepartmentNames from '../../../Components/CustodialDepartmentNames'
 
 const CustodianDepartmentList = lazy(() => import('../../../Components/CustomTable'));
 
@@ -26,29 +28,41 @@ const CustodianDepartment = () => {
     const [custDepartment, setCustDepartment] = useState({
         custodianDepartmentName: '',
         custodianDepartmentStatus: '',
+        departments: 0
     })
+
+    const { data: depData } = useQuery({
+        queryKey: ['gethrmDeptList'],
+        queryFn: gethrmDeptDetails,
+        staleTime: Infinity,
+    });
 
     const handleChange = useCallback((e) => {
         setCustDepartment({ ...custDepartment, [e.target.name]: sanitizeInput(e.target.value) })
     }, [custDepartment])
 
-    const { custodianDepartmentName, custodianDepartmentStatus } = custDepartment;
+    const { custodianDepartmentName, custodianDepartmentStatus, departments } = custDepartment;
 
     const handleSubmitButtonFun = useCallback(async (e) => {
         e.preventDefault()
 
-        if (custDepartment.custodianDepartmentName === '') {
+        const custDeptValue = Number(custDepartment.departments);
+
+        if (custDeptValue === 0) {
             warningNofity('Custodian Department Name cannot be empty' || 'An error has occurred')
             return
         }
-
         if (custDepartment.custodianDepartmentStatus === '') {
             warningNofity('Custodian Department Status cannot be empty' || 'An error has occurred')
             return
         }
 
+        const matchedItem = depData?.find(val => val.value === custDeptValue);
+
+        const deptName = matchedItem ? matchedItem.label : null;
+
         const FormData = {
-            custodian_department_name: custDepartment.custodianDepartmentName?.trim().toUpperCase(),
+            custodian_department_name: deptName?.trim().toUpperCase(),
             custodian_department_status: custDepartment.custodianDepartmentStatus,
         }
 
@@ -92,14 +106,14 @@ const CustodianDepartment = () => {
     return (
         <DefaultPageLayout label={'Custodian Department'}>
             <MasterPageLayout style={{}}>
-                <CustomInputWithLabel
-                    handleInputChange={(e) => handleChange({ target: { name: 'custodianDepartmentName', value: e.target.value } })}
-                    values={custodianDepartmentName}
-                    placeholder="Type here ..."
-                    sx={{}}
-                    labelName='Custodian Department Name'
-                    type="text"
+
+                <CustodialDepartmentNames
+                    handleChange={(e, val) => handleChange({ target: { name: 'departments', value: val } })}
+                    value={Number(departments)}
+                    label='Custodian Department Name'
+                    data={depData}
                 />
+
                 <CustomSelectWithLabel
                     labelName='Custodian Department Status'
                     dataCollection={commonStatus}

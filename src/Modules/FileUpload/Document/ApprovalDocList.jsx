@@ -1,74 +1,108 @@
 import { Box } from "@mui/joy";
 import React, { Fragment, memo, useCallback } from "react";
-// import CustomTypo from "../../../Components/CustomTypo";
-// import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-// import DoDisturbOffOutlinedIcon from "@mui/icons-material/DoDisturbOffOutlined";
 import FileLink from "../../../assets/images/pdfSvg2.svg";
-import { NAS_FOLDER } from "../../../Constant/Static";
 import { useState } from "react";
 import FileDisplayModal from "./FileDisplayModal";
-// import { BinMinusIn, PageEdit } from 'iconoir-react'
 import { format } from "date-fns";
-// import FileReplaceModal from "./FileReplaceModal";
-// import FileDelete from "./FileDelete";
+import JSZip from "jszip";
+import axiosApi from "../../../Axios/Axios";
 
 const ApprovalDocList = ({ data }) => {
 
     const {
-        // docd_slno,
-        // doc_id,
         doc_number,
         originalname,
-        mimetype,
         filename,
         docVer,
         docVerDate,
-        // docCreateUser,
         name,
         docCreatedDate,
-        // docActiveStatus,
-        // docVer_amentment,
-        // dovVer_infoAment,
+        type,
+        url
     } = data
-    const NasFileLink = `${NAS_FOLDER}${doc_number}/${filename}`
-    // console.log("docActiveStatus,doc_number", docActiveStatus, doc_number);
-
 
     const [openFile, setOpenFile] = useState(false)
-    const [editModal, setEditModal] = useState(false)
-    // const [deleteModal, setDeleteModal] = useState(false)
+    const [UploadedImages, setUploadedImages] = useState([])
 
-    const docEditButton = useCallback((e) => {
-        // console.log("e", e);
+    const FetchFiles = useCallback(() => {
+        setOpenFile(true)
 
-        setEditModal(true)
-    }, [setEditModal])
+        const getImage = async (doc_number, filename) => {
+            try {
+                const result = await axiosApi.get(`/docMaster/getFiles/${doc_number}/${filename}`, {
+                    responseType: 'blob'
+                });
+                // console.log(result);
 
-    // console.log("editModal", editModal);
+                const contentType = result.headers['content-type'] || '';
+                if (contentType?.includes('application/json')) {
+                    return;
+                } else {
+                    const zip = await JSZip.loadAsync(result.data);
+                    // Extract image files (e.g., .jpg, .png)
+                    const imageEntries = Object.entries(zip.files).filter(
+                        ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+                    );
+                    const imagePromises = imageEntries.map(async ([filename, fileObj]) => {
+                        // Get the original blob (no type)
+                        const originalBlob = await fileObj.async('blob');
+                        // Determine MIME type based on filename extension (or any other logic)
+                        let mimeType = '';
+                        if (filename.endsWith('.pdf')) {
+                            mimeType = 'application/pdf';
+                        } else if (filename.endsWith('.png')) {
+                            mimeType = 'image/png';
+                        } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                            mimeType = 'image/jpeg';
+                        } else {
+                            mimeType = 'application/octet-stream'; // fallback
+                        }
+                        // Recreate blob with correct type
+                        const blobWithType = new Blob([originalBlob], { type: mimeType });
+                        // Create URL from new blob
+                        const url = URL.createObjectURL(blobWithType);
+                        return { imageName: filename, url, blob: blobWithType };
+                    });
+                    const images = await Promise.all(imagePromises);
+                    setUploadedImages(images[0])
+                }
+            } catch (error) {
+                console.error('Error fetching or processing images:', error);
+            }
+        }
+        getImage(doc_number, filename)
 
-    // const docDeleteButton = useCallback(() => {
-    //     // setDeleteModal(true)
 
-    // }, [])
+    }, [doc_number, filename])
 
     return (
         <Fragment>
 
             <Box className="p-1 border-[0.5px] rounded-md h-16 flex flex-1 flex-row mb-1 bg-bgcard border-borderprimary justify-between gap-1">
                 {openFile && (
-                    <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} fileLink={NasFileLink} />
+                    <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
                 )}
+
                 <Box
                     className="flex rounded-md items-center justify-center cursor-pointer hover:bg-baseWhite/85 bg-baseWhite/60 drop-shadow-md"
-                    onClick={() => setOpenFile(true)}
+                    onClick={FetchFiles}
                 >
-                    <img
-                        alt="upload image"
-                        src={mimetype === "application/pdf" ? FileLink : NasFileLink}
-                        width={50}
-                        height={50}
-                        className="p-[0.300rem] rounded-md object-contain"
-                    />
+
+                    {url ? (
+                        <img
+                            alt="upload image"
+                            src={type === "application/pdf" ? FileLink : url}
+                            width={50}
+                            height={50}
+                            className="p-[0.300rem] rounded-md object-contain"
+                            onContextMenu={(e) => e.preventDefault()}
+                        />
+                    ) : (
+                        //Skeleton Placeholder
+                        <div
+                            className="w-[50px] h-[50px] rounded-md bg-gray-200 animate-pulse"
+                        />
+                    )}
                 </Box>
                 <Box className="flex rounded-md flex-col pl-2 p-0 overflow-hidden flex-1">
                     <div

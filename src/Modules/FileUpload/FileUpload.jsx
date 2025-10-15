@@ -4,8 +4,11 @@ import {
   Button,
   Checkbox,
   Divider,
+  FormControl,
+  FormLabel,
   IconButton,
   Input,
+  TextField,
   Textarea,
   Typography,
   colors,
@@ -72,7 +75,6 @@ const FileUpload = () => {
   const userType = atob(JSON.parse(userData)?.authType);
   const user = atob(JSON.parse(userData)?.authNo);
 
-
   // GET UNIQUE DOCUMENT NUMBER
   const {
     isLoading: documentNumberLoading,
@@ -121,7 +123,7 @@ const FileUpload = () => {
   const [message, setMessage] = useState("");
 
   // TAB HANDLER STATE
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => setValue(newValue);
 
   // CUSTOM DOC NUMBER
@@ -153,6 +155,9 @@ const FileUpload = () => {
     isLegalDoc: false,
     docRack: 0,
     docCustodian: 0,
+    shortName: '',
+    lifeLongValidity: false,
+    DaysToRenew: 0
 
   });
 
@@ -174,12 +179,76 @@ const FileUpload = () => {
     isSecure,
     isLegalDoc,
     docRack,
-    docCustodian
+    docCustodian,
+    shortName,
+    lifeLongValidity,
+    DaysToRenew
   } = documentState;
 
+  // const handleDocumentState = useCallback((e) => {
+  //   console.log(e.target.value);
+
+  //   setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
+  // }, [documentState]);
+
+
+
+  // const handleDocumentState = (e) => {
+  // const { name, value } = e.target;
+  // if (value.length <= 4) {
+  //   setShortName(value);
+  // }
+  // };
+
   const handleDocumentState = useCallback((e) => {
-    setDocumentState({ ...documentState, [e.target.name]: sanitizeInput(e.target.value) });
-  }, [documentState]);
+    const { name, value } = e.target;
+
+    let newValue = value;
+
+    if (name === "shortName") {
+      // Allow only alphanumeric characters
+      newValue = newValue.replace(/[^a-zA-Z0-9]/g, "");
+
+      // Clamp length to 4
+      if (newValue.length > 4) {
+        newValue = newValue.slice(0, 4);
+      }
+    }
+
+    // Example: Convert to number if name matches your number inputs
+    if (name === "DaysToRenew" /* or any other numeric field */) {
+      // Convert empty string to null or 0 if you want
+      newValue = newValue === "" ? "" : Number(newValue);
+    }
+
+    setDocumentState(prev => ({
+      ...prev,
+      [name]: newValue,
+    }));
+  }, []);
+
+
+  // const handleDocumentState = useCallback((e) => {
+  //   const { name, value } = e.target;
+
+  //   let newValue = value;
+
+  //   if (name === "shortName") {
+  //     // Allow only alphanumeric characters
+  //     newValue = newValue.replace(/[^a-zA-Z0-9]/g, "");
+
+  //     // Optionally clamp length to 4 here too (even though inputProps does it)
+  //     if (newValue.length > 4) {
+  //       newValue = newValue.slice(0, 4);
+  //     }
+  //   }
+
+  //   setDocumentState(prev => ({
+  //     ...prev,
+  //     [name]: newValue, // optionally sanitizeInput(newValue)
+  //   }));
+  // }, []);
+
 
   useEffect(() => {
     if (isLegalDoc) {
@@ -203,6 +272,7 @@ const FileUpload = () => {
   /********* FILE UPLOAD SECTION START ********/
 
   const [files, setFiles] = useState([]);
+
   const handlefileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     // setFiles(newFiles);
@@ -239,6 +309,11 @@ const FileUpload = () => {
   // HANDLE SUBMIT
   const handleDocInformationSubmit = useCallback(async (e) => {
     e.preventDefault();
+
+    if (documentState.shortName === "") {
+      warningNofity("Document Short Name cannot be empty");
+      return;
+    }
 
     if (documentState.docName === "") {
       warningNofity("Document Name cannot be empty");
@@ -356,7 +431,10 @@ const FileUpload = () => {
       docRack: Number(documentState.docRack),
       docCustodian: Number(documentState.docCustodian),
       userID: user,
-      docUpload: format(new Date(), "yyyy-MM-dd HH:mm")
+      docUpload: format(new Date(), "yyyy-MM-dd HH:mm"),
+      shortName: documentState.shortName,
+      lifeLongValidity: Boolean(documentState.lifeLongValidity) === true ? 1 : 0,
+      DaysToRenew: DaysToRenew,
     };
 
     const formData = new FormData();
@@ -402,7 +480,7 @@ const FileUpload = () => {
       setOpen(true);
     }
   },
-    [documentState, documentNumber, custDocNumber, files, warningNofity, setMessage, setOpen, queryClient]
+    [documentState, documentNumber, custDocNumber, files, warningNofity, setMessage, setOpen, queryClient, DaysToRenew]
   );
 
   const resetForm = () => {
@@ -426,9 +504,20 @@ const FileUpload = () => {
       isLegalDoc: false,
       docRack: 0,
       docCustodian: 0,
+      shortName: '',
+      lifeLongValidity: false,
+      DaysToRenew: 0,
     });
     setFiles([]);
   };
+
+  // const [shrtName, setShrtName] = useState('');
+
+  // const handleChange = (event) => {
+  //   setShrtName(event.target.value);
+  // };
+  // console.log("shortName:::", shortName);
+
 
   return (
     <Box className="h-dvh p-2">
@@ -539,7 +628,7 @@ const FileUpload = () => {
               }}
               className="flex justify-end items-center "
             >
-              {menurights.map((tab, index) => (
+              {menurights?.map((tab, index) => (
                 <Tab
                   key={index}
                   icon={tab.icon}
@@ -556,6 +645,8 @@ const FileUpload = () => {
                     borderBottomLeftRadius: 0,
                     borderBottomRightRadius: 0,
                     minWidth: "15%",
+                    mr: index !== menurights.length - 1 ? 0.5 : 0,// Adds margin-right except on last tab
+                    mb: 0.5,
                     "&.Mui-selected": {
                       color: "rgba(var(--color-white))",
                       bgcolor: "rgba(var(--tab-color))",
@@ -698,6 +789,30 @@ const FileUpload = () => {
                       checkBoxValue={isLegalDoc}
                       handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isLegalDoc", value: e.target.checked } })}
                     />
+
+                    <Box>
+                      <Input
+                        name="shortName"
+                        variant="outlined"
+                        color="neutral"
+                        size="sm"
+                        value={shortName}
+                        onChange={handleDocumentState}
+                        placeholder="Short Name (Max 4)"
+                        inputProps={{ maxLength: 4 }}
+                        sx={{
+                          opacity: 0.8,
+                          paddingLeft: "0.26rem",
+                          lineHeight: "1.0rem",
+                          fontSize: "0.81rem",
+                          color: 'rgba(var(--font-primary-white))',
+                          paddingY: "0.26rem",
+                          borderColor: 'rgba(var(--list-border-color))',
+                          p: 1,
+                        }}
+                      />
+                    </Box>
+
                   </Box>
                   <Box className="flex flex-1 flex-col">
                     <SelectDocTypeMaster
@@ -747,25 +862,7 @@ const FileUpload = () => {
                       </Box>
                     </>
                   ) : null}
-                  {/* <Box className="flex flex-1 flex-col">
-                    <SelectCmpCategoryNameList
-                      label={"Category Name List"}
-                      handleChange={(e, element) => handleDocumentState({ target: { name: "category", value: element }, })}
-                      value={category}
-                    />
-                  </Box>
-                  <Box className="flex flex-1 flex-col">
-                    <SelectSubCategoryMater
-                      label={"Sub Category Master"}
-                      catSlno={Number(category) ?? 0}
-                      handleChange={(e, element) =>
-                        handleDocumentState({
-                          target: { name: "subCategory", value: element },
-                        })
-                      }
-                      value={subCategory}
-                    />
-                  </Box> */}
+
                   <Box className="flex flex-1 flex-col">
                     <SelectCmpCategoryNameList
                       label={"Category Name List"}
@@ -875,13 +972,78 @@ const FileUpload = () => {
                         disabled={Boolean(isLegalDoc)}
                       />
                     </Box>
-                    <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
+
+                    <Box className="flex flex-col gap-4 p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+                      {/* Validity Checkbox */}
                       <CustomCheckBoxWithLabel
                         label="Is Validity Required for this Document"
                         checkBoxValue={isRequiredExp}
-                        handleCheckBoxValue={(e) => handleDocumentState({ target: { name: "isRequiredExp", value: e.target.checked } })}
+                        handleCheckBoxValue={(e) =>
+                          handleDocumentState({ target: { name: "isRequiredExp", value: e.target.checked } })
+                        }
                       />
+
+                      {/* Life Long Validity and Renewal Section */}
+                      {
+                        isRequiredExp === true ?
+
+                          <Box className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                            {/* Life Long Validity */}
+                            <Box className="flex items-center space-x-1">
+                              {/* <label htmlFor="lifeLongValidity" className="text-sm font-medium text-gray-700">
+                                Life Long Validity
+                              </label> */}
+                              {/* <input
+                                id="lifeLongValidity"
+                                type="checkbox"
+                                checked={lifeLongValidity}
+                                onChange={(e) =>
+                                  handleDocumentState({ target: { name: "lifeLongValidity", value: e.target.checked } })
+                                }
+                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                              /> */}
+
+                              <CustomCheckBoxWithLabel
+                                label="Life Long Validity"
+                                checkBoxValue={lifeLongValidity}
+                                handleCheckBoxValue={(e) =>
+                                  handleDocumentState({ target: { name: "lifeLongValidity", value: e.target.checked } })
+                                }
+                              />
+                            </Box>
+
+                            {/* Days Before Renewal - Only if not lifelong */}
+                            {!lifeLongValidity && (
+                              <Box className="flex flex-col">
+                                <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
+                                  color: 'rgba(var(--font-primary-white))',
+                                  fontFamily: "var(--font-varient)",
+                                }}>
+                                  Days Before Renew
+                                </label>
+                                <input
+                                  style={{
+                                    color: 'rgba(var(--font-primary-white))',
+                                    fontFamily: "var(--font-varient)",
+                                  }}
+                                  id="renewalTime"
+                                  type="number"
+                                  min={0}
+                                  value={DaysToRenew}
+                                  onChange={(e) =>
+                                    handleDocumentState({ target: { name: "DaysToRenew", value: e.target.value } })
+                                  }
+                                  className="border border-gray-300 rounded px-0 py-0.5 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                              </Box>
+                            )}
+                          </Box>
+                          : null}
                     </Box>
+
+
+
                     {Boolean(isRequiredExp) === true && (
                       <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                         <Box className="flex flex-auto">
@@ -925,7 +1087,17 @@ const FileUpload = () => {
                     className="files-dropzone"
                     onChange={handlefileChange}
                     onError={handleError}
-                    accepts={["image/png", ".pdf", "image/jpeg", "image/jpg"]}
+                    accepts={[
+                      "image/png",
+                      "image/jpeg",
+                      "image/jpg",
+                      ".pdf",
+                      "application/pdf",
+                      ".doc",
+                      ".docx",
+                      "application/msword",
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    ]}
                     multiple
                     maxFiles={10}
                     maxFileSize={10000000}

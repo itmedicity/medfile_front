@@ -19,6 +19,7 @@ import { errorNofity, sanitizeInput, warningNofity } from '../../Constant/Consta
 import axiosApi from '../../Axios/Axios'
 import { PageSearch, Xmark } from 'iconoir-react'
 import InputFileNameSearch from '../../Components/InputFileNameSearch'
+import InputShortNameSearch from '../../Components/InputShortNameSearch'
 
 const AdvancedSearch = () => {
 
@@ -37,8 +38,9 @@ const AdvancedSearch = () => {
         group: 0,
         institute: 0,
         course: 0,
-        docNumber: 0,
-        fileName: ''
+        docNumber: '',
+        fileName: '',
+        shortName: ''
     })
 
     const handleSetState = (e) => {
@@ -46,7 +48,6 @@ const AdvancedSearch = () => {
     }
 
     const handleSearchDoc = useCallback(async () => {
-        // console.log("state", state);
 
         const result = await axiosApi.post('/docMaster/getSearchData', state)
         const { success, data } = result.data
@@ -102,6 +103,10 @@ const AdvancedSearch = () => {
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <InputFileNameSearch getInputValue={handleSetState} reset={reset} />
                     </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
+                        <InputShortNameSearch getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+
                     <Grid size={12}>
                         <Divider sx={{ color: 'rgba(var(--border-primary))' }} >OR</Divider>
                     </Grid>
@@ -155,7 +160,7 @@ const AdvancedSearch = () => {
                             }}
                             onClick={handleSearchDoc}
                         >
-                            Serach Document
+                            Search Document
                         </Button>
                         <Button
                             variant='outlined'

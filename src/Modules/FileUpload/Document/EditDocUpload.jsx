@@ -10,6 +10,7 @@ import {
     Checkbox,
     Divider,
     IconButton,
+    Input,
     List,
     ListItemButton,
     ListItemDecorator,
@@ -66,6 +67,7 @@ import ExpiryRenewDoc from "./ExpiryRenewDoc";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
 import RenewDoc from "./RenewDoc";
 import CommonRightBasedMenus from "../../../Components/CommonRightBasedMenus";
+import JSZip from "jszip";
 
 const EditDocUpload = ({ refetchDocList, params }) => {
 
@@ -79,7 +81,6 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     const user = atob(JSON.parse(userData)?.authNo);
     const userType = atob(JSON.parse(userData)?.authType);
 
-    // console.log("userType", userType);
 
     const [open, setOpen] = useState(false);
 
@@ -121,14 +122,18 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         uploadUserName: "",
         uploadDate: "",
         isLegalDoc: false,
+        short_name: '',
+        lifelong_validity: false,
+        days_torenew: 0,
+
     });
 
     //    GET THE DATA USING THE DOCUMENT ID USING THE REACT QERY
     const { isLoading, data, error, refetch: refetchDocInfoByID } = useQuery({
         queryKey: ["getDocInfoByID", docmntSlno],
         queryFn: async () => await getDocInforByID(docmntSlno),
-        enabled: false,
-        staleTime: Infinity,
+        // enabled: false,
+        // staleTime: Infinity,
     });
 
     const docData = useMemo(() => data, [data]);
@@ -175,6 +180,9 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
                 uploadUserName: docData?.name,
                 isLegalDoc: docData?.isLegalDoc === 1 ? true : false,
+                short_name: docData?.short_name,
+                lifelong_validity: docData?.lifelong_validity === 1 ? true : false,
+                days_torenew: docData?.days_torenew
             }));
         }
     }, [docData]);
@@ -215,10 +223,63 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         uploadUser,
         uploadDate,
         uploadUserName,
-        isLegalDoc
+        isLegalDoc,
+        short_name,
+        lifelong_validity,
+        days_torenew
     } = editDocumentState;
 
     // GET THE DOCUEMNT DETAILS
+
+    const [UploadedImagesall, setUploadedImagesall] = useState([])
+
+
+    useEffect(() => {
+        const getImage = async (doc_number) => {
+            try {
+                const result = await axiosApi.get(`/docMaster/getFilesall/${doc_number}`, {
+                    responseType: 'blob'
+                });
+
+                const contentType = result.headers['content-type'] || '';
+                if (contentType?.includes('application/json')) {
+                    return;
+                } else {
+                    const zip = await JSZip.loadAsync(result.data);
+                    // Extract image files (e.g., .jpg, .png)
+                    const imageEntries = Object.entries(zip.files).filter(
+                        ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+                    );
+                    const imagePromises = imageEntries.map(async ([filename, fileObj]) => {
+                        // Get the original blob (no type)
+                        const originalBlob = await fileObj.async('blob');
+                        // Determine MIME type based on filename extension (or any other logic)
+                        let mimeType = '';
+                        if (filename.endsWith('.pdf')) {
+                            mimeType = 'application/pdf';
+                        } else if (filename.endsWith('.png')) {
+                            mimeType = 'image/png';
+                        } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                            mimeType = 'image/jpeg';
+                        } else {
+                            mimeType = 'application/octet-stream'; // fallback
+                        }
+                        // Recreate blob with correct type
+                        const blobWithType = new Blob([originalBlob], { type: mimeType });
+                        // Create URL from new blob
+                        const url = URL.createObjectURL(blobWithType);
+                        return { imageName: filename, url, blob: blobWithType };
+                    });
+                    const images = await Promise.all(imagePromises);
+                    setUploadedImagesall(images)
+                }
+            } catch (error) {
+                console.error('Error fetching or processing images:', error);
+            }
+        }
+        getImage(doc_number)
+    }, [doc_number])
+
 
     const {
         isLoading: docDetlIsLoading,
@@ -228,11 +289,14 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     } = useQuery({
         queryKey: ["getTheDocInfoDetl", docmntID],
         queryFn: async () => await getDocumentDetl(docmntID),
-        enabled: false,
-        staleTime: Infinity
+        // enabled: false,
+        // staleTime: Infinity
     });
 
-    // console.log("docDetlArray", docDetlArray);
+
+    // UploadedImagesall
+    //docVer
+
 
     const docDetlInfpArray = useMemo(() => {
         if (!docDetlArray || !Array.isArray(docDetlArray) || docDetlArray.length === 0) {
@@ -248,20 +312,61 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             return acc;
         }, {});
 
+        // docDetlArray filename
+
 
         return Object.entries(groupedItems)
             .sort(([verA], [verB]) => verB.localeCompare(verA)) // Descending order
             .map(([docVer, items]) => {
+
                 const firstItem = items[0];
+
+                const enrichedItems = items.map(itm => {
+                    const matchedUpload = UploadedImagesall.find(uploaded => uploaded.imageName === itm.filename);
+                    return {
+
+                        docActiveStatus: itm.docActiveStatus,
+                        docCreateUser: itm.docCreateUser,
+                        docCreatedDate: itm.docCreatedDate,
+                        docVer: itm.docVer,
+                        docVerDate: itm.docVerDate,
+                        docVer_amentment: itm.docVer_amentment,
+                        doc_id: itm.doc_id,
+                        doc_number: itm.doc_number,
+                        docd_slno: itm.docd_slno,
+                        dovVer_infoAment: itm.dovVer_infoAment,
+                        filename: itm.filename,
+                        mimetype: itm.mimetype,
+                        name: itm.name,
+                        originalname: itm.originalname,
+                        url: matchedUpload?.url,
+                        imageName: matchedUpload?.imageName,
+                        type: matchedUpload?.blob?.type
+
+                    };
+                });
+                // console.log("enrichedItems::::::::::", enrichedItems);
+
                 return {
-                    docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
+                    docVer: `${docVer}.${firstItem.docVer_amentment}.${firstItem.dovVer_infoAment}`,
                     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
-                    docVersionAment: items,
+                    docVersionAment: enrichedItems // enriched with uploaded images
                 };
+
+                // return {
+                //     docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
+                //     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
+                //     docVersionAment:
+                //         items,
+                //     matchedFiles
+
+                // };
             });
+    }, [docDetlArray, UploadedImagesall]);
+
+    // console.log("docDetlInfpArray:", docDetlInfpArray);
 
 
-    }, [docDetlArray]);
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -276,16 +381,46 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
     // HANDLE CHANGE FUNTIONS FOR UPDATING THE DOCUMENT DETAILS
 
+    // const handleDocumentUpdateChange = useCallback((e) => {
+    //     seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
+    // }, [editDocumentState]);
+
+    //   short_name,
+    //     lifelong_validity,
+    //     days_torenew
+    // } = editDocumentState;
     const handleDocumentUpdateChange = useCallback((e) => {
-        seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
-    }, [editDocumentState]);
+        const { name, value } = e.target;
+
+        let newValue = value;
+
+        if (name === "short_name") {
+            // Allow only alphanumeric characters
+            newValue = newValue.replace(/[^a-zA-Z0-9]/g, "");
+
+            // Clamp length to 4
+            if (newValue.length > 4) {
+                newValue = newValue.slice(0, 4);
+            }
+        }
+        // Example: Convert to number if name matches your number inputs
+        if (name === "days_torenew" /* or any other numeric field */) {
+            // Convert empty string to null or 0 if you want
+            newValue = newValue === "" ? "" : Number(newValue);
+        }
+
+        seteditDocumentState(prev => ({
+            ...prev,
+            [name]: newValue,
+        }));
+    }, []);
+
 
 
     useEffect(() => {
         isLegalDoc === "true" ? seteditDocumentState({ ...editDocumentState, isSecure: true }) : seteditDocumentState({ ...editDocumentState, isSecure: false })
     }, [isLegalDoc])
 
-    // console.log(isLegalDoc, isSecure)
 
     const handleUpdateDocument = useCallback(async (e) => {
 
@@ -363,7 +498,9 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             return;
         }
 
-
+        //  docVer,
+        // docVersionAment,
+        //     docVersionInfoEdit,
 
         const FormPostData = {
             docID: doc_id,
@@ -376,8 +513,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             category: Number(editDocumentState.category),
             subCategory: Number(editDocumentState.sub_category),
             group: Number(editDocumentState.group_mast),
-            docVersion: 1,
-            docVersionAment: 0,
+            docVersion: docVer,
+            docVersionAment: docVersionAment,
             docVersionInfoEdit: Number(docVersionInfoEdit) + 10,
             docVersionDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             docExpStart: format(new Date(editDocumentState.doc_exp_start), "yyyy-MM-dd"),
@@ -389,9 +526,11 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             docCustodian: Number(editDocumentState.docCustodian),
             docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             userID: user,
-            docActiveStatus: 0
+            docActiveStatus: 0,
+            short_name: editDocumentState.short_name,
+            lifelong_validity: Boolean(editDocumentState.lifelong_validity) === true ? 1 : 0,
+            days_torenew: Number(editDocumentState.days_torenew)
         };
-
         try {
             const updateRes = await axiosApi.patch("/docMaster/updateDocMaster", FormPostData);
             const { success } = updateRes.data;
@@ -399,6 +538,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                 succesNofity("Document Updated Successfully");
                 await refetchDocInfoByID();
                 await queryClient.invalidateQueries(["getDocList"]);
+                queryClient.invalidateQueries('getDocInfoByID')
+
             }
             // console.log(updateRes)
         } catch (error) {
@@ -406,7 +547,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             errorNofity("Something went wrong".error);
         }
 
-    }, [editDocumentState, docVersionInfoEdit, docmntSlno])
+    }, [editDocumentState, docVersionInfoEdit, docVer, docVersionAment, docmntSlno])
 
     const docUpdationState = useMemo(() => {
         return {
@@ -439,6 +580,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
     const [renDoc, setRenDoc] = useState(null)
 
+    // console.log("docVersionInfoEdit:", docVersionInfoEdit);
 
     return (
         <Box>
@@ -506,11 +648,11 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                     textTransform: "capitalize",
                                                     textAlign: "justify",
                                                     color: "rgba(var(--font-primary-white))"
-                                                }} >{doc_name}</div>
+                                                }} >    {doc_name} ({short_name})</div>
                                             <div className="flex gap-2">
                                                 <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document no : {doc_number} </div>
                                                 <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document date : {doc_date} </div>
-                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {'1.0.0'}</div>
+                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {docVer + '.' + docVersionAment + '.' + docVersionInfoEdit}</div>
                                             </div>
                                         </Box>
                                     </Box>
@@ -527,13 +669,24 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                     <Lock height={35} width={35} color="rgba(var(--icon-primary))" />
                                                 </Box>
                                                 : <Box className="flex flex-row items-end gap-3">
+                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
                                                     <Box sx={{
                                                         fontFamily: "var(--font-family)",
                                                         fontWeight: 500,
                                                         fontSize: "1rem",
                                                         color: "rgba(var(--font-primary-white))"
                                                     }}>Normal Doc</Box>
-                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
+
+
+
+                                                    {/* <Box sx={{
+                                                        fontFamily: "var(--font-family)",
+                                                        fontWeight: 500,
+                                                        fontSize: "1rem",
+                                                        color: "rgba(var(--font-primary-white))"
+                                                    }}>{short_name}</Box>
+                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" /> */}
+
                                                 </Box>
                                         }
                                     </Box>
@@ -604,11 +757,19 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                             <CustomTypoPara label={uploadDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created Date : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
+
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={lifelong_validity === 1 ? "Yes" : "No"} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}
+                                                                    Lifelong Validity: </span>} startIconStyle={{ opacity: 0.8, }} />
+
+                                                            <CustomTypoPara label={days_torenew} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Days Before Renew : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
                                                     </Box>
                                                 </Box>
                                             </Box>
                                         </Box>
-
 
                                         {/* Edit Document Section */}
                                         <Box sx={{ position: 'relative', top: 0, backgroundColor: 'rgba(var(--bg-card))' }}  >
@@ -623,7 +784,32 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                                 checkBoxValue={isLegalDoc}
                                                                 handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isLegalDoc", value: e.target.checked } })}
                                                             />
+                                                            <Box>
+                                                                <Input
+                                                                    name="short_name"
+                                                                    variant="outlined"
+                                                                    color="neutral"
+                                                                    size="sm"
+                                                                    value={short_name}
+                                                                    onChange={handleDocumentUpdateChange}
+                                                                    placeholder="Short Name (Max 4)"
+                                                                    inputProps={{ maxLength: 4 }}
+                                                                    sx={{
+                                                                        opacity: 0.8,
+                                                                        paddingLeft: "0.26rem",
+                                                                        lineHeight: "1.0rem",
+                                                                        fontSize: "0.81rem",
+                                                                        color: 'rgba(var(--font-primary-white))',
+                                                                        paddingY: "0.26rem",
+                                                                        borderColor: 'rgba(var(--list-border-color))',
+                                                                        p: 1,
+                                                                    }}
+                                                                />
+                                                            </Box>
                                                         </Box>
+
+
+
                                                         {/* Document Description */}
                                                         <Box>
                                                             <Typography level='body-sm'
@@ -781,6 +967,54 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                                 handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isRequiredExp", value: e.target.checked } })}
                                                             />
                                                         </Box>
+                                                        {/* 
+                                                        {
+                                                            isRequiredExp === true ? */}
+
+                                                        <Box className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                                                            {/* Life Long Validity */}
+                                                            <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
+                                                                {/* short_name: editDocumentState.short_name,
+                                                                        lifelong_validity: Boolean(editDocumentState.lifelong_validity) === true ? 1 : 0,
+                                                                        days_torenew: Number(editDocumentState.days_torenew) */}
+                                                                <CustomCheckBoxWithLabel
+                                                                    label="Life Long Validity"
+                                                                    checkBoxValue={lifelong_validity}
+                                                                    handleCheckBoxValue={(e) =>
+                                                                        handleDocumentUpdateChange({ target: { name: "lifelong_validity", value: e.target.checked } })
+                                                                    }
+                                                                />
+                                                            </Box>
+
+                                                            {/* Days Before Renewal - Only if not lifelong */}
+                                                            {/* {!lifelong_validity && ( */}
+                                                            <Box className="flex flex-col">
+                                                                <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
+                                                                    color: 'rgba(var(--font-primary-white))',
+                                                                    fontFamily: "var(--font-varient)",
+                                                                }}>
+                                                                    Days Before Renew
+                                                                </label>
+                                                                <input
+                                                                    style={{
+                                                                        color: 'rgba(var(--font-primary-white))',
+                                                                        fontFamily: "var(--font-varient)",
+                                                                    }}
+                                                                    id="renewalTime"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    value={days_torenew}
+                                                                    onChange={(e) =>
+                                                                        handleDocumentUpdateChange({ target: { name: "days_torenew", value: e.target.value } })
+                                                                    }
+                                                                    className="border border-gray-300 rounded px-0 py-0.5 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                />
+                                                            </Box>
+                                                            {/* )} */}
+                                                        </Box>
+                                                        {/* : null} */}
+
                                                         {Boolean(isRequiredExp) === true && (
                                                             <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                                                                 <Box className="flex flex-auto">
@@ -998,6 +1232,9 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                         <FilleListCmp key={idx} data={el} refetchDocDetl={refetchDocDetl} />
                                                     ))
                                                 }
+
+                                                {/* <FilleListCmp el={el} refetchDocDetl={refetchDocDetl} /> */}
+
                                             </Fragment>
                                         )
                                     })

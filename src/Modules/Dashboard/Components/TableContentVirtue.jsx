@@ -8,8 +8,11 @@ import { getAllSuperUsers, getDocumentDetl } from "../../../api/commonAPI";
 import { LockSlash, Lock, Presentation, Printer } from "iconoir-react";
 import { useQuery } from "@tanstack/react-query";
 import OtpVerificationModal from "../OTPVerification/OtpVerificationModal";
+import JSZip from "jszip";
+import axiosApi from "../../../Axios/Axios";
 
 const TableContentVirtue = ({ data, credValue, printerAccess }) => {
+  // console.log(data, "data");
 
   const [otpModal, setOtpModal] = useState(false)
 
@@ -23,13 +26,91 @@ const TableContentVirtue = ({ data, credValue, printerAccess }) => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState([]);
 
+  // const [UploadedImagesall, setUploadedImagesall] = useState([])
 
   const handleClickViewFile = useCallback(async (e) => {
     e.preventDefault();
     setOpen(true);
     const docID = data?.doc_id;
+    const doc_number = data?.doc_number;
     const fetchBulkFile = await getDocumentDetl(docID);
-    setFiles(fetchBulkFile);
+    // setFiles(fetchBulkFile);
+
+
+    const getImage = async (doc_number) => {
+      try {
+        const result = await axiosApi.get(`/docMaster/getFilesall/${doc_number}`, {
+          responseType: 'blob'
+        });
+
+        const contentType = result.headers['content-type'] || '';
+        if (contentType?.includes('application/json')) {
+          return;
+        } else {
+          const zip = await JSZip.loadAsync(result.data);
+          // Extract image files (e.g., .jpg, .png)
+          const imageEntries = Object.entries(zip.files).filter(
+            ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+          );
+          const imagePromises = imageEntries.map(async ([filename, fileObj]) => {
+            // Get the original blob (no type)
+            const originalBlob = await fileObj.async('blob');
+            // Determine MIME type based on filename extension (or any other logic)
+            let mimeType = '';
+            if (filename.endsWith('.pdf')) {
+              mimeType = 'application/pdf';
+            } else if (filename.endsWith('.png')) {
+              mimeType = 'image/png';
+            } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+              mimeType = 'image/jpeg';
+            } else {
+              mimeType = 'application/octet-stream'; // fallback
+            }
+            // Recreate blob with correct type
+            const blobWithType = new Blob([originalBlob], { type: mimeType });
+            // Create URL from new blob
+            const url = URL.createObjectURL(blobWithType);
+            return { imageName: filename, url, blob: blobWithType };
+          });
+          const images = await Promise.all(imagePromises);
+          // setUploadedImagesall(images)
+
+          // console.log("images:", images);
+
+          // console.log("fetchBulkFile:", fetchBulkFile);
+
+          const enrichedItems = fetchBulkFile.map(itm => {
+            const matchedUpload = images.find(uploaded => uploaded.imageName === itm.filename);
+            return {
+              docActiveStatus: itm.docActiveStatus,
+              docCreateUser: itm.docCreateUser,
+              docCreatedDate: itm.docCreatedDate,
+              docVer: itm.docVer,
+              docVerDate: itm.docVerDate,
+              docVer_amentment: itm.docVer_amentment,
+              doc_id: itm.doc_id,
+              doc_number: itm.doc_number,
+              docd_slno: itm.docd_slno,
+              dovVer_infoAment: itm.dovVer_infoAment,
+              filename: itm.filename,
+              mimetype: itm.mimetype,
+              name: itm.name,
+              originalname: itm.originalname,
+              url: matchedUpload?.url,
+              imageName: matchedUpload?.imageName,
+              type: matchedUpload?.blob?.type
+
+            };
+          });
+          setFiles(enrichedItems);
+          // console.log("enrichedItems::", enrichedItems);
+        }
+      } catch (error) {
+        console.error('Error fetching or processing images:', error);
+      }
+    }
+    getImage(doc_number)
+
   }, [data]);
 
   const userVal = Number(credValue);
@@ -254,7 +335,7 @@ const TableContentVirtue = ({ data, credValue, printerAccess }) => {
             </Box>
           </td>
           <td className="border-tableborder border-dashed border-t-[0.20px]">
-            <Box className="flex w-16 h-full justify-center items-center">
+            <Box className="flex w-16 h-full justify-center items-center" >
               <Tooltip title="View File" placement="top">
                 <IconButton
                   variant="outlined"

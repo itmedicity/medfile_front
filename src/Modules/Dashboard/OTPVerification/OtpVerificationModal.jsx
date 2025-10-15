@@ -7,9 +7,10 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import DocList from './DocList';
 import { getDocumentDetl } from '../../../api/commonAPI';
 import { useQuery } from "@tanstack/react-query";
-import { NAS_FLDR } from '../../../Constant/Static';
+// import { NAS_FLDR } from '../../../Constant/Static';
 import SecurityUpdateGoodIcon from '@mui/icons-material/SecurityUpdateGood';
 import KeyIcon from '@mui/icons-material/Key';
+import JSZip from 'jszip';
 
 const OtpVerificationModal = ({ setOtpModal, otpModal, data, AllsuperUsers }) => {
     const {
@@ -24,6 +25,7 @@ const OtpVerificationModal = ({ setOtpModal, otpModal, data, AllsuperUsers }) =>
     const inputRefs = useRef([]);
     const [proceedBtn, setproceedBtn] = useState(0)
     const [MobNumArray, setMobNumArray] = useState([])
+    const [activeFile, setactiveFile] = useState([])
 
     const activeFilenames = docDetails?.filter((val) => val.docActiveStatus === 0);
 
@@ -130,65 +132,198 @@ const OtpVerificationModal = ({ setOtpModal, otpModal, data, AllsuperUsers }) =>
     }, [otp]);
 
 
-    const VerifyOtp = useCallback(() => {
+    // const VerifyOtp = useCallback(() => {
+    //     if (otp.every((digit) => digit !== "")) {
+    //         const OTP = otp.join('');
+    //         const sanitizedOTP = sanitizeInput(OTP);
+    //         const sanitizedMobileArray = MobNumArray.map(mobile => sanitizeInput(mobile));
+
+    //         let errorMessages = new Set(); // Use Set to store unique messages
+    //         let isOtpValid = false; // Track if at least one OTP is valid
+
+    //         const requests = sanitizedMobileArray.map(mobile => {
+    //             const slicedMobileNumber = mobile.slice(2);
+    //             const postDataToVerifyOTP = {
+    //                 otp: sanitizedOTP,
+    //                 mobile: slicedMobileNumber,
+    //             };
+
+    //             return axiosApi.post('/user/verifyOTPforPrint', postDataToVerifyOTP)
+    //                 .then(response => {
+    //                     const { success, message } = response.data;
+
+    //                     if (success === 2) {
+    //                         isOtpValid = true; // OTP is valid for at least one number
+
+    //                         if (activeFilenames && activeFilenames.length > 0) {
+    //                             activeFilenames.forEach((val) => {
+    //                                 const fileUrl = `${NAS_FLDR}${val.doc_number}/${val.filename}`;
+    //                                 window.open(fileUrl, "_blank"); // Open file for printing
+    //                             });
+    //                             reset();
+    //                         }
+    //                     } else {
+    //                         errorMessages.add(message); // Add to Set to avoid duplicates
+    //                     }
+    //                 })
+    //                 .catch(error => {
+    //                     console.error('Error verifying OTP:', error);
+    //                     errorMessages.add("Error verifying OTP. Please try again.");
+    //                 });
+    //         });
+
+    //         // Wait for all requests to complete before showing notifications
+    //         Promise.all(requests).then(() => {
+    //             if (isOtpValid) {
+    //                 succesNofity("OTP verified successfully!"); // Show success only if at least one is valid
+    //             } else if (errorMessages.size > 0) {
+    //                 warningNofity([...errorMessages].join("\n")); // Convert Set to array and display only unique messages
+    //             }
+    //         });
+
+    //     } else {
+    //         warningNofity("Some OTP fields are empty");
+    //         setproceedBtn(0);
+    //     }
+    // }, [otp, MobNumArray, activeFilenames, reset]);
+
+
+
+    const VerifyOtp = useCallback(async () => {
         if (otp.every((digit) => digit !== "")) {
             const OTP = otp.join('');
             const sanitizedOTP = sanitizeInput(OTP);
             const sanitizedMobileArray = MobNumArray.map(mobile => sanitizeInput(mobile));
 
-            let errorMessages = new Set(); // Use Set to store unique messages
+            let errorMessages = new Set(); // Store unique messages
             let isOtpValid = false; // Track if at least one OTP is valid
 
-            const requests = sanitizedMobileArray.map(mobile => {
-                const slicedMobileNumber = mobile.slice(2);
-                const postDataToVerifyOTP = {
-                    otp: sanitizedOTP,
-                    mobile: slicedMobileNumber,
-                };
+            // For gathering files to open later
+            let allEnrichedItems = [];
 
-                return axiosApi.post('/user/verifyOTPforPrint', postDataToVerifyOTP)
-                    .then(response => {
-                        const { success, message } = response.data;
+            // We'll process each mobile's OTP verification in parallel
+            const requests = sanitizedMobileArray.map(async (mobile) => {
+                try {
+                    const slicedMobileNumber = mobile.slice(2);
+                    const postDataToVerifyOTP = {
+                        otp: sanitizedOTP,
+                        mobile: slicedMobileNumber,
+                    };
 
-                        if (success === 2) {
-                            isOtpValid = true; // OTP is valid for at least one number
+                    const response = await axiosApi.post('/user/verifyOTPforPrint', postDataToVerifyOTP);
+                    const { success, message } = response.data;
 
-                            if (activeFilenames && activeFilenames.length > 0) {
-                                activeFilenames.forEach((val) => {
-                                    const fileUrl = `${NAS_FLDR}${val.doc_number}/${val.filename}`;
-                                    window.open(fileUrl, "_blank"); // Open file for printing
-                                });
-                                reset();
+                    if (success === 2) {
+                        isOtpValid = true; // OTP is valid for this mobile number
+                        setproceedBtn(1);
+
+                        if (activeFilenames && activeFilenames.length > 0) {
+                            // For each active filename, fetch the related files and process images
+                            for (const val of activeFilenames) {
+                                try {
+                                    // Assuming val.doc_number exists
+                                    const doc_number = val.doc_number;
+
+                                    const result = await axiosApi.get(`/docMaster/getFilesall/${doc_number}`, {
+                                        responseType: 'blob'
+                                    });
+
+                                    const contentType = result.headers['content-type'] || '';
+                                    if (contentType.includes('application/json')) {
+                                        // If the response is JSON (likely an error), skip processing
+                                        continue;
+                                    } else {
+                                        const zip = await JSZip.loadAsync(result.data);
+
+                                        // Extract image files (jpg, png, gif, pdf)
+                                        const imageEntries = Object.entries(zip.files).filter(
+                                            ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+                                        );
+
+                                        const images = await Promise.all(
+                                            imageEntries.map(async ([filename, fileObj]) => {
+                                                const originalBlob = await fileObj.async('blob');
+                                                let mimeType = '';
+                                                if (filename.endsWith('.pdf')) {
+                                                    mimeType = 'application/pdf';
+                                                } else if (filename.endsWith('.png')) {
+                                                    mimeType = 'image/png';
+                                                } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                                                    mimeType = 'image/jpeg';
+                                                } else {
+                                                    mimeType = 'application/octet-stream';
+                                                }
+
+                                                const blobWithType = new Blob([originalBlob], { type: mimeType });
+                                                const url = URL.createObjectURL(blobWithType);
+
+                                                return { imageName: filename, url, blob: blobWithType };
+                                            })
+                                        );
+
+                                        // Enrich your fetchBulkFile with URLs from extracted images
+                                        const enrichedItems = activeFilenames.map(itm => {
+                                            const matchedUpload = images.find(uploaded => uploaded.imageName === itm.filename);
+                                            return {
+                                                ...itm,
+                                                url: matchedUpload?.url,
+                                                imageName: matchedUpload?.imageName,
+                                                type: matchedUpload?.blob?.type,
+                                            };
+                                        });
+
+                                        // console.log("enrichedItems:", enrichedItems);
+
+                                        allEnrichedItems = allEnrichedItems.concat(enrichedItems);
+                                        setactiveFile(allEnrichedItems[0])
+                                        console.log(allEnrichedItems[0], "allEnrichedItems");
+
+                                        // console.log("allEnrichedItems::", allEnrichedItems);
+
+                                    }
+                                } catch (error) {
+                                    console.error('Error fetching or processing images:', error);
+                                }
                             }
-                        } else {
-                            errorMessages.add(message); // Add to Set to avoid duplicates
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error verifying OTP:', error);
-                        errorMessages.add("Error verifying OTP. Please try again.");
-                    });
-            });
-
-            // Wait for all requests to complete before showing notifications
-            Promise.all(requests).then(() => {
-                if (isOtpValid) {
-                    succesNofity("OTP verified successfully!"); // Show success only if at least one is valid
-                } else if (errorMessages.size > 0) {
-                    warningNofity([...errorMessages].join("\n")); // Convert Set to array and display only unique messages
+                    } else {
+                        errorMessages.add(message);
+                    }
+                } catch (error) {
+                    console.error('Error verifying OTP:', error);
+                    errorMessages.add("Error verifying OTP. Please try again.");
                 }
             });
 
+            // Wait for all OTP verifications (and file processing) to complete
+            await Promise.all(requests);
+
+            // if (isOtpValid) {
+            //     succesNofity("OTP verified successfully!");
+            //     // Open files in new tabs/windows
+            //     // If these are URLs, open them one by one
+            //     allEnrichedItems.forEach(item => {
+            //         if (item.url) {
+            //             window.open(item.url, "_blank");
+            //         }
+            //     });
+
+            //     reset();
+            // } else if (errorMessages.size > 0) {
+            //     warningNofity([...errorMessages].join("\n"));
+            //     setproceedBtn(0);
+            // }
         } else {
             warningNofity("Some OTP fields are empty");
             setproceedBtn(0);
         }
     }, [otp, MobNumArray, activeFilenames, reset]);
 
+
     return (
         <Fragment>
             {proceedBtn === 1 ?
-                <DocList activeFilenames={activeFilenames} proceedBtn={proceedBtn} setproceedBtn={setproceedBtn} /> :
+                <DocList activeFilenames={activeFilenames} proceedBtn={proceedBtn} setproceedBtn={setproceedBtn} activeFile={activeFile} /> :
 
                 <Modal open={otpModal} onClose={() => setOtpModal(false)}>
                     <ModalDialog size='sm' sx={{ backgroundColor: "rgba(var(--modal-bg-color))" }}>

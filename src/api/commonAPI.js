@@ -49,6 +49,23 @@ export const getSelectCategoryNameList = async () => {
       }
     });
 };
+//get main catefories
+export const getMainCategories = async () => {
+  return await axiosApi
+    .get("/docMaster/selectmainCategories")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.sub_type_slno,
+            label: item.doc_sub_type_name.toUpperCase(),
+          };
+        });
+      }
+    });
+};
+
 
 export const getSubCategoryList = async () => {
   return await axiosApi
@@ -539,8 +556,8 @@ export const getMenuNames = async () => {
   });
 };
 
-export const getUserModules = async (module_name) => {
-  return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${module_name}`).then((res) => {
+export const getUserModules = async (loggedUser) => {
+  return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${loggedUser}`).then((res) => {
     const { success, data } = res.data;
     if (success === 1) {
       return data ? data : [];
@@ -548,8 +565,12 @@ export const getUserModules = async (module_name) => {
   });
 };
 export const userWiseSettingsRights = async (loggedUser) => {
+  // console.log("loggedUser", loggedUser);
+
   return await axiosApi.get(`/UserGroupRightMaster/userWiseSettingsRights/${loggedUser}`).then((res) => {
     const { success, data } = res.data;
+    // console.log(" success, data,", success, data);
+
     if (success === 1) {
       return data ? data : [];
     }
@@ -564,3 +585,29 @@ export const SubCategoryById = async (catSlno) => {
     }
   });
 };
+
+//fetching departments from medi_hrm
+
+export const gethrmDeptDetails = async () => {
+  try {
+    const res = await axiosApi.get("/custodianDepartment/selectHrDeptDetails");
+    const { success, data } = res.data;
+
+    if (success === 1) {
+      // return data;
+      return data?.map((item) => {
+        return {
+          value: item.dept_id,
+          label: item.dept_name.toUpperCase()
+        };
+      });
+    } else {
+      // If success is not 1, return empty array
+      return [];
+    }
+  } catch (error) {
+    console.error("Error in gethrmDeptDetails:", error);
+    return [];
+  }
+};
+

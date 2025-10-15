@@ -1,88 +1,179 @@
 import React, { memo, useCallback, useState } from 'react';
-import { Box, Divider, Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/joy';
+import { getMainCategories } from '../../../api/commonAPI';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { useQuery } from '@tanstack/react-query';
-import { getSelectCategoryNameList } from '../../../api/commonAPI';
-import CategoryBasedDashboard from '../../../Components/CategoryBasedDashboard';
-import SubCategoryDetails from './SubCategoryDetails';
+import DocCategories from './DocCategories';
 
-const DocCatagoryDetails = ({ SetView, catDetails, DocName }) => {
+const DocCategoryDetails = () => {
+    const [dtlView, setDtlView] = useState(0);
+    const [mainCatData, setMainCatData] = useState(null);
 
-    const [dtlView, SetDtlView] = useState(0)
-    const [catSlno, SetCatSlno] = useState(0)
-
-    const { data: docCatList } = useQuery({
-        queryKey: ["getDocCatList"],
-        queryFn: getSelectCategoryNameList
+    const { data: mainCategoriesList, isLoading, isError } = useQuery({
+        queryKey: ['mainCategories'],
+        queryFn: getMainCategories,
     });
 
-    const ViewDetails = useCallback((e) => {
-        const catno = Number(e)
-        SetCatSlno(catno)
-        SetDtlView(1)
-    }, [])
+    const viewDetails = useCallback((val) => {
+        setMainCatData(val);
+        setDtlView(1);
+    }, []);
+
+    const handleKeyDown = useCallback((event, val) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            viewDetails(val);
+        }
+    }, [viewDetails]);
+
+    // Standardized Colors
+    const colors = {
+        primary: '#3F84AA',
+        primaryLight: '#C9E3F1',
+        primaryDark: '#2C6D8E',
+        bgLight: '#F5FAFD',
+        cardBg: '#EDF5FA',
+        textPrimary: '#1A1A1A',
+        textSecondary: '#4F4F4F',
+        iconCircle: '#FFFFFF',
+    };
+
+    if (isLoading) {
+        return <Typography>Loading categories...</Typography>;
+    }
+
+    if (isError) {
+        return <Typography>Error loading categories.</Typography>;
+    }
 
     return (
-        <div>
-            {dtlView === 1 ? <Box sx={{ height: '100vh', flex: 1, bgcolor: 'rgba(var(--bg-common))' }}>
-                <SubCategoryDetails
-                    dtlView={dtlView} SetView={SetDtlView} catSlno={catSlno} SetCatSlno={SetCatSlno} catDetails={catDetails} />
-            </Box> :
-                <CategoryBasedDashboard SetView={SetView} label={DocName || "Document Type"}>
-                    <Box sx={{ display: "flex", width: "100%", flexDirection: "row", gap: 1, mt: 0, p: 1, flexWrap: "wrap", alignContent: "center", mx: "auto" }}>
-                        {docCatList?.map((category) => {
-                            const filteredDocs = catDetails?.filter(doc => category.value === doc.category);
-                            const docCount = filteredDocs?.length || 0;
-                            return (
-                                <Box
-                                    key={category.value}
-                                    onClick={() => ViewDetails(category.value)}
+        <Box>
+            {dtlView === 1 ? (
+                <DocCategories mainCatData={mainCatData} />
+            ) : (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 4,
+                        justifyContent: 'center',
+                        backgroundColor: colors.bgLight,
+                        borderRadius: 8,
+                        padding: { xs: 2, md: 4 },
+                        minHeight: '100vh',
+                    }}
+                >
+                    {mainCategoriesList.map((item) => (
+                        <Box
+                            key={item.value}
+                            onClick={() => viewDetails(item)}
+                            onKeyDown={(e) => handleKeyDown(e, item)}
+                            role="button"
+                            tabIndex={0}
+                            sx={{
+                                width: { xs: '100%', sm: 400, md: 380 },
+                                height: 260,
+                                backgroundImage: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primary} 60%, ${colors.primaryLight} 100%)`,
+                                borderRadius: 6,
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                boxShadow: `0 8px 24px rgba(63, 132, 170, 0.3)`,
+                                transition: 'all 0.3s ease-in-out',
+                                cursor: 'pointer',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                border: `1px solid rgba(63,132,170,0.3)`,
+                                color: '#fff',
+                                '&:hover': {
+                                    transform: 'translateY(-6px)',
+                                    boxShadow: `0 12px 32px rgba(63, 132, 170, 0.5)`,
+                                },
+                                '&:focus-visible': {
+                                    outline: `3px solid ${colors.primaryLight}`,
+                                    outlineOffset: '2px',
+                                },
+                            }}
+                        >
+                            {/* Icon */}
+                            <Box
+                                sx={{
+                                    backgroundColor: colors.iconCircle,
+                                    width: 56,
+                                    height: 56,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '50%',
+                                    boxShadow: `0 6px 12px rgba(255,255,255,0.6)`,
+                                    mb: 2,
+                                    zIndex: 2,
+                                }}
+                            >
+                                <DescriptionIcon sx={{ fontSize: 30, color: colors.primaryDark }} />
+                            </Box>
+
+                            {/* Title */}
+                            <Typography
+                                level="h6"
+                                sx={{
+                                    fontWeight: 700,
+                                    color: '#fff',
+                                    textTransform: 'uppercase',
+                                    fontSize: '1rem',
+                                    mb: 1,
+                                    textShadow: '0 0 4px rgba(0,0,0,0.4)',
+                                }}
+                            >
+                                {item.label}
+                            </Typography>
+
+                            {/* Description */}
+                            <Typography
+                                level="body2"
+                                sx={{
+                                    fontSize: '0.9rem',
+                                    color: 'rgba(255,255,255,0.85)',
+                                    lineHeight: 1.6,
+                                    flexGrow: 1,
+                                    textShadow: '0 0 3px rgba(0,0,0,0.3)',
+                                }}
+                            >
+                                Manage, Review, and Maintain {item.label.toUpperCase()} documents for easy accessibility.
+                            </Typography>
+
+                            {/* Arrow */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    mt: 3,
+                                }}
+                            >
+                                <Typography
+                                    component="span"
                                     sx={{
-                                        height: 115,
-                                        width: "19.5%",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        // backgroundColor: "#C7D9DD",
-                                        // backgroundColor: "#748B9C",
-                                        // backgroundColor: "#C5D3E8",
-                                        // backgroundColor: "#222831",
-                                        overflow: 'hidden',
-                                        flexWrap: 'wrap',
-                                        boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.1)",
-                                        cursor: "pointer",
-                                        borderRadius: 5,
-                                        border: 1,
-                                        borderColor: "#607274",
-                                        bgcolor: "rgba(var(--bg-common))",
+                                        fontSize: 26,
+                                        color: '#fff',
+                                        fontWeight: 500,
+                                        transition: 'transform 0.3s ease',
+                                        '&:hover': {
+                                            transform: 'translateX(5px)',
+                                        },
+                                        textShadow: '0 0 4px rgba(0,0,0,0.4)',
                                     }}
                                 >
-                                    <Box sx={{ p: 1, display: "flex", flexDirection: "column", flex: 1 }}>
-                                        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-                                            <Typography
-                                                sx={{
-                                                    wordBreak: 'break-word',
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'normal',
-                                                    display: 'block',
-                                                    // color: "rgb(var(--bg-box-typo))",
-                                                    color: 'rgba(var(--font-primary-white))'
-                                                }}
-                                            >
-                                                {category.label}
-                                            </Typography>
-                                        </Box>
-                                        <Divider />
-                                        <Box sx={{ mt: 1.5 }}>
-                                            <Typography sx={{ fontSize: "30px", color: 'rgba(var(--font-primary-white))', }}>{docCount}</Typography>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            );
-                        })}
-                    </Box>
-                </CategoryBasedDashboard>
-            }
-        </div >
+                                    →
+                                </Typography>
+                            </Box>
+                        </Box>
+                    ))}
+                </Box>
+            )}
+        </Box>
     );
 };
 
-export default memo(DocCatagoryDetails);
+export default memo(DocCategoryDetails);
