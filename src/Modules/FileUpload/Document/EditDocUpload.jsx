@@ -68,6 +68,7 @@ import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOu
 import RenewDoc from "./RenewDoc";
 import CommonRightBasedMenus from "../../../Components/CommonRightBasedMenus";
 import JSZip from "jszip";
+import SelectNestedCate from "../../../Components/SelectNestedCate";
 
 const EditDocUpload = ({ refetchDocList, params }) => {
 
@@ -101,6 +102,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         category_name: "",
         sub_category: 0,
         subcat_name: "",
+        nested_category: 0,
+        nested_cat_name: "",
         group_mast: 0,
         group_name: "",
         docVer: 0,
@@ -125,6 +128,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         short_name: '',
         lifelong_validity: false,
         days_torenew: 0,
+
 
     });
 
@@ -159,6 +163,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                 category_name: docData?.category_name,
                 sub_category: docData?.sub_category,
                 subcat_name: docData?.subcat_name,
+                nested_category: docData?.nested_category,
+                nested_cat_name: docData?.nested_cat_name,
                 group_mast: docData?.group_mast,
                 group_name: docData?.group_name,
                 docVer: docData?.docVer,
@@ -203,6 +209,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         category_name,
         sub_category,
         subcat_name,
+        nested_category,
+        nested_cat_name,
         group_mast,
         group_name,
         docVer,
@@ -426,77 +434,77 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
         e.preventDefault();
 
-        if (editDocumentState.doc_name === "") {
-            warningNofity("Document Name cannot be empty");
-            return;
-        }
+        // if (editDocumentState.doc_name === "") {
+        //     warningNofity("Document Name cannot be empty");
+        //     return;
+        // }
 
-        if (editDocumentState.doc_desc === "") {
-            warningNofity("Document Description cannot be empty");
-            return;
-        }
+        // if (editDocumentState.doc_desc === "") {
+        //     warningNofity("Document Description cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.doc_type) === 0) {
-            warningNofity("Document Type cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.doc_type) === 0) {
+        //     warningNofity("Document Type cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.doc_sub_type) === 0) {
-            warningNofity("Document Sub Type cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.doc_sub_type) === 0) {
+        //     warningNofity("Document Sub Type cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
-            warningNofity("Institute cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
+        //     warningNofity("Institute cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
-            warningNofity("Course cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
+        //     warningNofity("Course cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.category) === 0) {
-            warningNofity("Category cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.category) === 0) {
+        //     warningNofity("Category cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.sub_category) === 0) {
-            warningNofity("Sub Category cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.sub_category) === 0) {
+        //     warningNofity("Sub Category cannot be empty");
+        //     return;
+        // }
 
-        if (Number(editDocumentState.group_mast) === 0) {
-            warningNofity("Group cannot be empty");
-            return;
-        }
+        // if (Number(editDocumentState.group_mast) === 0) {
+        //     warningNofity("Group cannot be empty");
+        //     return;
+        // }
 
-        if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
-            warningNofity(
-                "Document Expiry Start Date cannot be empty || Valid Date is required"
-            );
-            return;
-        }
+        // if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
+        //     warningNofity(
+        //         "Document Expiry Start Date cannot be empty || Valid Date is required"
+        //     );
+        //     return;
+        // }
 
-        if (
-            Boolean(editDocumentState.isRequiredExp) === true &&
-            isValid(new Date(editDocumentState.doc_exp_end)) === false
-        ) {
-            warningNofity(
-                "Document Expiry End Date cannot be empty || Valid Date is required"
-            );
-            return;
-        }
+        // if (
+        //     Boolean(editDocumentState.isRequiredExp) === true &&
+        //     isValid(new Date(editDocumentState.doc_exp_end)) === false
+        // ) {
+        //     warningNofity(
+        //         "Document Expiry End Date cannot be empty || Valid Date is required"
+        //     );
+        //     return;
+        // }
 
-        if (
-            Boolean(editDocumentState.isRequiredExp) === true &&
-            new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
-        ) {
-            warningNofity(
-                "Document Expiry Start Date cannot be greater than Expiry End Date"
-            );
-            return;
-        }
+        // if (
+        //     Boolean(editDocumentState.isRequiredExp) === true &&
+        //     new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
+        // ) {
+        //     warningNofity(
+        //         "Document Expiry Start Date cannot be greater than Expiry End Date"
+        //     );
+        //     return;
+        // }
 
         //  docVer,
         // docVersionAment,
@@ -512,6 +520,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             course: Number(editDocumentState.course),
             category: Number(editDocumentState.category),
             subCategory: Number(editDocumentState.sub_category),
+            nested_category: Number(editDocumentState.nested_category),
             group: Number(editDocumentState.group_mast),
             docVersion: docVer,
             docVersionAment: docVersionAment,
@@ -728,6 +737,12 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={subcat_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={nested_cat_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Nested Category : </span>} startIconStyle={{ opacity: 0.8, }} />
+
+
+
+
                                                         <CustomTypoPara label={group_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         {
@@ -909,6 +924,18 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                                 value={sub_category}
                                                             />
                                                         </Box>
+
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectNestedCate
+                                                                label={"Nested Category Master"}
+                                                                subCatSlno={sub_category ? Number(sub_category) : 0} // Ensure category is a valid number
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({
+                                                                    target: { name: "nested_category", value: element }
+                                                                })}
+                                                                value={nested_category} // Ensure nestedCategory is the correct type
+                                                            />
+                                                        </Box>
+
                                                         {/* Group */}
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectGroupMaster

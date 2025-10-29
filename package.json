@@ -24,6 +24,7 @@
     "dompurify": "^3.2.2",
     "firebase": "^10.13.0",
     "iconoir-react": "^7.10.0",
+    "ip-info-react": "^1.0.0",
     "jszip": "^3.10.1",
     "otp-input-react": "^0.3.0",
     "react": "^18.3.1",

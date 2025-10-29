@@ -20,6 +20,7 @@ import axiosApi from '../../Axios/Axios'
 import { PageSearch, Xmark } from 'iconoir-react'
 import InputFileNameSearch from '../../Components/InputFileNameSearch'
 import InputShortNameSearch from '../../Components/InputShortNameSearch'
+import AutoNestedCategory from '../../Components/AutoNestedCategory'
 
 const AdvancedSearch = () => {
 
@@ -38,9 +39,11 @@ const AdvancedSearch = () => {
         group: 0,
         institute: 0,
         course: 0,
-        docNumber: '',
+        docNumber: 0,
         fileName: '',
-        shortName: ''
+        shortName: '',
+        nestedCategory: 0
+
     })
 
     const handleSetState = (e) => {
@@ -51,8 +54,6 @@ const AdvancedSearch = () => {
 
         const result = await axiosApi.post('/docMaster/getSearchData', state)
         const { success, data } = result.data
-        // console.log("data", data);
-
         if (success === 0) {
             errorNofity('Error Getting Data , Please check the connection')
             return
@@ -90,6 +91,9 @@ const AdvancedSearch = () => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoSubCategory getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
+                        <AutoNestedCategory getInputValue={handleSetState} reset={reset} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoGroupName getInputValue={handleSetState} reset={reset} />

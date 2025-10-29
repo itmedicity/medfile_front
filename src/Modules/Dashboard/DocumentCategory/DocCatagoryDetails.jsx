@@ -1,179 +1,242 @@
-import React, { memo, useCallback, useState } from 'react';
-import { Box, Typography } from '@mui/joy';
-import { getMainCategories } from '../../../api/commonAPI';
-import DescriptionIcon from '@mui/icons-material/Description';
+import React, { Fragment, memo, useCallback, useState } from 'react';
+import { Box, Typography, Divider, CircularProgress } from '@mui/joy';
 import { useQuery } from '@tanstack/react-query';
-import DocCategories from './DocCategories';
+import {
+    getDocumentList,
+    getMainCategories,
+    getSelectCategoryNameList
+} from '../../../api/commonAPI';
+import FolderCard from './FolderCard';
+import axiosApi from '../../../Axios/Axios';
 
 const DocCategoryDetails = () => {
     const [dtlView, setDtlView] = useState(0);
     const [mainCatData, setMainCatData] = useState(null);
+    const [subCategories, setSubcategories] = useState([]);;
+    const [subCatData, setSubCatData] = useState(null);
+    const [viewSub, setViewSub] = useState(0);
 
-    const { data: mainCategoriesList, isLoading, isError } = useQuery({
+    const [selectedFolder, setSelectedFolder] = useState(null);
+
+    // Fetch main categories
+    const { data: mainCategoriesList = [], isLoading, isError } = useQuery({
         queryKey: ['mainCategories'],
         queryFn: getMainCategories,
     });
 
+    // Fetch category name list
+    const { data: docCatList = [] } = useQuery({
+        queryKey: ['getDocCatList'],
+        queryFn: getSelectCategoryNameList,
+    });
+
+    // Fetch document list
+    const { data: getDocumentDatas = [] } = useQuery({
+        queryKey: ['DocumentList'],
+        queryFn: getDocumentList,
+    });
+
+    // Handle view of details
     const viewDetails = useCallback((val) => {
         setMainCatData(val);
         setDtlView(1);
+        setSubcategories([]); // reset subcategories
+        setSelectedFolder(val.value);
     }, []);
 
-    const handleKeyDown = useCallback((event, val) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            viewDetails(val);
+
+    // Safely extract mainCatData value
+    const value = mainCatData?.value || '';
+
+    // Filtered document list
+    const filteredData = getDocumentDatas.filter((item) => item.doc_sub_type === value);
+
+    // Handle subcategory click
+    const handleClick = useCallback(async (item) => {
+        setViewSub(1);
+        setSubCatData(item)
+        setSelectedFolder(item.value);
+        try {
+            const res = await axiosApi.get(`/docSubCategoryName/getSubCategoryById/${item.value}`);
+            const { success, data } = res.data;
+            setSubcategories(success === 1 ? data : []);
+        } catch (error) {
+            console.error('Error fetching subcategories:', error);
+            setSubcategories([]);
         }
-    }, [viewDetails]);
+    }, []);
 
-    // Standardized Colors
-    const colors = {
-        primary: '#3F84AA',
-        primaryLight: '#C9E3F1',
-        primaryDark: '#2C6D8E',
-        bgLight: '#F5FAFD',
-        cardBg: '#EDF5FA',
-        textPrimary: '#1A1A1A',
-        textSecondary: '#4F4F4F',
-        iconCircle: '#FFFFFF',
-    };
-
+    // Loading state
     if (isLoading) {
-        return <Typography>Loading categories...</Typography>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+                <CircularProgress size="lg" />
+                <Typography level="body-md" sx={{ ml: 2 }}>
+                    Loading categories...
+                </Typography>
+            </Box>
+        );
     }
 
+    // Error state
     if (isError) {
-        return <Typography>Error loading categories.</Typography>;
+        return (
+            <Typography color="danger" sx={{ mt: 4, textAlign: 'center' }}>
+                ❌ Error loading categories. Please try again later.
+            </Typography>
+        );
     }
+
+    //  UI Layout
 
     return (
-        <Box>
-            {dtlView === 1 ? (
-                <DocCategories mainCatData={mainCatData} />
-            ) : (
+        <Fragment>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    height: '100vh', // total available height for all sheets
+                    overflow: 'hidden', // prevent double scrolls,
+                    modalbgcolor: "rgba(var(--modal-bg-color))",
+                }}
+            >
                 <Box
+                    // variant="outlined"
                     sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 4,
-                        justifyContent: 'center',
-                        backgroundColor: colors.bgLight,
-                        borderRadius: 8,
-                        padding: { xs: 2, md: 4 },
-                        minHeight: '100vh',
+                        borderRadius: 'md',
+                        p: { xs: 2, md: 3 },
+                        mb: 3,
+                        overflowY: 'auto', // scrollable content
+                        minHeight: 0, // required for flex scroll
+                        modalbgcolor: "rgba(var(--modal-bg-color))",
                     }}
                 >
-                    {mainCategoriesList.map((item) => (
-                        <Box
-                            key={item.value}
-                            onClick={() => viewDetails(item)}
-                            onKeyDown={(e) => handleKeyDown(e, item)}
-                            role="button"
-                            tabIndex={0}
-                            sx={{
-                                width: { xs: '100%', sm: 400, md: 380 },
-                                height: 260,
-                                backgroundImage: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primary} 60%, ${colors.primaryLight} 100%)`,
-                                borderRadius: 6,
-                                padding: 3,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                boxShadow: `0 8px 24px rgba(63, 132, 170, 0.3)`,
-                                transition: 'all 0.3s ease-in-out',
-                                cursor: 'pointer',
-                                position: 'relative',
-                                overflow: 'hidden',
-                                border: `1px solid rgba(63,132,170,0.3)`,
-                                color: '#fff',
-                                '&:hover': {
-                                    transform: 'translateY(-6px)',
-                                    boxShadow: `0 12px 32px rgba(63, 132, 170, 0.5)`,
-                                },
-                                '&:focus-visible': {
-                                    outline: `3px solid ${colors.primaryLight}`,
-                                    outlineOffset: '2px',
-                                },
-                            }}
-                        >
-                            {/* Icon */}
-                            <Box
-                                sx={{
-                                    backgroundColor: colors.iconCircle,
-                                    width: 56,
-                                    height: 56,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderRadius: '50%',
-                                    boxShadow: `0 6px 12px rgba(255,255,255,0.6)`,
-                                    mb: 2,
-                                    zIndex: 2,
-                                }}
-                            >
-                                <DescriptionIcon sx={{ fontSize: 30, color: colors.primaryDark }} />
-                            </Box>
+                    <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
+                        📁 CORE CATEGORIES
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
 
-                            {/* Title */}
-                            <Typography
-                                level="h6"
-                                sx={{
-                                    fontWeight: 700,
-                                    color: '#fff',
-                                    textTransform: 'uppercase',
-                                    fontSize: '1rem',
-                                    mb: 1,
-                                    textShadow: '0 0 4px rgba(0,0,0,0.4)',
-                                }}
-                            >
-                                {item.label}
-                            </Typography>
-
-                            {/* Description */}
-                            <Typography
-                                level="body2"
-                                sx={{
-                                    fontSize: '0.9rem',
-                                    color: 'rgba(255,255,255,0.85)',
-                                    lineHeight: 1.6,
-                                    flexGrow: 1,
-                                    textShadow: '0 0 3px rgba(0,0,0,0.3)',
-                                }}
-                            >
-                                Manage, Review, and Maintain {item.label.toUpperCase()} documents for easy accessibility.
-                            </Typography>
-
-                            {/* Arrow */}
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                    mt: 3,
-                                }}
-                            >
-                                <Typography
-                                    component="span"
-                                    sx={{
-                                        fontSize: 26,
-                                        color: '#fff',
-                                        fontWeight: 500,
-                                        transition: 'transform 0.3s ease',
-                                        '&:hover': {
-                                            transform: 'translateX(5px)',
-                                        },
-                                        textShadow: '0 0 4px rgba(0,0,0,0.4)',
-                                    }}
-                                >
-                                    →
-                                </Typography>
-                            </Box>
-                        </Box>
-                    ))}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        {mainCategoriesList.map((item) => (
+                            <FolderCard
+                                key={item.value}
+                                value={item.value}
+                                label={item.label}
+                                count={0}
+                                onClick={() => viewDetails(item)}
+                                isSelected={selectedFolder === item.value}
+                            />
+                        ))}
+                    </Box>
                 </Box>
-            )}
-        </Box>
+
+                {/* ===== SUB CATEGORY SECTION ===== */}
+                {dtlView === 1 && (
+                    <Box
+                        // variant="outlined"
+                        sx={{
+                            borderRadius: 'md',
+                            p: { xs: 2, md: 3 },
+                            mb: 3,
+                            overflowY: 'auto', // scrollable content
+                            minHeight: 0, // required for flex scroll
+                            modalbgcolor: "rgba(var(--modal-bg-color))",
+                        }}
+                    >
+                        <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
+                            {`📂 ${mainCatData?.label}`}
+                        </Typography>
+                        <Divider sx={{ mb: 2 }} />
+
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                            {docCatList
+                                .filter((item) => {
+                                    const label = item.label.trim().toUpperCase();
+                                    return filteredData.some(
+                                        (doc) => doc.category_name?.trim().toUpperCase() === label
+                                    );
+                                })
+                                .map((item) => {
+                                    const label = item.label.trim().toUpperCase();
+                                    const count =
+                                        filteredData.filter(
+                                            (doc) => doc.category_name?.trim().toUpperCase() === label
+                                        ).length || 0;
+
+                                    return (
+                                        <FolderCard
+                                            key={item.value}
+                                            value={item.value}
+                                            label={item.label}
+                                            count={count}
+                                            onClick={() => handleClick(item)}
+                                            isSelected={selectedFolder === item.value}
+                                        />
+                                    );
+                                })}
+                        </Box>
+                    </Box>
+                )}
+
+                {viewSub === 1 && subCategories.length > 0 && (
+                    <Box
+                        // variant="outlined"
+                        sx={{
+                            borderRadius: 'md',
+                            p: { xs: 2, md: 3 },
+                            overflowY: 'auto', // scrollable content
+                            minHeight: 0, // required for flex scroll
+                            modalbgcolor: "rgba(var(--modal-bg-color))",
+                        }}
+                    >
+                        <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
+                            {`📂 ${subCatData?.label}`}
+                        </Typography>
+                        <Divider sx={{ mb: 2 }} />
+
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                            {subCategories
+                                .filter((item) => {
+                                    const label = item.subcat_name;
+                                    return filteredData.some(
+                                        (doc) => doc.subcat_name?.trim().toUpperCase() === label
+                                    );
+                                })
+                                .map((item) => {
+
+                                    const label = item.subcat_name;
+                                    const count =
+                                        filteredData.filter(
+                                            (doc) => doc.subcat_name?.trim().toUpperCase() === label
+                                        ).length || 0;
+
+                                    return (
+                                        <FolderCard
+                                            key={item.subcat_slno}
+                                            value={item.subcat_slno}
+                                            label={item.subcat_name}
+                                            count={count}
+
+                                        />
+                                    );
+                                })}
+                        </Box>
+                    </Box>
+                )}
+
+                {/* ===== EMPTY STATE ===== */}
+                {viewSub === 1 && subCategories.length === 0 && (
+                    <Typography level="body-md" sx={{ textAlign: 'center', mt: 3 }}>
+                        No subcategories found.
+                    </Typography>
+                )}
+            </Box>
+        </Fragment>
     );
 };
 
 export default memo(DocCategoryDetails);
+
+
+

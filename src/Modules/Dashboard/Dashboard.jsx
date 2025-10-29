@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Box, Button, Input, Skeleton } from "@mui/joy";
 import Grid from "@mui/material/Grid2";
-import React, { Fragment, memo, useCallback, useEffect, useState } from "react";
+import React, { Fragment, memo, useCallback, useContext, useEffect, useState } from "react";
 import {
   baseColor,
   sanitizeInput,
@@ -25,6 +25,7 @@ import { ToastContainer } from "react-toastify";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import axiosApi from "../../Axios/Axios";
 import DocCatagoryDetails from "./DocumentCategory/DocCatagoryDetails";
+import GetSystemInfo from "../../Components/GetSystemInfo";
 
 const localData = localStorage.getItem("app_auth");
 const credValue = atob(JSON.parse(localData)?.authType);
@@ -91,23 +92,6 @@ const Dashboard = () => {
     staleTime: Infinity,
   });
 
-  // const handleSearchFun = useCallback(() => {
-  //   let searchContent = sanitizeInput(searchParm?.trim());
-  //   let stringLength = searchContent?.length;
-  //   if (stringLength < 5) {
-  //     warningNofity("Search parameter must be greater than 5 letter");
-  //     return;
-  //   }
-  //   if (
-  //     searchContent !== undefined ||
-  //     searchContent !== null ||
-  //     searchContent !== "" ||
-  //     stringLength > 5
-  //   ) {
-  //     refetch();
-  //   }
-  // }, [searchParm, refetch]);
-
   const handleSearchFun = useCallback(() => {
     try {
       let searchContent = sanitizeInput(searchParm?.trim());
@@ -128,29 +112,10 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error("Error occurred during search:", error);
-      // Optionally notify the user about the error
       warningNofity("An unexpected error occurred. Please try again.");
     }
   }, [searchParm, refetch]);
 
-
-  // useEffect(() => {
-  //   if (allDocData) {
-  //     setTableData(allDocData);
-  //   }
-  //   else {
-  //     setTableData([])
-  //   }
-  // }, [allDocData]);
-
-  // useEffect(() => {
-  //   if (docNameData) {
-  //     setTableData(docNameData);
-  //   }
-  //   else {
-  //     setTableData([])
-  //   }
-  // }, [docNameData]);
   useEffect(() => {
     if (searchParm && docNameData) {
       setTableData(docNameData);
@@ -168,6 +133,7 @@ const Dashboard = () => {
 
   return (
     <Fragment>
+      {/* <GetSystemInfo /> */}
       {view === 1 ? <DocCatagoryDetails SetView={SetView} view={view} catDetails={catDetails} SetCatDetails={SetCatDetails} DocName={DocName} /> :
         <Box className="flex flex-col  rounded-xl p-2 pb-2 overflow-scroll w-full bg-bgcommon h-screen">
           {/* <ToastContainer /> */}

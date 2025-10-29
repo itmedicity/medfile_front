@@ -1,23 +1,29 @@
 import React from 'react'
 import { memo } from 'react'
 import CustomSelectWithLabel from './CustomSelectWithLabel'
-import { getSelectInstitutionMasterList } from '../api/commonAPI'
+import { getNestedCategoryList } from '../api/commonAPI'
 import { useQuery } from '@tanstack/react-query'
 import { errorNofity } from '../Constant/Constant'
 
-const SelectInstituteMaster = ({ handleChange, value, label }) => {
+const SelectNestedCate = ({ handleChange, value, label, subCatSlno }) => {
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ['selectInstituteMast'],
-        queryFn: getSelectInstitutionMasterList,
-        staleTime: Infinity
+        queryKey: ['nestedCategoryList'],
+        queryFn: getNestedCategoryList
     })
     if (error) return errorNofity('An error has occurred: ' + error)
+
+    const filteredData = data
+        ?.filter((item) => item.subcat_slno === subCatSlno)
+        ?.map((item) => ({
+            value: item.nested_cat_slno,
+            label: item.nested_cat_name,
+        }));
 
     return (
         <CustomSelectWithLabel
             labelName={label || 'List'}
-            dataCollection={data}
+            dataCollection={filteredData}
             values={Number(value)}
             handleChangeSelect={handleChange}
             placeholder={isLoading ? "Loading..." : "Select here ..."}
@@ -25,4 +31,4 @@ const SelectInstituteMaster = ({ handleChange, value, label }) => {
     )
 }
 
-export default memo(SelectInstituteMaster)
+export default memo(SelectNestedCate)

@@ -41,7 +41,7 @@ const MenuNameMaster = lazy(() => import("./Modules/Settings/MenuNameMaster/Menu
 const UserTypeMaster = lazy(() => import("./Modules/Settings/UserTypeMaster/UserTypeMaster.jsx"))
 const UserGroupRights = lazy(() => import("./Modules/Settings/UserGroupRights/UserGroupRights.jsx"))
 const ModuleNameMaster = lazy(() => import("./Modules/Settings/ModuleNameMaster/ModuleNameMaster.jsx"))
-
+const DocumentNestedCategory = lazy(() => import("./Modules/Settings/DocumentNestedCategory/DocumentNestedCategory.jsx"))
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -106,6 +106,7 @@ const routes = createBrowserRouter([
           { path: "UserTypeMaster", element: <UserTypeMaster />, errorElement: <ErrorElement /> },
           { path: "UserGroupRights", element: <UserGroupRights />, errorElement: <ErrorElement /> },
           { path: "ModuleNameMaster", element: <ModuleNameMaster />, errorElement: <ErrorElement /> },
+          { path: "DocumentNestedCategory", element: <DocumentNestedCategory />, errorElement: <ErrorElement /> }
 
         ],
       },

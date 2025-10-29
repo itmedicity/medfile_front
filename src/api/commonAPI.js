@@ -192,6 +192,7 @@ export const getSelectSubTypeMasterList = async () => {
           return {
             value: item.sub_type_slno,
             label: item.doc_sub_type_name.toUpperCase(),
+            doc_institute_status: item.doc_institute_status
           };
         });
       }
@@ -213,6 +214,7 @@ export const getSelectInstitutionMasterList = async () => {
       }
     });
 };
+
 
 export const getSelectCourseMasterList = async () => {
   return await axiosApi
@@ -611,3 +613,13 @@ export const gethrmDeptDetails = async () => {
   }
 };
 
+export const getNestedCategoryList = async () => {
+  return await axiosApi
+    .get("/docNestedCategoryName/getAllNestedCategory")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};

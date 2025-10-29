@@ -49,6 +49,13 @@ const TableHeaderVirtue = () => {
                 >
                     Category
                 </Box>
+
+                {/* <Box
+                    className="flex justify-center w-[16rem] text-baseWhite/80"
+                    sx={{ fontSize: { lg: "0.8rem" }, fontFamily: 'var(--font-varient)' }}
+                >
+                    Category
+                </Box> */}
             </th>
             <th>
                 <Box

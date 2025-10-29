@@ -27,19 +27,19 @@ const CommonRightBasedMenus = ({
     // Define an array of icons and their properties
     const iconButtons = [
         {
-            menuslno: 23,
+            menuslno: 22,
             icon: <QueueIcon />,
             onClick: handleSubmitButtonFun,
             tooltip: submitLabel || "Click Here to Submit",
         },
         {
-            menuslno: 24,
+            menuslno: 23,
             icon: <SearchIcon />,
             onClick: handleViewButtonFun,
             tooltip: "Click Here to View",
         },
         {
-            menuslno: 25,
+            menuslno: 24,
             icon: <CloseIcon />,
             onClick: () => navigation(-1),
             tooltip: "Back to Previous Page",

@@ -27,7 +27,7 @@ import {
 } from "../../Constant/Constant";
 import CustomInput from "../../Components/CustomInput";
 import Clock from "react-live-clock";
-import { getDocNumber, userWiseSettingsRights } from "../../api/commonAPI";
+import { getDocNumber, getSelectSubTypeMasterList, userWiseSettingsRights } from "../../api/commonAPI";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import CustomBackDropWithOutState from "../../Components/CustomBackDropWithOutState";
 import { customDocNumber } from "../../Function/CommonFunction";
@@ -65,11 +65,11 @@ import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
 import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
 import CommonRightBasedMenus from "../../Components/CommonRightBasedMenus";
+import SelectNestedCate from "../../Components/SelectNestedCate";
 
 const DocuementList = lazy(() => import("./Document/DocuementList"));
 
 const FileUpload = () => {
-  // const [docType, setDocType] = useState(0)
   const queryClient = useQueryClient();
   const userData = localStorage.getItem("app_auth");
   const userType = atob(JSON.parse(userData)?.authType);
@@ -91,6 +91,13 @@ const FileUpload = () => {
     queryFn: () => userWiseSettingsRights(userType),
     enabled: !!userType,
   });
+
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['selectDocSubTypeMaster'],
+    queryFn: getSelectSubTypeMasterList,
+    staleTime: Infinity
+  })
 
   const [menurights, setMenurights] = useState([])
 
@@ -157,7 +164,8 @@ const FileUpload = () => {
     docCustodian: 0,
     shortName: '',
     lifeLongValidity: false,
-    DaysToRenew: 0
+    DaysToRenew: 0,
+    nestedCategory: 0
 
   });
 
@@ -182,7 +190,8 @@ const FileUpload = () => {
     docCustodian,
     shortName,
     lifeLongValidity,
-    DaysToRenew
+    DaysToRenew,
+    nestedCategory
   } = documentState;
 
   // const handleDocumentState = useCallback((e) => {
@@ -227,27 +236,6 @@ const FileUpload = () => {
     }));
   }, []);
 
-
-  // const handleDocumentState = useCallback((e) => {
-  //   const { name, value } = e.target;
-
-  //   let newValue = value;
-
-  //   if (name === "shortName") {
-  //     // Allow only alphanumeric characters
-  //     newValue = newValue.replace(/[^a-zA-Z0-9]/g, "");
-
-  //     // Optionally clamp length to 4 here too (even though inputProps does it)
-  //     if (newValue.length > 4) {
-  //       newValue = newValue.slice(0, 4);
-  //     }
-  //   }
-
-  //   setDocumentState(prev => ({
-  //     ...prev,
-  //     [name]: newValue, // optionally sanitizeInput(newValue)
-  //   }));
-  // }, []);
 
 
   useEffect(() => {
@@ -330,41 +318,41 @@ const FileUpload = () => {
       return;
     }
 
-    if (Number(documentState.docSubType) === 0) {
-      warningNofity("Document Sub Type cannot be empty");
-      return;
-    }
+    // if (Number(documentState.docSubType) === 0) {
+    //   warningNofity("Document Sub Type cannot be empty");
+    //   return;
+    // }
 
-    if (
-      Number(documentState.institute) === 2 &&
-      Number(documentState.institute) === 0
-    ) {
-      warningNofity("Institute cannot be empty");
-      return;
-    }
+    // if (
+    //   Number(documentState.institute) === 2 &&
+    //   Number(documentState.institute) === 0
+    // ) {
+    //   warningNofity("Institute cannot be empty");
+    //   return;
+    // }
 
-    if (
-      Number(documentState.institute) === 2 &&
-      Number(documentState.course) === 0
-    ) {
-      warningNofity("Course cannot be empty");
-      return;
-    }
+    // if (
+    //   Number(documentState.institute) === 2 &&
+    //   Number(documentState.course) === 0
+    // ) {
+    //   warningNofity("Course cannot be empty");
+    //   return;
+    // }
 
-    if (Number(documentState.category) === 0) {
-      warningNofity("Category cannot be empty");
-      return;
-    }
+    // if (Number(documentState.category) === 0) {
+    //   warningNofity("Category cannot be empty");
+    //   return;
+    // }
 
-    if (Number(documentState.subCategory) === 0) {
-      warningNofity("Sub Category cannot be empty");
-      return;
-    }
+    // if (Number(documentState.subCategory) === 0) {
+    //   warningNofity("Sub Category cannot be empty");
+    //   return;
+    // }
 
-    if (Number(documentState.group) === 0) {
-      warningNofity("Group cannot be empty");
-      return;
-    }
+    // if (Number(documentState.group) === 0) {
+    //   warningNofity("Group cannot be empty");
+    //   return;
+    // }
 
     if (isValid(new Date(documentState.docDate)) === false) {
       warningNofity("Document Date cannot be empty");
@@ -417,6 +405,7 @@ const FileUpload = () => {
       course: Number(documentState.course),
       category: Number(documentState.category),
       subCategory: Number(documentState.subCategory),
+      nestedCategory: Number(documentState.nestedCategory),
       group: Number(documentState.group),
       docDate: format(new Date(documentState.docDate), "yyyy-MM-dd HH:mm"),
       docVersion: 1,
@@ -507,6 +496,7 @@ const FileUpload = () => {
       shortName: '',
       lifeLongValidity: false,
       DaysToRenew: 0,
+      nestedCategory: 0
     });
     setFiles([]);
   };
@@ -516,8 +506,10 @@ const FileUpload = () => {
   // const handleChange = (event) => {
   //   setShrtName(event.target.value);
   // };
-  // console.log("shortName:::", shortName);
 
+  const selectedItem = data?.find(
+    (item) => item.value === docSubType && item.doc_institute_status === 1
+  );
 
   return (
     <Box className="h-dvh p-2">
@@ -793,8 +785,8 @@ const FileUpload = () => {
                     <Box>
                       <Input
                         name="shortName"
-                        variant="outlined"
-                        color="neutral"
+                        // variant="outlined"
+                        // color="neutral"
                         size="sm"
                         value={shortName}
                         onChange={handleDocumentState}
@@ -825,22 +817,35 @@ const FileUpload = () => {
                       value={docType}
                     />
                   </Box>
-                  <Box className="flex flex-1 flex-col">
+                  {/* <Box className="flex flex-1 flex-col">
                     <SelectDocSubTypeMaster
                       label={"Document Sub Type Master"}
                       handleChange={(e, element) =>
-                        handleDocumentState({
+\                        handleDocumentState({
                           target: { name: "docSubType", value: element },
                         })
                       }
                       value={docSubType}
                     />
+                  </Box> */}
+
+                  <Box className="flex flex-1 flex-col">
+                    <SelectDocSubTypeMaster
+                      label={"Document Sub Type Master"}
+                      handleChange={(e, element) => {
+                        handleDocumentState({
+                          target: { name: "docSubType", value: element },
+                        });
+                      }}
+                      value={docSubType}
+                    />
                   </Box>
-                  {docSubType === "2" ? (
+
+                  {selectedItem?.doc_institute_status === 1 && (
                     <>
                       <Box className="flex flex-1 flex-col">
                         <SelectInstituteMaster
-                          label={"Institute Master"}
+                          label="Institute Master"
                           handleChange={(e, element) =>
                             handleDocumentState({
                               target: { name: "institute", value: element },
@@ -849,9 +854,10 @@ const FileUpload = () => {
                           value={institute}
                         />
                       </Box>
+
                       <Box className="flex flex-1 flex-col">
                         <SelectCourseMaster
-                          label={"Course Master"}
+                          label="Course Master"
                           handleChange={(e, element) =>
                             handleDocumentState({
                               target: { name: "course", value: element },
@@ -861,7 +867,7 @@ const FileUpload = () => {
                         />
                       </Box>
                     </>
-                  ) : null}
+                  )}
 
                   <Box className="flex flex-1 flex-col">
                     <SelectCmpCategoryNameList
@@ -880,6 +886,17 @@ const FileUpload = () => {
                         target: { name: "subCategory", value: element }
                       })}
                       value={subCategory} // Ensure subCategory is the correct type
+                    />
+                  </Box>
+
+                  <Box className="flex flex-1 flex-col">
+                    <SelectNestedCate
+                      label={"Nested Category Master"}
+                      subCatSlno={subCategory ? Number(subCategory) : 0} // Ensure category is a valid number
+                      handleChange={(e, element) => handleDocumentState({
+                        target: { name: "nestedCategory", value: element }
+                      })}
+                      value={nestedCategory} // Ensure nestedCategory is the correct type
                     />
                   </Box>
 
@@ -973,7 +990,7 @@ const FileUpload = () => {
                       />
                     </Box>
 
-                    <Box className="flex flex-col gap-4 p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+                    <Box className="flex flex-col gap-4 p-4 border border-gray-200 rounded-lg shadow-sm">
                       {/* Validity Checkbox */}
                       <CustomCheckBoxWithLabel
                         label="Is Validity Required for this Document"
@@ -1016,7 +1033,7 @@ const FileUpload = () => {
                             {/* Days Before Renewal - Only if not lifelong */}
                             {!lifeLongValidity && (
                               <Box className="flex flex-col">
-                                <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
+                                <label htmlFor="renewalTime" className="text-sm font-medium mb-0" style={{
                                   color: 'rgba(var(--font-primary-white))',
                                   fontFamily: "var(--font-varient)",
                                 }}>
@@ -1044,7 +1061,7 @@ const FileUpload = () => {
 
 
 
-                    {Boolean(isRequiredExp) === true && (
+                    {Boolean(isRequiredExp) && !lifeLongValidity && (
                       <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                         <Box className="flex flex-auto">
                           <CustomButtonDateFeild
