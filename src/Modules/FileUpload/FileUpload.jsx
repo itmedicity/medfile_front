@@ -1,28 +1,28 @@
 // @ts-nocheck
 import {
   Box,
-  Button,
-  Checkbox,
+  // Button,
+  // Checkbox,
   Divider,
-  FormControl,
-  FormLabel,
-  IconButton,
+  // FormControl,
+  // FormLabel,
+  // IconButton,
   Input,
-  TextField,
+  // TextField,
   Textarea,
   Typography,
-  colors,
+  // colors,
 } from "@mui/joy";
 import Grid from "@mui/material/Grid2";
 import "./Document/Style.css";
 import React, { memo, useEffect, useState } from "react";
 import {
-  baseColor,
-  customFontSize,
-  customInputHeight,
-  errorNofity,
-  sanitizeInput,
-  succesNofity,
+  // baseColor,
+  // customFontSize,
+  // customInputHeight,
+  // errorNofity,
+  // sanitizeInput,
+  // succesNofity,
   warningNofity,
 } from "../../Constant/Constant";
 import CustomInput from "../../Components/CustomInput";
@@ -45,22 +45,22 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
-import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
-import CommonMenuList from "../../Components/CommonMenuList";
+// import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
+// import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
+// import CommonMenuList from "../../Components/CommonMenuList";
 import { useCallback } from "react";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import axiosApi from "../../Axios/Axios";
 import { lazy } from "react";
 import { Suspense } from "react";
 import Files from "react-files";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import dummyImage from "../../assets/pdf.png";
-import ClearIcon from "@mui/icons-material/Clear";
+// import ClearIcon from "@mui/icons-material/Clear";
 import FileListComponent from "./Document/FileListComponent";
 import Snackbar from "@mui/joy/Snackbar";
 import MarkUnreadChatAltOutlinedIcon from "@mui/icons-material/MarkUnreadChatAltOutlined";
-import { PageStar, TaskList, PrivacyPolicy } from 'iconoir-react'
+import { PageStar, PrivacyPolicy } from 'iconoir-react'
 import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
 import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
 import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
@@ -85,6 +85,8 @@ const FileUpload = () => {
     queryFn: getDocNumber,
   });
 
+  // console.log("documentNumber");
+
   //user rights
   const { data: userSettings } = useQuery({
     queryKey: ['getuserSettings', userType],
@@ -93,7 +95,7 @@ const FileUpload = () => {
   });
 
 
-  const { isLoading, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['selectDocSubTypeMaster'],
     queryFn: getSelectSubTypeMasterList,
     staleTime: Infinity
@@ -124,7 +126,7 @@ const FileUpload = () => {
       })
     });
     setMenurights(array)
-  }, [userSettings])
+  }, [tabs, userSettings])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -136,7 +138,7 @@ const FileUpload = () => {
   // CUSTOM DOC NUMBER
   const custDocNumber = customDocNumber(documentNumber);
 
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
 
   // DOCUMENT UPLOAD AMIN STATE VALUE
   const [documentState, setDocumentState] = useState({
@@ -272,9 +274,9 @@ const FileUpload = () => {
     );
   };
 
-  const handleClearFiles = () => {
-    setFiles([]);
-  };
+  // const handleClearFiles = () => {
+  //   setFiles([]);
+  // };
   // console.log(files);
 
   const handleError = useCallback((error, file) => {
@@ -469,7 +471,7 @@ const FileUpload = () => {
       setOpen(true);
     }
   },
-    [documentState, documentNumber, custDocNumber, files, warningNofity, setMessage, setOpen, queryClient, DaysToRenew]
+    [documentState, documentNumber, custDocNumber, files, setMessage, setOpen, queryClient, DaysToRenew, user]
   );
 
   const resetForm = () => {
