@@ -60,6 +60,12 @@
   --list-hover-font-color: 78, 78, 78;
 
   --modal-bg-color: 255, 255, 255;
+  --icon-approve-clr : 12, 130, 47;
+  --icon-notapprove-clr : 191, 21, 38;
+  --typo-clr:64, 64, 66;
+  --tab-font-clr:17, 17, 18,
+  --bg-box-color:28, 61, 84,
+
 }
 
 .dark {
@@ -124,4 +130,13 @@
   --list-hover-font-color: 78, 78, 78;
 
   --modal-bg-color: 19, 21, 22;
+  --icon-approve-clr : 54, 247, 77;
+  --icon-notapprove-clr :242, 22, 51;
+  --typo-clr:242, 240, 240,
+  --tab-bg-clr:13, 15, 18,
+  --tab-font-clr:240, 242, 252,
+  /* --box-bg-clr:92, 114, 133 */
+  --bg-box-color:92, 114, 133,
+  --bg-box-typo:237, 242, 245
+
 }

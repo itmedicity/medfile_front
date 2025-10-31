@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Box, IconButton, Skeleton } from "@mui/joy";
+import { Box, IconButton, Skeleton, Typography } from "@mui/joy";
 import React from "react";
 import { memo } from "react";
 import { Document, Page } from "react-pdf";
@@ -16,8 +16,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 const PdfViewComponent = ({ fileLink }) => {
+
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+
+  const fileType = fileLink?.type;
+
+  const isImage = fileType?.startsWith('image/jpeg') || fileType?.startsWith('image/png');
+  const isPDF = fileType === 'application/pdf';
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -25,7 +31,7 @@ const PdfViewComponent = ({ fileLink }) => {
   }
 
   function changePage(offset) {
-    setPageNumber((prevPageNumber) => prevPageNumber + offset);
+    setPageNumber(prevPageNumber => prevPageNumber + offset);
   }
 
   function previousPage() {
@@ -35,6 +41,7 @@ const PdfViewComponent = ({ fileLink }) => {
   function nextPage() {
     changePage(1);
   }
+
   return (
     <>
       <Box>
@@ -74,25 +81,40 @@ const PdfViewComponent = ({ fileLink }) => {
             display: "flex",
             overflow: "scroll",
             justifyContent: "center",
-            // backgroundColor: "rgba(var(--bg-card))",
           }}
         >
-          {fileLink === "" ? (
-            <Skeleton
-              variant="rectangular"
-              sx={{
-                height: "calc(100vh - 180px)",
-                backgroundColor: "rgba(var(--border-primary))",
+
+          {fileType === 'image/jpeg' || fileType === 'image/png' ? (
+            <img
+              src={fileLink.url}
+              alt="Preview"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain'
               }}
-              animation="wave"
+              onContextMenu={(e) => e.preventDefault()}
             />
-          ) : (
-            <Document file={fileLink} onLoadSuccess={onDocumentLoadSuccess}>
+          ) : fileType === 'application/pdf' ? (
+            <Document
+              file={fileLink.url}
+              onLoadSuccess={onDocumentLoadSuccess}
+            >
               <Page pageNumber={pageNumber} scale={1.5} />
             </Document>
-          )}
+          )
+            : (
+              <Skeleton
+                variant="rectangular"
+                sx={{
+                  height: "calc(100vh - 180px)",
+                  backgroundColor: "rgba(var(--border-primary))",
+                }}
+                animation="wave"
+              />
+            )}
+
         </Box>
-        {/* <ModalClose variant="plain" sx={{ m: 1 }} /> */}
       </Box>
     </>
   );

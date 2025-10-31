@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { memo } from "react";
+import { ListSubheader } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -9,41 +9,62 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { HomeAltSlimHoriz, NavArrowRight, PageSearch, PrivacyPolicy, Settings, ShieldUpload } from 'iconoir-react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { ListSubheader } from "@mui/material";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import { NavArrowRight } from 'iconoir-react'
-import { useCallback } from "react";
-import { useMemo } from "react";
-import {
-    HomeAltSlimHoriz,
-    ShieldUpload,
-    PageSearch,
-    Settings,
-    DocMagnifyingGlass
-} from 'iconoir-react'
+import { getUserModules, userWiseSettingsRights } from '../api/commonAPI';
 
 const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
     const navigation = useNavigate()
 
+    const loggedUser = atob(JSON.parse(localStorage.getItem("app_auth"))?.authType)
+
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [arr, setarr] = useState([]);
 
     const handleListItemClick = useCallback((event, index, route) => {
         setSelectedIndex(index);
         navigation(route);
     }, []);
 
+    // const id = EmpauthId();
+    const { data: allmoduleitem } = useQuery({
+        queryKey: ['getallmoduleitem', loggedUser],
+        queryFn: () => getUserModules(loggedUser),
+        enabled: !!loggedUser,
+    });
+
+
+
     const drawerMenu = useMemo(() => {
         return [
-            { menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "File Search", text: "/Home/FileSearch", icon: <DocMagnifyingGlass height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
-            { menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 1, menu: "Dashboard", text: "/Home/Dashboard", icon: <HomeAltSlimHoriz height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 2, menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 3, menu: "Doc Approval", text: "/Home/FileSearch", icon: <PrivacyPolicy height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 4, menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 5, menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
         ]
     }, [])
+
+    const module_slno = allmoduleitem?.[0]?.module_slno;
+    const allmoduleArray = module_slno
+        ? Object.entries(module_slno).map(([menu, status]) => ({
+            menu,
+            status,
+        }))
+        : [];
+
+
+    useEffect(() => {
+        let array = drawerMenu?.filter((value) => {
+            return allmoduleArray?.find((val) => {
+                return value.menu === val.menu && val.status === 1;
+            })
+        });
+        setarr(array)
+    }, [drawerMenu, allmoduleitem])
 
     const drawer = useMemo(() => (
         <div>
@@ -65,7 +86,7 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                     </ListSubheader>
                 }
             >
-                {drawerMenu?.map((val, index) => (
+                {arr?.map((val, index) => (
                     <ListItem
                         key={index}
                         disablePadding
@@ -99,6 +120,9 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                                         transform: "translateX(2px)",
                                         color: "rgba(var(--drawer-font-color))",
                                     },
+                                    "& .marqueeSpan": {
+                                        animation: "marquee 5s linear infinite", // Start the marquee animation on hover
+                                    },
                                 },
                             }}
                         >
@@ -114,27 +138,50 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                             >
                                 {val.icon}
                             </ListItemIcon>
-                            <Typography
-                                noWrap
-                                className="hoverClass text-fontsecondarywhite "
-                                sx={{
-                                    display: "flex",
-                                    fontFamily: "var(--font-varient)",
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                    transition: "transform 0.3s ease",
-                                    transform: "translateX(0)",
+
+                            <span
+                                className="marqueeSpan"
+                                style={{
+                                    display: "inline-block",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
                                 }}
                             >
-                                {val.menu}
-                            </Typography>
+                                <Typography
+                                    noWrap
+                                    className="hoverClass text-fontsecondarywhite "
+                                    sx={{
+                                        display: "flex",
+                                        fontFamily: "var(--font-varient)",
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                        transition: "transform 10s ease",
+                                        transform: "translateX(0)",
+                                    }}
+                                >
+                                    {val.menu}
+                                </Typography>
+                            </span>
+
+
+                            {val.menu.length > 16 ? <style>
+                                {`
+                                @keyframes marquee {
+                                  100% { transform: translateX(100%); }
+                                  20% { transform: translateX(0%); }
+                                }
+                              `}
+                            </style>
+                                :
+                                null
+                            }
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <Divider />
         </div>
-    ), [selectedIndex, handleListItemClick])
+    ), [selectedIndex, arr, handleListItemClick])
 
     return (
         <Box
@@ -154,7 +201,6 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
                         width: drawerWidth,
                         transition: "width 0.5s",
                         backgroundColor: "rgba(var(--bg-drawer))",
-                        // backgroundColor: "rgba(var(--color-blue))",
                     },
                 }}
                 onClose={handleDrawerClose}

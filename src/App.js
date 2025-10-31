@@ -10,8 +10,7 @@ import "./App.css";
 import { AuthProvider } from "./Context/AuthProvider";
 import ErrorElement from "./Pages/ErrorElement";
 import { socket } from "./ws/socket";
-import { warningNofity } from "./Constant/Constant";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 // Main Modules
 const Dashboard = lazy(() => import("./Modules/Dashboard/Dashboard.jsx"));
@@ -37,7 +36,12 @@ const LocationMaster = lazy(() => import("./Modules/Settings/LocationMaster/Loca
 const CustodianMaster = lazy(() => import("./Modules/Settings/CustomdienMaster/CustodianMaster.jsx"));
 const CustodianDepartment = lazy(() => import("./Modules/Settings/CustodienDepartment/CustodianDepartment.jsx"));
 const FileApprovals = lazy(() => import("./Modules/FileApprovals/FileApprovals.jsx"));
-
+const ModuleGroupMaster = lazy(() => import("./Modules/Settings/ModuleGroupMaster/ModuleGroupMaster.jsx"))
+const MenuNameMaster = lazy(() => import("./Modules/Settings/MenuNameMaster/MenuNameMaster.jsx"))
+const UserTypeMaster = lazy(() => import("./Modules/Settings/UserTypeMaster/UserTypeMaster.jsx"))
+const UserGroupRights = lazy(() => import("./Modules/Settings/UserGroupRights/UserGroupRights.jsx"))
+const ModuleNameMaster = lazy(() => import("./Modules/Settings/ModuleNameMaster/ModuleNameMaster.jsx"))
+const DocumentNestedCategory = lazy(() => import("./Modules/Settings/DocumentNestedCategory/DocumentNestedCategory.jsx"))
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -97,6 +101,13 @@ const routes = createBrowserRouter([
           { path: "CustodianMaster", element: <CustodianMaster />, errorElement: <ErrorElement /> },
           { path: "CustodianDepartment", element: <CustodianDepartment />, errorElement: <ErrorElement /> },
           { path: "Color", element: <Colors />, errorElement: <ErrorElement /> },
+          { path: "ModuleGroupMaster", element: <ModuleGroupMaster />, errorElement: <ErrorElement /> },
+          { path: "MenuNameMaster", element: <MenuNameMaster />, errorElement: <ErrorElement /> },
+          { path: "UserTypeMaster", element: <UserTypeMaster />, errorElement: <ErrorElement /> },
+          { path: "UserGroupRights", element: <UserGroupRights />, errorElement: <ErrorElement /> },
+          { path: "ModuleNameMaster", element: <ModuleNameMaster />, errorElement: <ErrorElement /> },
+          { path: "DocumentNestedCategory", element: <DocumentNestedCategory />, errorElement: <ErrorElement /> }
+
         ],
       },
       { path: "/Color", element: <Colors /> },
@@ -152,6 +163,7 @@ function App() {
   {/* <CustomBackDropWithOutState message={"Loading..."} /> */ }
   return (
     <QueryClientProvider client={queryClient}>
+      <ToastContainer />
       <AuthProvider>
         <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />}>
           <RouterProvider router={routes} />

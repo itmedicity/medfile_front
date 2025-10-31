@@ -18,22 +18,16 @@ import {
 
 // @ts-ignore
 import OtpInput from 'react-otp-input';
-
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axiosApi from "../Axios/Axios";
 import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
-
 import useAuth from "../hooks/useAuth";
 import { socket } from "../ws/socket";
-
 import { User, KeyBack } from 'iconoir-react'
 import Logo from "../assets/images/logo.png"
-
-
-
 
 const RoootLayouts = () => {
   // import functions
@@ -108,6 +102,7 @@ const RoootLayouts = () => {
       axiosApi.post("/user/verifyOTP", postDataToVerifyOTP, { withCredentials: true })
         .then((res) => {
           const { message, success, userInfo } = res.data;
+          // console.log(userInfo, "userInfo");
 
           // after verify OTP page redirected to dashboard
           if (success === 0) {
@@ -116,12 +111,16 @@ const RoootLayouts = () => {
             warningNofity(message); // incorrected OTP
           } else if (success === 2) {
             succesNofity(message); // OTP Verified
-            const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
+            const { user_slno, name, login_type, tokenValidity, printer_access, accessToken } = JSON.parse(userInfo);
+            // console.log(accessToken, "accessToken");
+
             const authData = {
               authNo: btoa(user_slno),
               authName: btoa(name),
               authType: btoa(login_type),
               authTimeStamp: getTime(new Date(tokenValidity)),
+              printeraccess: btoa(printer_access),
+              authToken: btoa(accessToken)
             };
 
             setAuth((prev) => {
@@ -192,7 +191,7 @@ const RoootLayouts = () => {
       }
 
       const result = await axiosApi.post("/user/checkUserCres", postData, { withCredentials: true })
-      console.log(result.data)
+      // console.log(result.data)
 
       const { message, success, userInfo } = result.data;
 
@@ -202,12 +201,15 @@ const RoootLayouts = () => {
         warningNofity(message); // incorrected OTP
       } else if (success === 2) {
         succesNofity(message); // OTP Verified
-        const { user_slno, name, login_type, tokenValidity } = JSON.parse(userInfo);
+        const { user_slno, name, login_type, tokenValidity, printer_access } = JSON.parse(userInfo);
+        // console.log(printer_access, "printer_access");
         const authData = {
           authNo: btoa(user_slno),
           authName: btoa(name),
           authType: btoa(login_type),
           authTimeStamp: getTime(new Date(tokenValidity)),
+          printeraccess: btoa(printer_access)
+
         };
 
         setAuth((prev) => {
@@ -239,7 +241,7 @@ const RoootLayouts = () => {
     <Box className="flex flex-col justify-center items-center w-full h-screen "
       sx={{ backgroundColor: 'rgba(253, 253, 253)' }}
     >
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <CustomBackDrop setOpen={setOpen} open={open} />
       {/* <ScreenCheck /> */}
       <Box

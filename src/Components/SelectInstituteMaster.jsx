@@ -14,7 +14,6 @@ const SelectInstituteMaster = ({ handleChange, value, label }) => {
     })
     if (error) return errorNofity('An error has occurred: ' + error)
 
-
     return (
         <CustomSelectWithLabel
             labelName={label || 'List'}

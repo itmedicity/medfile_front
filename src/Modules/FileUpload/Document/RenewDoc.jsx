@@ -34,6 +34,8 @@ import FileListComponent from "./FileListComponent";
 import dummyImage from "../../../assets/pdf.png";
 import CommonMenuList from "../../../Components/CommonMenuList";
 import CustomCheckBoxWithLabel from '../../../Components/CustomCheckBoxWithLabel';
+import axiosApi from '../../../Axios/Axios';
+import { useQueryClient } from "@tanstack/react-query";
 
 
 const RenewDoc = (props) => {
@@ -41,6 +43,12 @@ const RenewDoc = (props) => {
     const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
+
+    const queryClient = useQueryClient();
+    const userData = localStorage.getItem("app_auth");
+    const user = atob(JSON.parse(userData)?.authNo);
+
+    // console.log("jhlbhlgjhj");
 
     const {
         doc_number,
@@ -51,9 +59,13 @@ const RenewDoc = (props) => {
         doc_ver_date,
         isRequiredExp,
         doc_exp_end,
-        doc_exp_start
+        doc_exp_start,
+        // user,
+        doc_id
     } = props;
 
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
 
     const docDate = format(new Date(doc_date), "yyyy-MM-dd HH:mm:ss");
 
@@ -65,14 +77,15 @@ const RenewDoc = (props) => {
     })
 
 
+
     const handleDocumentUpdateChange = useCallback((e) => {
         setRenDoc({ ...renewDoc, [e.target.name]: e.target.value });
     }, [renewDoc]);
 
     const { ren_doc_date, ren_isRequiredExp, ren_doc_exp_start, ren_doc_exp_end } = renewDoc
 
-    console.log(doc_date)
-    console.log(ren_doc_date)
+    // console.log(doc_date)
+    // console.log(ren_doc_date)
 
     /********* FILE UPLOAD SECTION START ********/
 
@@ -81,6 +94,10 @@ const RenewDoc = (props) => {
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
         // setFiles(newFiles);
     };
+
+    const resetForm = useCallback(() => {
+        setFiles([]);
+    }, [setFiles])
 
     const handleError = useCallback((error, file) => {
         const { code } = error;
@@ -101,6 +118,7 @@ const RenewDoc = (props) => {
         );
     };
 
+    // console.log("jhfgjghjghfjh");
 
 
     const handleSubmitREnewDoc = useCallback(async () => {
@@ -125,15 +143,76 @@ const RenewDoc = (props) => {
             return
         }
 
-
-        const postData = {
+        const UpdateData = {
+            ren_docID: Number(doc_id),
+            docNumber: doc_number,
+            ren_doc_date: format(new Date(renewDoc.ren_doc_date), "yyyy-MM-dd HH:mm"),
+            ren_isRequiredExp: Number(renewDoc.ren_isRequiredExp),
+            ren_doc_exp_start: format(new Date(renewDoc.ren_doc_exp_start), "yyyy-MM-dd HH:mm"),
+            ren_doc_exp_end: format(new Date(renewDoc.ren_doc_exp_end), "yyyy-MM-dd HH:mm"),
+            ren_docVersion: Number(docVer) + 1,
+            // ren_docVersionAment: Number(docVersionAment) + 10,
+            ren_docVersionAment: Number(docVersionAment),
+            ren_userID: Number(user),
+            ren_docUpload: format(new Date(), "yyyy-MM-dd HH:mm"),
+            ren_docVersionInfoEdit: Number(docVersionInfoEdit),
+            ren_docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
+            // ren_doc_ver_date: format(new Date(doc_ver_date), "yyyy-MM-dd HH:mm")
+            ren_doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
 
         }
 
+        // console.log(UpdateData);
+
+        const formData = new FormData();
+
+        formData.append("postData", JSON.stringify(UpdateData));
+        files.forEach((file) => {
+            formData.append("file", new Blob([file], { type: file.type }), file.name || "file");
+        });
+
+        formData.append('file', files);
+
+        try {
+            const response = await axiosApi.patch("/docMaster/updateRenewDocument", formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            const { success, message } = await response.data;
+            // console.log("success, message ", success, message);
+
+            if (success === 0) {
+                // setFiles([]);
+                // errorNofity(message);
+                setMessage(message);
+                setOpen(true);
+            } else if (success === 2) {
+                setMessage(message);
+                setOpen(true);
+                // warningNofity(message);
+            } else if (success === 1) {
+                setMessage(message);
+                setOpen(true);
+                // succesNofity(message);
+                queryClient.invalidateQueries(["getDocumentNumber", "getDocList"]);
+                resetForm()
+            } else {
+                setMessage(message);
+                setOpen(true);
+                // warningNofity(message);
+            }
+        } catch (error) {
+            setMessage("An error has occurred: " + error);
+            setOpen(true);
+        }
+
+    }, [queryClient, doc_date, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end, doc_exp_end, doc_exp_start, files, doc_number, renewDoc, resetForm, docVer, docVersionAment, user, doc_id, docVersionInfoEdit])
 
 
 
-    }, [doc_date, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end, doc_exp_end, doc_exp_start])
 
     return (
         <Box className="flex flex-1 flex-col border-[0.5px] p-2 rounded-md gap-1" >
@@ -275,8 +354,9 @@ const RenewDoc = (props) => {
             <Box className="flex flex-1 flex-row justify-end">
                 <CommonMenuList
                     submitLabel={"Click here to renew Document"}
-                // handleSubmitButtonFun={handleUpdateDocument}
-                // handleViewButtonFun={() => setValue("2")}
+                    // handleSubmitButtonFun={handleUpdateDocument}
+                    // handleViewButtonFun={() => setValue("2")}
+                    handleSubmitButtonFun={handleSubmitREnewDoc}
                 />
             </Box>
         </Box>

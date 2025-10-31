@@ -49,6 +49,23 @@ export const getSelectCategoryNameList = async () => {
       }
     });
 };
+//get main catefories
+export const getMainCategories = async () => {
+  return await axiosApi
+    .get("/docMaster/selectmainCategories")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.sub_type_slno,
+            label: item.doc_sub_type_name.toUpperCase(),
+          };
+        });
+      }
+    });
+};
+
 
 export const getSubCategoryList = async () => {
   return await axiosApi
@@ -175,6 +192,7 @@ export const getSelectSubTypeMasterList = async () => {
           return {
             value: item.sub_type_slno,
             label: item.doc_sub_type_name.toUpperCase(),
+            doc_institute_status: item.doc_institute_status
           };
         });
       }
@@ -196,6 +214,7 @@ export const getSelectInstitutionMasterList = async () => {
       }
     });
 };
+
 
 export const getSelectCourseMasterList = async () => {
   return await axiosApi
@@ -264,6 +283,30 @@ export const getDocumentList = async () => {
     }
   });
 };
+
+
+
+export const getNonSecDocumentList = async () => {
+  return await axiosApi.get("/docMaster/getNonSecDocMaster").then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data?.map((item) => {
+        return {
+          id: item.doc_slno,
+          docDate: format(new Date(item.doc_date), "dd-MM-yyyy HH:mm:ss"),
+          docVersion: format(
+            new Date(item.doc_ver_date),
+            "dd-MM-yyyy HH:mm:ss"
+          ),
+          ...item,
+        };
+      });
+    }
+  });
+};
+
+
+
 
 export const getDocInforByID = async (id) => {
   return await axiosApi.get(`/docMaster/getDocMasterById/${id}`).then((res) => {
@@ -436,6 +479,147 @@ export const getSelectCustodianDepartmentData = async () => {
             label: item.cust_name.toUpperCase()
           };
         });
+      }
+    });
+};
+
+export const getAllSuperUsers = async () => {
+  return await axiosApi.get(`/user/getSuperUsers`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getAllUsers = async () => {
+  return await axiosApi.get(`/user/getAllUser`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const userTypes = async () => {
+  return await axiosApi.get(`/UserTypeMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1 && Array.isArray(data)) {
+      return data.map(item => ({
+        value: item.user_type_slno,
+        label: item.user_type
+      }));
+    }
+  });
+};
+
+export const getModules = async () => {
+  return await axiosApi.get(`/ModuleNameMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1 && Array.isArray(data)) {
+      return data.map(item => ({
+        value: item.module_slno,
+        label: item.module_name
+      }));
+    }
+  });
+};
+
+export const getAllModules = async () => {
+  return await axiosApi.get(`/ModuleNameMaster/selectAllModules`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data
+    }
+  });
+};
+export const getModuleMast = async () => {
+  return await axiosApi.get(`/ModuleGroupMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+export const getuserType = async () => {
+  return await axiosApi.get(`/UserTypeMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+export const getMenuNames = async () => {
+  return await axiosApi.get(`/MenuNameMaster/getdatas`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
+export const getUserModules = async (loggedUser) => {
+  return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${loggedUser}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data ? data : [];
+    }
+  });
+};
+export const userWiseSettingsRights = async (loggedUser) => {
+  // console.log("loggedUser", loggedUser);
+
+  return await axiosApi.get(`/UserGroupRightMaster/userWiseSettingsRights/${loggedUser}`).then((res) => {
+    const { success, data } = res.data;
+    // console.log(" success, data,", success, data);
+
+    if (success === 1) {
+      return data ? data : [];
+    }
+  });
+};
+
+export const SubCategoryById = async (catSlno) => {
+  return await axiosApi.get(`/docSubCategoryName/getSubCategoryById/${catSlno}`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data
+    }
+  });
+};
+
+//fetching departments from medi_hrm
+
+export const gethrmDeptDetails = async () => {
+  try {
+    const res = await axiosApi.get("/custodianDepartment/selectHrDeptDetails");
+    const { success, data } = res.data;
+
+    if (success === 1) {
+      // return data;
+      return data?.map((item) => {
+        return {
+          value: item.dept_id,
+          label: item.dept_name.toUpperCase()
+        };
+      });
+    } else {
+      // If success is not 1, return empty array
+      return [];
+    }
+  } catch (error) {
+    console.error("Error in gethrmDeptDetails:", error);
+    return [];
+  }
+};
+
+export const getNestedCategoryList = async () => {
+  return await axiosApi
+    .get("/docNestedCategoryName/getAllNestedCategory")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
       }
     });
 };

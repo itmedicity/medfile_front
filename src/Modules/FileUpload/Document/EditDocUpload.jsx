@@ -10,6 +10,7 @@ import {
     Checkbox,
     Divider,
     IconButton,
+    Input,
     List,
     ListItemButton,
     ListItemDecorator,
@@ -65,8 +66,12 @@ import dummyImage from "../../../assets/pdf.png";
 import ExpiryRenewDoc from "./ExpiryRenewDoc";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
 import RenewDoc from "./RenewDoc";
+import CommonRightBasedMenus from "../../../Components/CommonRightBasedMenus";
+import JSZip from "jszip";
+import SelectNestedCate from "../../../Components/SelectNestedCate";
 
-const EditDocUpload = ({ params }) => {
+const EditDocUpload = ({ refetchDocList, params }) => {
+
     const queryClient = useQueryClient();
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
@@ -75,6 +80,8 @@ const EditDocUpload = ({ params }) => {
 
     const userData = localStorage.getItem("app_auth");
     const user = atob(JSON.parse(userData)?.authNo);
+    const userType = atob(JSON.parse(userData)?.authType);
+
 
     const [open, setOpen] = useState(false);
 
@@ -95,6 +102,8 @@ const EditDocUpload = ({ params }) => {
         category_name: "",
         sub_category: 0,
         subcat_name: "",
+        nested_category: 0,
+        nested_cat_name: "",
         group_mast: 0,
         group_name: "",
         docVer: 0,
@@ -116,17 +125,23 @@ const EditDocUpload = ({ params }) => {
         uploadUserName: "",
         uploadDate: "",
         isLegalDoc: false,
+        short_name: '',
+        lifelong_validity: false,
+        days_torenew: 0,
+
+
     });
 
     //    GET THE DATA USING THE DOCUMENT ID USING THE REACT QERY
     const { isLoading, data, error, refetch: refetchDocInfoByID } = useQuery({
         queryKey: ["getDocInfoByID", docmntSlno],
         queryFn: async () => await getDocInforByID(docmntSlno),
-        enabled: false,
-        staleTime: Infinity,
+        // enabled: false,
+        // staleTime: Infinity,
     });
 
     const docData = useMemo(() => data, [data]);
+
 
     useEffect(() => {
         if (docData) {
@@ -148,6 +163,8 @@ const EditDocUpload = ({ params }) => {
                 category_name: docData?.category_name,
                 sub_category: docData?.sub_category,
                 subcat_name: docData?.subcat_name,
+                nested_category: docData?.nested_category,
+                nested_cat_name: docData?.nested_cat_name,
                 group_mast: docData?.group_mast,
                 group_name: docData?.group_name,
                 docVer: docData?.docVer,
@@ -169,23 +186,9 @@ const EditDocUpload = ({ params }) => {
                 uploadDate: docData?.uploadDate && isValid(new Date(docData?.uploadDate)) && format(new Date(docData?.uploadDate), "dd-MM-yyyy HH:mm") || "",
                 uploadUserName: docData?.name,
                 isLegalDoc: docData?.isLegalDoc === 1 ? true : false,
-
-                // docNumber: docData?.doc_number,
-                // docName: docData?.doc_name,
-                // docDes: docData?.doc_desc,
-                // docType: docData?.doc_type,
-                // docSubType: docData?.doc_sub_type,
-                // institute: docData?.institute,
-                // course: docData?.course,
-                // category: docData?.category,
-                // subCategory: docData?.sub_category,
-                // group: docData?.group_mast,
-                // docDate: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_date), "yyyy-MM-dd HH:mm"),
-                // docVersionDate: new Date(docData?.doc_ver_date),
-                // docExpStart: new Date(docData?.doc_exp_start),
-                // docExpEnd: isValid(new Date(docData?.doc_date)) && format(new Date(docData?.doc_exp_end), "yyyy-MM-dd"),
-                // isRequiredExp: docData?.isRequiredExp === 1 ? true : false,
-                // isSecure: docData?.isSecure === 1 ? true : false,
+                short_name: docData?.short_name,
+                lifelong_validity: docData?.lifelong_validity === 1 ? true : false,
+                days_torenew: docData?.days_torenew
             }));
         }
     }, [docData]);
@@ -206,6 +209,8 @@ const EditDocUpload = ({ params }) => {
         category_name,
         sub_category,
         subcat_name,
+        nested_category,
+        nested_cat_name,
         group_mast,
         group_name,
         docVer,
@@ -226,10 +231,63 @@ const EditDocUpload = ({ params }) => {
         uploadUser,
         uploadDate,
         uploadUserName,
-        isLegalDoc
+        isLegalDoc,
+        short_name,
+        lifelong_validity,
+        days_torenew
     } = editDocumentState;
 
     // GET THE DOCUEMNT DETAILS
+
+    const [UploadedImagesall, setUploadedImagesall] = useState([])
+
+
+    useEffect(() => {
+        const getImage = async (doc_number) => {
+            try {
+                const result = await axiosApi.get(`/docMaster/getFilesall/${doc_number}`, {
+                    responseType: 'blob'
+                });
+
+                const contentType = result.headers['content-type'] || '';
+                if (contentType?.includes('application/json')) {
+                    return;
+                } else {
+                    const zip = await JSZip.loadAsync(result.data);
+                    // Extract image files (e.g., .jpg, .png)
+                    const imageEntries = Object.entries(zip.files).filter(
+                        ([filename]) => /\.(jpe?g|png|gif|pdf)$/i.test(filename)
+                    );
+                    const imagePromises = imageEntries.map(async ([filename, fileObj]) => {
+                        // Get the original blob (no type)
+                        const originalBlob = await fileObj.async('blob');
+                        // Determine MIME type based on filename extension (or any other logic)
+                        let mimeType = '';
+                        if (filename.endsWith('.pdf')) {
+                            mimeType = 'application/pdf';
+                        } else if (filename.endsWith('.png')) {
+                            mimeType = 'image/png';
+                        } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                            mimeType = 'image/jpeg';
+                        } else {
+                            mimeType = 'application/octet-stream'; // fallback
+                        }
+                        // Recreate blob with correct type
+                        const blobWithType = new Blob([originalBlob], { type: mimeType });
+                        // Create URL from new blob
+                        const url = URL.createObjectURL(blobWithType);
+                        return { imageName: filename, url, blob: blobWithType };
+                    });
+                    const images = await Promise.all(imagePromises);
+                    setUploadedImagesall(images)
+                }
+            } catch (error) {
+                console.error('Error fetching or processing images:', error);
+            }
+        }
+        getImage(doc_number)
+    }, [doc_number])
+
 
     const {
         isLoading: docDetlIsLoading,
@@ -239,9 +297,14 @@ const EditDocUpload = ({ params }) => {
     } = useQuery({
         queryKey: ["getTheDocInfoDetl", docmntID],
         queryFn: async () => await getDocumentDetl(docmntID),
-        enabled: false,
-        staleTime: Infinity
+        // enabled: false,
+        // staleTime: Infinity
     });
+
+
+    // UploadedImagesall
+    //docVer
+
 
     const docDetlInfpArray = useMemo(() => {
         if (!docDetlArray || !Array.isArray(docDetlArray) || docDetlArray.length === 0) {
@@ -257,28 +320,61 @@ const EditDocUpload = ({ params }) => {
             return acc;
         }, {});
 
+        // docDetlArray filename
+
 
         return Object.entries(groupedItems)
             .sort(([verA], [verB]) => verB.localeCompare(verA)) // Descending order
             .map(([docVer, items]) => {
-                const firstItem = items[0];
-                return {
-                    docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
-                    docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
-                    docVersionAment: items,
-                };
-            });
 
-        // return [...new Set(docDetlArray?.map((item) => item.docVer))].map((items) => {
-        //     return {
-        //         docVer: items,
-        //         docAment: docDetlArray?.filter((item) => item.docVer === items)[0].docVer_amentment,
-        //         docInfo: docDetlArray?.filter((item) => item.docVer === items)[0].dovVer_infoAment,
-        //         docVerDate: format(new Date(docDetlArray?.filter((item) => item.docVer === items)[0].docVerDate), "dd-MM-yyyy HH:mm"),
-        //         docVersionAment: docDetlArray?.filter((item) => item.docVer === items),
-        //     }
-        // })
-    }, [docDetlArray]);
+                const firstItem = items[0];
+
+                const enrichedItems = items.map(itm => {
+                    const matchedUpload = UploadedImagesall.find(uploaded => uploaded.imageName === itm.filename);
+                    return {
+
+                        docActiveStatus: itm.docActiveStatus,
+                        docCreateUser: itm.docCreateUser,
+                        docCreatedDate: itm.docCreatedDate,
+                        docVer: itm.docVer,
+                        docVerDate: itm.docVerDate,
+                        docVer_amentment: itm.docVer_amentment,
+                        doc_id: itm.doc_id,
+                        doc_number: itm.doc_number,
+                        docd_slno: itm.docd_slno,
+                        dovVer_infoAment: itm.dovVer_infoAment,
+                        filename: itm.filename,
+                        mimetype: itm.mimetype,
+                        name: itm.name,
+                        originalname: itm.originalname,
+                        url: matchedUpload?.url,
+                        imageName: matchedUpload?.imageName,
+                        type: matchedUpload?.blob?.type
+
+                    };
+                });
+                // console.log("enrichedItems::::::::::", enrichedItems);
+
+                return {
+                    docVer: `${docVer}.${firstItem.docVer_amentment}.${firstItem.dovVer_infoAment}`,
+                    docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
+                    docVersionAment: enrichedItems // enriched with uploaded images
+                };
+
+                // return {
+                //     docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
+                //     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
+                //     docVersionAment:
+                //         items,
+                //     matchedFiles
+
+                // };
+            });
+    }, [docDetlArray, UploadedImagesall]);
+
+    // console.log("docDetlInfpArray:", docDetlInfpArray);
+
+
 
     const handleModelOpen = async () => {
         setOpen(true);
@@ -293,104 +389,126 @@ const EditDocUpload = ({ params }) => {
 
     // HANDLE CHANGE FUNTIONS FOR UPDATING THE DOCUMENT DETAILS
 
+    // const handleDocumentUpdateChange = useCallback((e) => {
+    //     seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
+    // }, [editDocumentState]);
+
+    //   short_name,
+    //     lifelong_validity,
+    //     days_torenew
+    // } = editDocumentState;
     const handleDocumentUpdateChange = useCallback((e) => {
-        seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
-    }, [editDocumentState]);
+        const { name, value } = e.target;
+
+        let newValue = value;
+
+        if (name === "short_name") {
+            // Allow only alphanumeric characters
+            newValue = newValue.replace(/[^a-zA-Z0-9]/g, "");
+
+            // Clamp length to 4
+            if (newValue.length > 4) {
+                newValue = newValue.slice(0, 4);
+            }
+        }
+        // Example: Convert to number if name matches your number inputs
+        if (name === "days_torenew" /* or any other numeric field */) {
+            // Convert empty string to null or 0 if you want
+            newValue = newValue === "" ? "" : Number(newValue);
+        }
+
+        seteditDocumentState(prev => ({
+            ...prev,
+            [name]: newValue,
+        }));
+    }, []);
+
 
 
     useEffect(() => {
         isLegalDoc === "true" ? seteditDocumentState({ ...editDocumentState, isSecure: true }) : seteditDocumentState({ ...editDocumentState, isSecure: false })
     }, [isLegalDoc])
 
-    // console.log(isLegalDoc, isSecure)
 
     const handleUpdateDocument = useCallback(async (e) => {
 
         e.preventDefault();
 
-        if (editDocumentState.doc_name === "") {
-            warningNofity("Document Name cannot be empty");
-            return;
-        }
-
-        if (editDocumentState.doc_desc === "") {
-            warningNofity("Document Description cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.doc_type) === 0) {
-            warningNofity("Document Type cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.doc_sub_type) === 0) {
-            warningNofity("Document Sub Type cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
-            warningNofity("Institute cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
-            warningNofity("Course cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.category) === 0) {
-            warningNofity("Category cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.sub_category) === 0) {
-            warningNofity("Sub Category cannot be empty");
-            return;
-        }
-
-        if (Number(editDocumentState.group_mast) === 0) {
-            warningNofity("Group cannot be empty");
-            return;
-        }
-
-        // if (isValid(new Date(editDocumentState.doc_date)) === false) {
-        //     warningNofity("Document Date cannot be empty");
+        // if (editDocumentState.doc_name === "") {
+        //     warningNofity("Document Name cannot be empty");
         //     return;
         // }
 
-        // if (isValid(new Date(editDocumentState.doc_ver_date)) === false) {
-        //     warningNofity("Document Version Date cannot be empty");
+        // if (editDocumentState.doc_desc === "") {
+        //     warningNofity("Document Description cannot be empty");
         //     return;
         // }
 
-        if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
-            warningNofity(
-                "Document Expiry Start Date cannot be empty || Valid Date is required"
-            );
-            return;
-        }
+        // if (Number(editDocumentState.doc_type) === 0) {
+        //     warningNofity("Document Type cannot be empty");
+        //     return;
+        // }
 
-        if (
-            Boolean(editDocumentState.isRequiredExp) === true &&
-            isValid(new Date(editDocumentState.doc_exp_end)) === false
-        ) {
-            warningNofity(
-                "Document Expiry End Date cannot be empty || Valid Date is required"
-            );
-            return;
-        }
+        // if (Number(editDocumentState.doc_sub_type) === 0) {
+        //     warningNofity("Document Sub Type cannot be empty");
+        //     return;
+        // }
 
-        if (
-            Boolean(editDocumentState.isRequiredExp) === true &&
-            new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
-        ) {
-            warningNofity(
-                "Document Expiry Start Date cannot be greater than Expiry End Date"
-            );
-            return;
-        }
+        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
+        //     warningNofity("Institute cannot be empty");
+        //     return;
+        // }
 
+        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
+        //     warningNofity("Course cannot be empty");
+        //     return;
+        // }
 
+        // if (Number(editDocumentState.category) === 0) {
+        //     warningNofity("Category cannot be empty");
+        //     return;
+        // }
+
+        // if (Number(editDocumentState.sub_category) === 0) {
+        //     warningNofity("Sub Category cannot be empty");
+        //     return;
+        // }
+
+        // if (Number(editDocumentState.group_mast) === 0) {
+        //     warningNofity("Group cannot be empty");
+        //     return;
+        // }
+
+        // if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
+        //     warningNofity(
+        //         "Document Expiry Start Date cannot be empty || Valid Date is required"
+        //     );
+        //     return;
+        // }
+
+        // if (
+        //     Boolean(editDocumentState.isRequiredExp) === true &&
+        //     isValid(new Date(editDocumentState.doc_exp_end)) === false
+        // ) {
+        //     warningNofity(
+        //         "Document Expiry End Date cannot be empty || Valid Date is required"
+        //     );
+        //     return;
+        // }
+
+        // if (
+        //     Boolean(editDocumentState.isRequiredExp) === true &&
+        //     new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
+        // ) {
+        //     warningNofity(
+        //         "Document Expiry Start Date cannot be greater than Expiry End Date"
+        //     );
+        //     return;
+        // }
+
+        //  docVer,
+        // docVersionAment,
+        //     docVersionInfoEdit,
 
         const FormPostData = {
             docID: doc_id,
@@ -402,9 +520,10 @@ const EditDocUpload = ({ params }) => {
             course: Number(editDocumentState.course),
             category: Number(editDocumentState.category),
             subCategory: Number(editDocumentState.sub_category),
+            nested_category: Number(editDocumentState.nested_category),
             group: Number(editDocumentState.group_mast),
-            docVersion: 1,
-            docVersionAment: 0,
+            docVersion: docVer,
+            docVersionAment: docVersionAment,
             docVersionInfoEdit: Number(docVersionInfoEdit) + 10,
             docVersionDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             docExpStart: format(new Date(editDocumentState.doc_exp_start), "yyyy-MM-dd"),
@@ -415,9 +534,12 @@ const EditDocUpload = ({ params }) => {
             docRack: Number(editDocumentState.docRack),
             docCustodian: Number(editDocumentState.docCustodian),
             docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
-            userID: user
+            userID: user,
+            docActiveStatus: 0,
+            short_name: editDocumentState.short_name,
+            lifelong_validity: Boolean(editDocumentState.lifelong_validity) === true ? 1 : 0,
+            days_torenew: Number(editDocumentState.days_torenew)
         };
-
         try {
             const updateRes = await axiosApi.patch("/docMaster/updateDocMaster", FormPostData);
             const { success } = updateRes.data;
@@ -425,14 +547,16 @@ const EditDocUpload = ({ params }) => {
                 succesNofity("Document Updated Successfully");
                 await refetchDocInfoByID();
                 await queryClient.invalidateQueries(["getDocList"]);
+                queryClient.invalidateQueries('getDocInfoByID')
+
             }
-            console.log(updateRes)
+            // console.log(updateRes)
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             errorNofity("Something went wrong".error);
         }
 
-    }, [editDocumentState, docVersionInfoEdit, docmntSlno])
+    }, [editDocumentState, docVersionInfoEdit, docVer, docVersionAment, docmntSlno])
 
     const docUpdationState = useMemo(() => {
         return {
@@ -444,7 +568,10 @@ const EditDocUpload = ({ params }) => {
             doc_ver_date,
             isRequiredExp,
             doc_exp_end,
-            doc_exp_start
+            doc_exp_start,
+            user: user,
+            doc_id,
+
         }
     }, [
         doc_number,
@@ -455,11 +582,14 @@ const EditDocUpload = ({ params }) => {
         doc_ver_date,
         isRequiredExp,
         doc_exp_end,
-        doc_exp_start
+        doc_exp_start,
+        user, doc_id
     ])
 
 
     const [renDoc, setRenDoc] = useState(null)
+
+    // console.log("docVersionInfoEdit:", docVersionInfoEdit);
 
     return (
         <Box>
@@ -527,11 +657,11 @@ const EditDocUpload = ({ params }) => {
                                                     textTransform: "capitalize",
                                                     textAlign: "justify",
                                                     color: "rgba(var(--font-primary-white))"
-                                                }} >{doc_name}</div>
+                                                }} >    {doc_name} ({short_name})</div>
                                             <div className="flex gap-2">
                                                 <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document no : {doc_number} </div>
                                                 <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Document date : {doc_date} </div>
-                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {'1.0.0'}</div>
+                                                <div className="flex text-xs" style={{ fontFamily: "var(--font-family)", color: "rgba(var(--font-primary-white))" }} >Version : {docVer + '.' + docVersionAment + '.' + docVersionInfoEdit}</div>
                                             </div>
                                         </Box>
                                     </Box>
@@ -548,13 +678,24 @@ const EditDocUpload = ({ params }) => {
                                                     <Lock height={35} width={35} color="rgba(var(--icon-primary))" />
                                                 </Box>
                                                 : <Box className="flex flex-row items-end gap-3">
+                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
                                                     <Box sx={{
                                                         fontFamily: "var(--font-family)",
                                                         fontWeight: 500,
                                                         fontSize: "1rem",
                                                         color: "rgba(var(--font-primary-white))"
                                                     }}>Normal Doc</Box>
-                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" />
+
+
+
+                                                    {/* <Box sx={{
+                                                        fontFamily: "var(--font-family)",
+                                                        fontWeight: 500,
+                                                        fontSize: "1rem",
+                                                        color: "rgba(var(--font-primary-white))"
+                                                    }}>{short_name}</Box>
+                                                    <OpenBook height={35} width={35} color="rgba(var(--icon-primary))" /> */}
+
                                                 </Box>
                                         }
                                     </Box>
@@ -596,6 +737,12 @@ const EditDocUpload = ({ params }) => {
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Category : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         <CustomTypoPara label={subcat_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Sub Category : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        <CustomTypoPara label={nested_cat_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Nested Category : </span>} startIconStyle={{ opacity: 0.8, }} />
+
+
+
+
                                                         <CustomTypoPara label={group_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                             startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Group : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         {
@@ -625,11 +772,19 @@ const EditDocUpload = ({ params }) => {
                                                             <CustomTypoPara label={uploadDate} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created Date : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
+
+                                                        <Box className="flex flex-1 flex-row gap-x-1" >
+                                                            <CustomTypoPara label={lifelong_validity === 1 ? "Yes" : "No"} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}
+                                                                    Lifelong Validity: </span>} startIconStyle={{ opacity: 0.8, }} />
+
+                                                            <CustomTypoPara label={days_torenew} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Days Before Renew : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        </Box>
                                                     </Box>
                                                 </Box>
                                             </Box>
                                         </Box>
-
 
                                         {/* Edit Document Section */}
                                         <Box sx={{ position: 'relative', top: 0, backgroundColor: 'rgba(var(--bg-card))' }}  >
@@ -644,7 +799,32 @@ const EditDocUpload = ({ params }) => {
                                                                 checkBoxValue={isLegalDoc}
                                                                 handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isLegalDoc", value: e.target.checked } })}
                                                             />
+                                                            <Box>
+                                                                <Input
+                                                                    name="short_name"
+                                                                    variant="outlined"
+                                                                    color="neutral"
+                                                                    size="sm"
+                                                                    value={short_name}
+                                                                    onChange={handleDocumentUpdateChange}
+                                                                    placeholder="Short Name (Max 4)"
+                                                                    inputProps={{ maxLength: 4 }}
+                                                                    sx={{
+                                                                        opacity: 0.8,
+                                                                        paddingLeft: "0.26rem",
+                                                                        lineHeight: "1.0rem",
+                                                                        fontSize: "0.81rem",
+                                                                        color: 'rgba(var(--font-primary-white))',
+                                                                        paddingY: "0.26rem",
+                                                                        borderColor: 'rgba(var(--list-border-color))',
+                                                                        p: 1,
+                                                                    }}
+                                                                />
+                                                            </Box>
                                                         </Box>
+
+
+
                                                         {/* Document Description */}
                                                         <Box>
                                                             <Typography level='body-sm'
@@ -744,6 +924,18 @@ const EditDocUpload = ({ params }) => {
                                                                 value={sub_category}
                                                             />
                                                         </Box>
+
+                                                        <Box className="flex flex-1 flex-col">
+                                                            <SelectNestedCate
+                                                                label={"Nested Category Master"}
+                                                                subCatSlno={sub_category ? Number(sub_category) : 0} // Ensure category is a valid number
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({
+                                                                    target: { name: "nested_category", value: element }
+                                                                })}
+                                                                value={nested_category} // Ensure nestedCategory is the correct type
+                                                            />
+                                                        </Box>
+
                                                         {/* Group */}
                                                         <Box className="flex flex-1 flex-col">
                                                             <SelectGroupMaster
@@ -802,6 +994,54 @@ const EditDocUpload = ({ params }) => {
                                                                 handleCheckBoxValue={(e) => handleDocumentUpdateChange({ target: { name: "isRequiredExp", value: e.target.checked } })}
                                                             />
                                                         </Box>
+                                                        {/* 
+                                                        {
+                                                            isRequiredExp === true ? */}
+
+                                                        <Box className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                                                            {/* Life Long Validity */}
+                                                            <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
+                                                                {/* short_name: editDocumentState.short_name,
+                                                                        lifelong_validity: Boolean(editDocumentState.lifelong_validity) === true ? 1 : 0,
+                                                                        days_torenew: Number(editDocumentState.days_torenew) */}
+                                                                <CustomCheckBoxWithLabel
+                                                                    label="Life Long Validity"
+                                                                    checkBoxValue={lifelong_validity}
+                                                                    handleCheckBoxValue={(e) =>
+                                                                        handleDocumentUpdateChange({ target: { name: "lifelong_validity", value: e.target.checked } })
+                                                                    }
+                                                                />
+                                                            </Box>
+
+                                                            {/* Days Before Renewal - Only if not lifelong */}
+                                                            {/* {!lifelong_validity && ( */}
+                                                            <Box className="flex flex-col">
+                                                                <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
+                                                                    color: 'rgba(var(--font-primary-white))',
+                                                                    fontFamily: "var(--font-varient)",
+                                                                }}>
+                                                                    Days Before Renew
+                                                                </label>
+                                                                <input
+                                                                    style={{
+                                                                        color: 'rgba(var(--font-primary-white))',
+                                                                        fontFamily: "var(--font-varient)",
+                                                                    }}
+                                                                    id="renewalTime"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    value={days_torenew}
+                                                                    onChange={(e) =>
+                                                                        handleDocumentUpdateChange({ target: { name: "days_torenew", value: e.target.value } })
+                                                                    }
+                                                                    className="border border-gray-300 rounded px-0 py-0.5 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                />
+                                                            </Box>
+                                                            {/* )} */}
+                                                        </Box>
+                                                        {/* : null} */}
+
                                                         {Boolean(isRequiredExp) === true && (
                                                             <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                                                                 <Box className="flex flex-auto">
@@ -854,7 +1094,12 @@ const EditDocUpload = ({ params }) => {
 
                                                 </Box>
                                                 <Box className="flex flex-1 flex-row mt-4 justify-end">
-                                                    <CommonMenuList
+                                                    {/* <CommonMenuList
+                                                        handleSubmitButtonFun={handleUpdateDocument}
+                                                    // handleViewButtonFun={() => setValue("2")}
+                                                    /> */}
+                                                    <CommonRightBasedMenus
+                                                        userType={userType}
                                                         handleSubmitButtonFun={handleUpdateDocument}
                                                     // handleViewButtonFun={() => setValue("2")}
                                                     />
@@ -897,7 +1142,7 @@ const EditDocUpload = ({ params }) => {
                                                                     <Box className="flex flex-1 flex-row gap-2" >
                                                                         <Box className="flex flex-1 flex-row gap-2 items-center ">
                                                                             <Calendar height={35} width={35} color="rgba(var(--color-pink),0.9)" />
-                                                                            <Box className="flex flex-1 flex-row gap-2 items-center " >
+                                                                            <Box className="flex flex-1 flex-row gap-2 items-center " color="rgba(var(--color-pink),0.9)">
                                                                                 <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 500, fontSize: '0.9rem' }} >Expired on </Box>
                                                                                 <ArrowRight height={15} width={15} className="flex" />
                                                                                 <Box className="flex" sx={{ fontFamily: 'var(--font-varient)', fontWeight: 600, fontSize: '0.9rem', color: "rgba(var(--color-pink),0.9)" }} >{format(new Date(doc_exp_end), "do-LLLL-yyyy")}</Box>
@@ -966,8 +1211,8 @@ const EditDocUpload = ({ params }) => {
 
                                                         {/* doc expiry renew   */}
                                                         <Suspense fallback={<CustomBackDropWithOutState message="Loading..." />} >
-                                                            {renDoc === true && <RenewDoc {...docUpdationState} />}
-                                                            {renDoc === false && <ExpiryRenewDoc {...docUpdationState} />}
+                                                            {renDoc === true && <RenewDoc refetchDocDetl={refetchDocDetl} {...docUpdationState} />}
+                                                            {renDoc === false && <ExpiryRenewDoc refetchDocDetl={refetchDocDetl}  {...docUpdationState} />}
                                                         </Suspense>
 
                                                         {/* doc version revision   */}
@@ -1011,16 +1256,17 @@ const EditDocUpload = ({ params }) => {
                                                 </Box>
                                                 {
                                                     el.docVersionAment?.map((el, idx) => (
-                                                        <FilleListCmp key={idx} data={el} />
+                                                        <FilleListCmp key={idx} data={el} refetchDocDetl={refetchDocDetl} />
                                                     ))
                                                 }
+
+                                                {/* <FilleListCmp el={el} refetchDocDetl={refetchDocDetl} /> */}
+
                                             </Fragment>
                                         )
                                     })
                                 }
-                                {/* {docDetlInfpArray?.map((el, idx) => (
-                                    <FilleListCmp key={idx} data={el} />
-                                ))} */}
+
                             </Grid>
                         </Grid>
                     </Box>

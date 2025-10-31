@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Modal, ModalDialog, Box, IconButton } from "@mui/joy";
+import { Modal, ModalDialog, Box, IconButton, Typography } from "@mui/joy";
 import React from "react";
 import { memo } from "react";
 import ModalClose from "@mui/joy/ModalClose";
@@ -17,11 +17,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url
 ).toString();
 
-const FileDisplayModal = ({ openFile, setOpenFile, fileLink }) => {
-    console.log('modelreder')
+const FileDisplayModal = ({ openFile, setOpenFile, UploadedImages }) => {
 
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
+
+    const fileType = UploadedImages?.blob?.type;
+
+    // console.log("fileType:", fileType);
+
+    // const isImage = fileType?.startsWith('image/jpeg');
+    const isImage = fileType?.startsWith('image/jpeg') || fileType?.startsWith('image/png');
+    const isPDF = fileType === 'application/pdf';
 
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
@@ -57,12 +64,29 @@ const FileDisplayModal = ({ openFile, setOpenFile, fileLink }) => {
                     onContextMenu={(e) => e.preventDefault()}
                 >
                     <ModalClose variant="plain" sx={{ m: 1 }} />
-                    <Document
-                        file={fileLink}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                    >
-                        <Page pageNumber={pageNumber} scale={1.5} />
-                    </Document>
+
+                    {fileType === 'image/jpeg' || fileType === 'image/png' ? (
+                        <img
+                            src={UploadedImages.url}
+                            alt="Preview"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    ) : fileType === 'application/pdf' ? (
+                        <Document
+                            file={UploadedImages.url}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                        >
+                            <Page pageNumber={pageNumber} scale={1.5} />
+                        </Document>
+                    ) : (
+                        <Typography variant="h6" color="text.secondary">
+                            Unsupported file type.
+                        </Typography>
+                    )}
                 </Box>
                 <Box>
                     <p>

@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import { getDocumentList } from "../../../api/commonAPI";
+import { getDocumentList, getNonSecDocumentList } from "../../../api/commonAPI";
 import { useQuery } from "@tanstack/react-query";
 import { errorNofity } from "../../../Constant/Constant";
 import CustomBackDropWithOutState from "../../../Components/CustomBackDropWithOutState";
@@ -11,20 +11,33 @@ import { format } from "date-fns";
 import { Box } from "@mui/joy";
 import EditDocUpload from "./EditDocUpload";
 
-const DocuementList = () => {
+const DocuementList = ({ userType }) => {
+
+    // const { isLoading, data, error } = useQuery({
+    //     queryKey: ["getDocList"],
+    //     queryFn: getDocumentList,
+    //     refetchOnWindowFocus: false
+    // });
+
+    const [tableData, setTableData] = useState([]);
 
     const { isLoading, data, error } = useQuery({
         queryKey: ["getDocList"],
-        queryFn: getDocumentList,
+        queryFn: Number(userType) === 1 ? getNonSecDocumentList : getDocumentList,
+        staleTime: Infinity,
         refetchOnWindowFocus: false
     });
+
+    useEffect(() => {
+        if (data) {
+            setTableData(data);
+        }
+    }, [data]);
 
     if (isLoading) <CustomBackDropWithOutState message={"Loading..."} />;
     if (error) errorNofity(error);
 
-    const renderCmp = useCallback((params) => (<EditDocUpload {...{ params }} />), []);
-
-    // type: 'actions', width: 100,  renderCell: (params) => (<EditDocUpload {...{ params }} />) 
+    const renderCmp = useCallback((params) => (<EditDocUpload  {...{ params }} />), []);
 
     const columns = useMemo(() => [
         { field: "actions", headerName: 'Actions', width: 100, type: 'actions', renderCell: renderCmp },
@@ -45,21 +58,20 @@ const DocuementList = () => {
         { field: "docVersion", headerName: "Doc Version", width: 170 },
     ], [renderCmp]);
 
-    const rows = useMemo(() => data, [data])
+    const rows = useMemo(() => tableData, [tableData])
     const pagination = { page: 0, pageSize: 25 };
     const paginationModel = useMemo(() => pagination, [pagination]);
 
     return (
         <Box sx={{ height: '80vh', overflow: 'hidden', width: '100%', maxWidth: '100vw', }}>
-            <ToastContainer />
-            <DataGrid
+            {/* <ToastContainer /> */}
+            {/* <DataGrid
                 rows={rows}
                 columns={columns}
                 rowHeight={35}
                 initialState={{ pagination: { paginationModel } }}
                 pageSizeOptions={[25, 50, 75, 100]}
                 columnHeaderHeight={35}
-                // checkboxSelection
                 sx={{
                     display: 'flex',
                     border: 0.5,
@@ -68,13 +80,43 @@ const DocuementList = () => {
                     '&.MuiDataGrid-root .MuiDataGrid-row--borderBottom': {
                         backgroundColor: 'rgba(var(--font-darkGrey))',
                         color: 'rgba(var(--font-primary-white))',
-                        // borderColor: 'red',
                     },
                     '& .MuiDataGrid-columnHeaderTitle': {
                         color: 'rgba(var(--color-white))',
                     },
                 }}
-            // onRowClick={(e) => console.log(e)}
+            /> */}
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                rowHeight={35}
+                initialState={{ pagination: { paginationModel } }}
+                pageSizeOptions={[25, 50, 75, 100]}
+                columnHeaderHeight={35}
+                sx={{
+                    display: 'flex',
+                    border: 0.5,
+                    borderColor: 'rgba(var(--border-primary))',
+                    color: 'rgba(var(--font-primary-white))',
+                    '&.MuiDataGrid-root .MuiDataGrid-row--borderBottom': {
+                        backgroundColor: 'rgba(var(--font-darkGrey))',
+                        color: 'rgba(var(--font-primary-white))',
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        color: 'rgba(var(--color-white))',
+                    },
+                    // Styling the pagination dropdown button (page size options)
+                    '& .MuiTablePagination-select': {
+                        color: 'rgba(var(--font-primary-white))',  // Change the text color
+                        backgroundColor: 'rgba(var(--background-dropdown))',  // Change background color
+                        '&:hover': {
+                            backgroundColor: 'rgba(var(--background-hover-dropdown))', // Background color on hover
+                        },
+                    },
+                    '& .MuiTablePagination-selectIcon': {
+                        color: 'rgba(var(--icon-color))', // Change the icon color
+                    }
+                }}
             />
         </Box>
     );

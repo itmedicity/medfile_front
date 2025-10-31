@@ -1,13 +1,7 @@
 import React from 'react'
 import { memo } from 'react'
 import { Box, Divider, Typography } from '@mui/joy'
-import Grid from '@mui/material/Grid2'
 import { useNavigate } from 'react-router-dom'
-import { baseColor } from '../Constant/Constant'
-import AirlinesIcon from '@mui/icons-material/Airlines';
-import HomeIcon from '@mui/icons-material/Home';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { ToastContainer } from 'react-toastify'
 import { HomeSimple, LogOut, ReportColumns } from 'iconoir-react'
 
 const DefaultPageLayout = ({ label, children }) => {
@@ -16,7 +10,7 @@ const DefaultPageLayout = ({ label, children }) => {
         <Box className="m-1 h-dvh overscroll-none" sx={{ backgroundColor: 'rgba(var(--bg-common))', borderColor: 'rgba(var(--border-primary))' }} >
             <Box className="flex flex-col m-0 rounded-xl p-1 pb-2 overflow-scroll w-full"
                 sx={{ backgroundColor: 'rgba(var(--bg-card))', border: 1, borderColor: 'rgba(var(--border-primary))' }} >
-                <ToastContainer />
+                {/* <ToastContainer /> */}
                 <Box className="flex flex-row items-center" >
                     <ReportColumns fontSize='medium' className='text-iconprimary ml-2' />
                     <Typography level='title-md' textAlign='left'

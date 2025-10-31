@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react'
+import React, { useState } from 'react'
 import { memo } from 'react'
 import DefaultPageLayout from '../../Components/DefaultPageLayout'
 import MasterPageLayout from '../../Components/MasterPageLayout'
@@ -11,17 +11,24 @@ import AutoInstitutionMast from '../../Components/AutoInstitutionMast'
 import AutoCourse from '../../Components/AutoCourse'
 import Grid from '@mui/material/Grid2'
 import { Box, Button, Divider, Input } from '@mui/joy'
-import SearchIcon from '@mui/icons-material/Search';
 import { TableVirtuoso } from 'react-virtuoso'
 import TableHeaderVirtue from '../Dashboard/Components/TableHeaderVirtue'
 import TableContentVirtue from '../Dashboard/Components/TableContentVirtue'
 import { useCallback } from 'react'
 import { errorNofity, sanitizeInput, warningNofity } from '../../Constant/Constant'
 import axiosApi from '../../Axios/Axios'
-import ClearIcon from '@mui/icons-material/Clear';
 import { PageSearch, Xmark } from 'iconoir-react'
+import InputFileNameSearch from '../../Components/InputFileNameSearch'
+import InputShortNameSearch from '../../Components/InputShortNameSearch'
+import AutoNestedCategory from '../../Components/AutoNestedCategory'
 
 const AdvancedSearch = () => {
+
+    const localData = localStorage.getItem("app_auth");
+    const credValue = atob(JSON.parse(localData)?.authType);
+    const printerAccess = atob(JSON.parse(localData)?.printeraccess);
+
+
     const [reset, setReset] = useState(false)
     const [tableData, setTableData] = useState([])
     const [state, setState] = useState({
@@ -32,7 +39,11 @@ const AdvancedSearch = () => {
         group: 0,
         institute: 0,
         course: 0,
-        docNumber: 0
+        docNumber: 0,
+        fileName: '',
+        shortName: '',
+        nestedCategory: 0
+
     })
 
     const handleSetState = (e) => {
@@ -56,7 +67,6 @@ const AdvancedSearch = () => {
         if (success === 1) {
             setTableData(data)
         }
-
     }, [state])
 
 
@@ -83,6 +93,9 @@ const AdvancedSearch = () => {
                         <AutoSubCategory getInputValue={handleSetState} reset={reset} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
+                        <AutoNestedCategory getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoGroupName getInputValue={handleSetState} reset={reset} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
@@ -91,6 +104,13 @@ const AdvancedSearch = () => {
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
                         <AutoCourse getInputValue={handleSetState} reset={reset} />
                     </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
+                        <InputFileNameSearch getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} paddingX={0.5}>
+                        <InputShortNameSearch getInputValue={handleSetState} reset={reset} />
+                    </Grid>
+
                     <Grid size={12}>
                         <Divider sx={{ color: 'rgba(var(--border-primary))' }} >OR</Divider>
                     </Grid>
@@ -144,7 +164,7 @@ const AdvancedSearch = () => {
                             }}
                             onClick={handleSearchDoc}
                         >
-                            Serach Document
+                            Search Document
                         </Button>
                         <Button
                             variant='outlined'
@@ -180,7 +200,7 @@ const AdvancedSearch = () => {
                                 className="flex flex-1 rounded-md"
                                 data={tableData}
                                 fixedHeaderContent={() => (<TableHeaderVirtue />)}
-                                itemContent={(index, data) => (<TableContentVirtue data={data} />)}
+                                itemContent={(index, data) => (<TableContentVirtue data={data} credValue={credValue} printerAccess={printerAccess} />)}
                             />
                         </Box>
                     </Grid>

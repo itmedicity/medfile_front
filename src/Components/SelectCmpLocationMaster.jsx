@@ -12,6 +12,7 @@ const SelectCmpLocationMaster = ({ handleChange, value, label }) => {
         queryFn: getLocationMasterList,
         staleTime: Infinity
     })
+
     if (error) return errorNofity('An error has occurred: ' + error)
 
     return (

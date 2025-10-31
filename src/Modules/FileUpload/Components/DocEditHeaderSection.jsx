@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider } from '@mui/joy'
+import { Avatar, Box } from '@mui/joy'
 import { MultiplePages } from 'iconoir-react'
 import React, { memo } from 'react'
 

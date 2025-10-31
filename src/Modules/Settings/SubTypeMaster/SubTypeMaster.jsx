@@ -10,6 +10,8 @@ import CustomBackDropWithOutState from '../../../Components/CustomBackDropWithOu
 import axiosApi from '../../../Axios/Axios'
 import { getSubTypeMasterList } from '../../../api/commonAPI'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import CustomCheckBoxWithLabel from "../../../Components/CustomCheckBoxWithLabel";
+import { Box } from '@mui/joy'
 
 const SubTypeMasterList = lazy(() => import('../../../Components/CustomTable'));
 
@@ -18,14 +20,15 @@ const SubTypeMaster = () => {
     const queryClient = useQueryClient();
     const [subTypeStates, setSubTypeStates] = useState({
         subTypeName: '',
-        subTypeStatus: 0
+        subTypeStatus: 0,
+        doc_institute_status: false
     })
 
     const handleChange = (e) => {
         setSubTypeStates({ ...subTypeStates, [e.target.name]: sanitizeInput(e.target.value) })
     }
 
-    const { subTypeName, subTypeStatus } = subTypeStates
+    const { subTypeName, subTypeStatus, doc_institute_status } = subTypeStates
 
     const handleSubmitButtonFun = useCallback(async (e) => {
         e.preventDefault()
@@ -42,7 +45,8 @@ const SubTypeMaster = () => {
 
         const FormData = {
             sub_type_name: subTypeStates.subTypeName?.trim(),
-            sub_type_status: subTypeStates.subTypeStatus
+            sub_type_status: subTypeStates.subTypeStatus,
+            doc_institute_status: subTypeStates.doc_institute_status === false ? 0 : 1
         }
 
         try {
@@ -53,7 +57,8 @@ const SubTypeMaster = () => {
                 queryClient.invalidateQueries({ queryKey: ['docSubTypeMaster'] })
                 setSubTypeStates({
                     subTypeName: '',
-                    subTypeStatus: 0
+                    subTypeStatus: 0,
+                    doc_institute_status: false
                 })
             } else if (success === 0) {
                 errorNofity(message)
@@ -94,19 +99,36 @@ const SubTypeMaster = () => {
                     handleChangeSelect={(e, val) => handleChange({ target: { name: 'subTypeStatus', value: val } })}
                     placeholder={"Select here ..."}
                 />
+
+                {/* doc_institute_status */}
+
+                <Box className="flex flex-1 items-center justify-between mt-2">
+                    <CustomCheckBoxWithLabel
+                        label="Institute Status"
+                        checkBoxValue={doc_institute_status}
+                        handleCheckBoxValue={(e) =>
+                            handleChange({ target: { name: "doc_institute_status", value: e.target.checked } })
+                        }
+                    />
+                </Box>
+
+
+
                 <CommonMenuList
                     handleSubmitButtonFun={handleSubmitButtonFun}
                     handleViewButtonFun={() => { }}
                 />
             </MasterPageLayout>
             <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                <SubTypeMasterList tableHeaderCol={['Action', 'Sub Type Name', 'Sub Type Status']} >
+                <SubTypeMasterList tableHeaderCol={['Action', 'Sub Type Name', 'Institute Status', 'Sub Type Status']} >
                     {
                         data?.map((item, idx) => (
                             <tr key={idx}>
                                 <td>{item.sub_type_slno}</td>
                                 <td>{item.doc_sub_type_name?.toUpperCase()}</td>
+                                <td>{item.doc_institute_status === 1 ? "YES" : "NO"}</td>
                                 <td>{item.status}</td>
+
                             </tr>
                         ))
                     }
