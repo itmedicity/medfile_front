@@ -28,6 +28,14 @@ import DocEditHeaderSection from "../Components/DocEditHeaderSection";
 
 const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => {
 
+    const userData = localStorage.getItem("app_auth");
+    const IPAddress = atob(JSON.parse(userData)?.IPAddress);
+    const browserName = atob(JSON.parse(userData)?.browserName);
+    const browserVersion = atob(JSON.parse(userData)?.browserVersion);
+    const osName = atob(JSON.parse(userData)?.osName);
+    const osVersion = atob(JSON.parse(userData)?.osVersion);
+
+
     // console.log("data:");
 
     const {
@@ -138,7 +146,12 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
             ren_docVersionInfoEdit: Number(dovVer_infoAment),
             ren_docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             ren_doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
-            docActiveStatus: 0
+            docActiveStatus: 0,
+            IPAddress: IPAddress ? IPAddress : 'Unknown',
+            browserName: browserName ? browserName : 'Unknown',
+            browserVersion: browserVersion ? browserVersion : 'Unknown',
+            osName: osName ? osName : 'Unknown',
+            osVersion: osVersion ? osVersion : 'Unknown'
         };
 
         // console.log("UpdateData", UpdateData);
@@ -197,7 +210,7 @@ const FileReplaceModal = ({ data, editModal, setEditModal, refetchDocDetl }) => 
         }
 
 
-    }, [files, docVer, docVer_amentment, docd_slno, dovVer_infoAment, doc_number, doc_id, docCreateUser, renewDoc, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end])
+    }, [files, docVer, docVer_amentment, docd_slno, dovVer_infoAment, doc_number, doc_id, docCreateUser, renewDoc, ren_doc_date, ren_doc_exp_start, ren_doc_exp_end, IPAddress, browserName, browserVersion, osName, osVersion])
 
 
     return (

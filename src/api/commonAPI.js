@@ -623,3 +623,96 @@ export const getNestedCategoryList = async () => {
       }
     });
 };
+
+
+export const getDocumentCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getdocMasterCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getdocMasterEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getdocMasterEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+//document details
+export const getDocumentDetailCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getdocDetailCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getdocDetailEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getdocDetailEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+
+export const getUserCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getUserCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getUserEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getUserEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+//document type MASTER
+export const getDocTypeCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getDocTypeCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getDocTypeEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getDocTypeEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+

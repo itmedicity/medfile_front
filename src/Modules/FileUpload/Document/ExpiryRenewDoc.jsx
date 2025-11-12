@@ -55,7 +55,8 @@ const ExpiryRenewDoc = (props) => {
         isRequiredExp,
         doc_exp_end,
         doc_exp_start,
-        user
+        user,
+        IPAddress, browserName, browserVersion, osName, osVersion
     } = props;
 
     const [message, setMessage] = useState("");
@@ -141,9 +142,13 @@ const ExpiryRenewDoc = (props) => {
             ren_docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             // ren_doc_ver_date: format(new Date(doc_ver_date), "yyyy-MM-dd HH:mm")
             ren_doc_ver_date: format(new Date(), "yyyy-MM-dd HH:mm"),
-            updateDocMaster: 0
+            updateDocMaster: 0,
+            IPAddress: IPAddress ? IPAddress : 'Unknown',
+            browserName: browserName ? browserName : 'Unknown',
+            browserVersion: browserVersion ? browserVersion : 'Unknown',
+            osName: osName ? osName : 'Unknown',
+            osVersion: osVersion ? osVersion : 'Unknown'
         }
-
         // console.log("UpdateData", UpdateData);
 
         const formData = new FormData();
@@ -191,7 +196,8 @@ const ExpiryRenewDoc = (props) => {
             setOpen(true);
         }
 
-    }, [renewExpDoc, ren_exp_doc_date, ren_exp_doc_exp_start, ren_Exp_doc_exp_end, docVer, docVersionAment, docVersionInfoEdit, files, user])
+    }, [renewExpDoc, ren_exp_doc_date, ren_exp_doc_exp_start, ren_Exp_doc_exp_end, docVer, docVersionAment, docVersionInfoEdit, files, user, IPAddress, browserName, browserVersion, osName, osVersion
+    ])
 
 
     const resetForm = useCallback(() => {

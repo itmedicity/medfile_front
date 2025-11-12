@@ -45,7 +45,6 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DoDisturbOffOutlinedIcon from "@mui/icons-material/DoDisturbOffOutlined";
 import FileLink from "../../../assets/pdf.png";
-import FilleListCmp from "./FilleListCmp";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getDocInforByID, getDocumentDetl } from "../../../api/commonAPI";
 import { format, isValid } from "date-fns";

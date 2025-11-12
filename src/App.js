@@ -42,6 +42,12 @@ const UserTypeMaster = lazy(() => import("./Modules/Settings/UserTypeMaster/User
 const UserGroupRights = lazy(() => import("./Modules/Settings/UserGroupRights/UserGroupRights.jsx"))
 const ModuleNameMaster = lazy(() => import("./Modules/Settings/ModuleNameMaster/ModuleNameMaster.jsx"))
 const DocumentNestedCategory = lazy(() => import("./Modules/Settings/DocumentNestedCategory/DocumentNestedCategory.jsx"))
+const AuditReport = lazy(() => import("./Modules/AuditReport/AuditReportMain.jsx"))
+const DocMastAuditReport = lazy(() => import("./Modules/AuditReport/DocMasterAudit/DocMasterAudit.jsx"))
+const DocDetlAuditReport = lazy(() => import("./Modules/AuditReport/DocDetlAuditReport/DocDetlAuditReport.jsx"))
+const UserAuditReport = lazy(() => import("./Modules/AuditReport/UserAuditReport/UserAuditReport.jsx"))
+const DocTypeAuditReport = lazy(() => import("./Modules/AuditReport/DocTypeAuditReport/DocTypeAuditReport.jsx"))
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -86,6 +92,12 @@ const routes = createBrowserRouter([
                 <FileApprovals />
               </Suspense>, errorElement: <ErrorElement />
           },
+          {
+            path: "AuditReport", element:
+              <Suspense fallback={<CustomBackDropWithOutState message={"Loading..."} />} >
+                <AuditReport />
+              </Suspense>, errorElement: <ErrorElement />
+          },
           { path: "UserManagement", element: <UserManagement />, errorElement: <ErrorElement /> },
           { path: "DocTypeMaster", element: <DocTypeMaster />, errorElement: <ErrorElement /> },
           { path: "SubTypeMaster", element: <SubTypeMaster />, errorElement: <ErrorElement /> },
@@ -106,7 +118,13 @@ const routes = createBrowserRouter([
           { path: "UserTypeMaster", element: <UserTypeMaster />, errorElement: <ErrorElement /> },
           { path: "UserGroupRights", element: <UserGroupRights />, errorElement: <ErrorElement /> },
           { path: "ModuleNameMaster", element: <ModuleNameMaster />, errorElement: <ErrorElement /> },
-          { path: "DocumentNestedCategory", element: <DocumentNestedCategory />, errorElement: <ErrorElement /> }
+          { path: "DocumentNestedCategory", element: <DocumentNestedCategory />, errorElement: <ErrorElement /> },
+
+          //audit report
+          { path: "DocMastAuditReport", element: <DocMastAuditReport />, errorElement: <ErrorElement /> },
+          { path: "DocDetlAuditReport", element: <DocDetlAuditReport />, errorElement: <ErrorElement /> },
+          { path: "UserAuditReport", element: <UserAuditReport />, errorElement: <ErrorElement /> },
+          { path: "DocTypeAuditReport", element: <DocTypeAuditReport />, errorElement: <ErrorElement /> }
 
         ],
       },

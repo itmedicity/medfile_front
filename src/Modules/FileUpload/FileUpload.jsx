@@ -74,6 +74,11 @@ const FileUpload = () => {
   const userData = localStorage.getItem("app_auth");
   const userType = atob(JSON.parse(userData)?.authType);
   const user = atob(JSON.parse(userData)?.authNo);
+  const IPAddress = atob(JSON.parse(userData)?.IPAddress);
+  const browserName = atob(JSON.parse(userData)?.browserName);
+  const browserVersion = atob(JSON.parse(userData)?.browserVersion);
+  const osName = atob(JSON.parse(userData)?.osName);
+  const osVersion = atob(JSON.parse(userData)?.osVersion);
 
   // GET UNIQUE DOCUMENT NUMBER
   const {
@@ -126,7 +131,7 @@ const FileUpload = () => {
       })
     });
     setMenurights(array)
-  }, [tabs, userSettings])
+  }, [userSettings])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -426,6 +431,11 @@ const FileUpload = () => {
       shortName: documentState.shortName,
       lifeLongValidity: Boolean(documentState.lifeLongValidity) === true ? 1 : 0,
       DaysToRenew: DaysToRenew,
+      IPAddress: IPAddress ? IPAddress : 'Unknown',
+      browserName: browserName ? browserName : 'Unknown',
+      browserVersion: browserVersion ? browserVersion : 'Unknown',
+      osName: osName ? osName : 'Unknown',
+      osVersion: osVersion ? osVersion : 'Unknown',
     };
 
     const formData = new FormData();
@@ -471,7 +481,7 @@ const FileUpload = () => {
       setOpen(true);
     }
   },
-    [documentState, documentNumber, custDocNumber, files, setMessage, setOpen, queryClient, DaysToRenew, user]
+    [documentState, documentNumber, custDocNumber, files, setMessage, setOpen, queryClient, DaysToRenew, user, IPAddress, browserName, browserVersion, osName, osVersion]
   );
 
   const resetForm = () => {

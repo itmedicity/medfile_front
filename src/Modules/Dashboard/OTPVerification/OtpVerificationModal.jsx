@@ -276,7 +276,7 @@ const OtpVerificationModal = ({ setOtpModal, otpModal, data, AllsuperUsers }) =>
 
                                         allEnrichedItems = allEnrichedItems.concat(enrichedItems);
                                         setactiveFile(allEnrichedItems[0])
-                                        console.log(allEnrichedItems[0], "allEnrichedItems");
+                                        // console.log(allEnrichedItems[0], "allEnrichedItems");
 
                                         // console.log("allEnrichedItems::", allEnrichedItems);
 

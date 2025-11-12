@@ -81,7 +81,11 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     const userData = localStorage.getItem("app_auth");
     const user = atob(JSON.parse(userData)?.authNo);
     const userType = atob(JSON.parse(userData)?.authType);
-
+    const IPAddress = atob(JSON.parse(userData)?.IPAddress);
+    const browserName = atob(JSON.parse(userData)?.browserName);
+    const browserVersion = atob(JSON.parse(userData)?.browserVersion);
+    const osName = atob(JSON.parse(userData)?.osName);
+    const osVersion = atob(JSON.parse(userData)?.osVersion);
 
     const [open, setOpen] = useState(false);
 
@@ -349,12 +353,16 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                         originalname: itm.originalname,
                         url: matchedUpload?.url,
                         imageName: matchedUpload?.imageName,
-                        type: matchedUpload?.blob?.type
+                        type: matchedUpload?.blob?.type,
+                        IPAddress: IPAddress ? IPAddress : 'Unknown',
+                        browserName: browserName ? browserName : 'Unknown',
+                        browserVersion: browserVersion ? browserVersion : 'Unknown',
+                        osName: osName ? osName : 'Unknown',
+                        osVersion: osVersion ? osVersion : 'Unknown'
 
                     };
                 });
                 // console.log("enrichedItems::::::::::", enrichedItems);
-
                 return {
                     docVer: `${docVer}.${firstItem.docVer_amentment}.${firstItem.dovVer_infoAment}`,
                     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
@@ -370,7 +378,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
                 // };
             });
-    }, [docDetlArray, UploadedImagesall]);
+    }, [docDetlArray, UploadedImagesall, IPAddress, browserName, browserVersion, osName, osVersion]);
 
     // console.log("docDetlInfpArray:", docDetlInfpArray);
 
@@ -538,7 +546,12 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             docActiveStatus: 0,
             short_name: editDocumentState.short_name,
             lifelong_validity: Boolean(editDocumentState.lifelong_validity) === true ? 1 : 0,
-            days_torenew: Number(editDocumentState.days_torenew)
+            days_torenew: Number(editDocumentState.days_torenew),
+            IPAddress: IPAddress ? IPAddress : 'Unknown',
+            browserName: browserName ? browserName : 'Unknown',
+            browserVersion: browserVersion ? browserVersion : 'Unknown',
+            osName: osName ? osName : 'Unknown',
+            osVersion: osVersion ? osVersion : 'Unknown'
         };
         try {
             const updateRes = await axiosApi.patch("/docMaster/updateDocMaster", FormPostData);
@@ -556,7 +569,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             errorNofity("Something went wrong".error);
         }
 
-    }, [editDocumentState, docVersionInfoEdit, docVer, docVersionAment, docmntSlno])
+    }, [editDocumentState, docVersionInfoEdit, docVer, user, docVersionAment, docmntSlno, IPAddress, browserName, browserVersion, osName, osVersion])
 
     const docUpdationState = useMemo(() => {
         return {
@@ -571,6 +584,11 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             doc_exp_start,
             user: user,
             doc_id,
+            IPAddress: IPAddress,
+            browserName: browserName,
+            browserVersion: browserVersion,
+            osName: osName,
+            osVersion: osVersion
 
         }
     }, [
@@ -583,7 +601,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         isRequiredExp,
         doc_exp_end,
         doc_exp_start,
-        user, doc_id
+        user, doc_id, IPAddress, browserName, browserVersion, osName, osVersion
     ])
 
 
@@ -774,7 +792,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                         </Box>
 
                                                         <Box className="flex flex-1 flex-row gap-x-1" >
-                                                            <CustomTypoPara label={lifelong_validity === 1 ? "Yes" : "No"} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                            <CustomTypoPara label={lifelong_validity === true ? "Yes" : "No"} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}
                                                                     Lifelong Validity: </span>} startIconStyle={{ opacity: 0.8, }} />
 

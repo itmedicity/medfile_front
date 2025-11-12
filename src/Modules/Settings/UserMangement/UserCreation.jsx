@@ -45,6 +45,14 @@ const UserCreation = () => {
     const [viewtable, setViewTable] = useState(0)
     const [editData, setEditData] = useState(0)
 
+  const userData = localStorage.getItem("app_auth");
+  const IPAddress = atob(JSON.parse(userData)?.IPAddress);
+  const browserName = atob(JSON.parse(userData)?.browserName);
+  const browserVersion = atob(JSON.parse(userData)?.browserVersion);
+  const osName = atob(JSON.parse(userData)?.osName);
+  const osVersion = atob(JSON.parse(userData)?.osVersion);
+  
+
     const [userManagemt, setUserManagemt] = useState({
         name: '',
         mobile: '',
@@ -173,7 +181,12 @@ const UserCreation = () => {
             notification_status: notification_status || 'N',
             temp_user_status: temp_user_status || 'N',
             temp_user_days: Number(temp_user_days || 0),
-            cust_slno:Number(cust_slno||0)
+          cust_slno: Number(cust_slno || 0),
+              IPAddress: IPAddress ? IPAddress : 'Unknown',
+                        browserName: browserName ? browserName : 'Unknown',
+                        browserVersion: browserVersion ? browserVersion : 'Unknown',
+                        osName: osName ? osName : 'Unknown',
+                        osVersion: osVersion ? osVersion : 'Unknown'
         }
 
         try {
@@ -191,7 +204,8 @@ const UserCreation = () => {
                     ...requestData,
                     user_slno,
                     edit_user: Number(loggedUser),
-                    edit_date: formattedDate
+                  edit_date: formattedDate,
+                    
                 }
 
                 response = await axiosApi.patch('/user/editUser', patchData)
@@ -240,7 +254,7 @@ const UserCreation = () => {
             }
         }
 
-    }, [userManagemt, editData, loggedUser, queryClient])
+    }, [userManagemt, editData, loggedUser, queryClient,IPAddress, browserName, browserVersion, osName, osVersion])
 
     const viewuserList = useCallback(() => setViewTable(1), [])
 
@@ -264,7 +278,8 @@ const UserCreation = () => {
             user_slno: item.user_slno || 0,
             temp_user_status: item.temp_user_status === "Y" ? "Y" : "N",
             temp_user_days: item.temp_user_days || 0,
-            cust_slno:item.cust_slno ||0
+            cust_slno:item.cust_slno ||0,
+            
         })
     }, [])
 
