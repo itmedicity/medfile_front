@@ -47,6 +47,11 @@ const DocMastAuditReport = lazy(() => import("./Modules/AuditReport/DocMasterAud
 const DocDetlAuditReport = lazy(() => import("./Modules/AuditReport/DocDetlAuditReport/DocDetlAuditReport.jsx"))
 const UserAuditReport = lazy(() => import("./Modules/AuditReport/UserAuditReport/UserAuditReport.jsx"))
 const DocTypeAuditReport = lazy(() => import("./Modules/AuditReport/DocTypeAuditReport/DocTypeAuditReport.jsx"))
+const DocSubTypeReport = lazy(() => import("./Modules/AuditReport/DocSubTypeReport/DocSubTypeReport.jsx"))
+const DocCategoryReport = lazy(() => import("./Modules/AuditReport/DocCategoryReport/DocCategoryReport.jsx"))
+const DocSubCategoryReport = lazy(() => import("./Modules/AuditReport/DocSubCategoryReport/DocSubCategoryReport.jsx"))
+const DocNestedCategoryReport = lazy(() => import("./Modules/AuditReport/DocNestedCategoryReport/DocNestedCategoryReport.jsx"))
+const DocGroupAuditReport = lazy(() => import("./Modules/AuditReport/DocGroupAuditReport/DocGroupAuditReport.jsx"))
 
 const routes = createBrowserRouter([
   {
@@ -124,7 +129,12 @@ const routes = createBrowserRouter([
           { path: "DocMastAuditReport", element: <DocMastAuditReport />, errorElement: <ErrorElement /> },
           { path: "DocDetlAuditReport", element: <DocDetlAuditReport />, errorElement: <ErrorElement /> },
           { path: "UserAuditReport", element: <UserAuditReport />, errorElement: <ErrorElement /> },
-          { path: "DocTypeAuditReport", element: <DocTypeAuditReport />, errorElement: <ErrorElement /> }
+          { path: "DocTypeAuditReport", element: <DocTypeAuditReport />, errorElement: <ErrorElement /> },
+          { path: "DocSubTypeReport", element: <DocSubTypeReport />, errorElement: <ErrorElement /> },
+          { path: "DocCategoryReport", element: <DocCategoryReport />, errorElement: <ErrorElement /> },
+          { path: "DocSubCategoryReport", element: <DocSubCategoryReport />, errorElement: <ErrorElement /> },
+          { path: "DocNestedCategoryReport", element: <DocNestedCategoryReport />, errorElement: <ErrorElement /> },
+          { path: "DocGroupAuditReport", element: <DocGroupAuditReport />, errorElement: <ErrorElement /> },
 
         ],
       },

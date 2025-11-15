@@ -24,10 +24,16 @@ const AuditReportMain = () => {
         { menuSlno: 27, menuName: 'Doc Detail Audit Report', menuCodeName: 'DocDetlAuditReport' },
         { menuSlno: 28, menuName: 'User Audit Report', menuCodeName: 'UserAuditReport' },
         { menuSlno: 29, menuName: 'Doc Type Audit Report', menuCodeName: 'DocTypeAuditReport' },
-        //     { menuSlno: 30, menuName: 'Doc Sub Type Audit Report', menuCodeName: 'DocSubTypeReport' },
-        //     { menuSlno: 31, menuName: 'Doc Category Audit Report', menuCodeName: 'DocCategoryReport' },
-        //     { menuSlno: 32, menuName: 'Doc Sub Category  Report', menuCodeName: 'DocSubCategoryReport' },
-        //     { menuSlno: 33, menuName: 'Doc Nested Category Report', menuCodeName: 'DocNestedCategoryReport' },
+        { menuSlno: 30, menuName: 'Doc Sub Type Audit Report', menuCodeName: 'DocSubTypeReport' },
+        { menuSlno: 31, menuName: 'Doc Category Audit Report', menuCodeName: 'DocCategoryReport' },
+        { menuSlno: 32, menuName: 'Doc Sub Category Report', menuCodeName: 'DocSubCategoryReport' },
+        { menuSlno: 33, menuName: 'Doc Nested Category Report', menuCodeName: 'DocNestedCategoryReport' },
+
+        { menuSlno: 34, menuName: 'Doc Group Audit Report', menuCodeName: 'DocGroupAuditReport' },
+        // { menuSlno: 35, menuName: 'Institute Type Audit Report', menuCodeName: 'InstituteTypeAuditReport' },
+        // { menuSlno: 36, menuName: 'Institute Mast Audit Report', menuCodeName: 'InstituteMastAuditReport' },
+        // { menuSlno: 37, menuName: 'Course Type Report', menuCodeName: 'CourseTypeAuditReport' },
+        // { menuSlno: 38, menuName: 'Course Name Report', menuCodeName: 'CourseAuditReport' },
     ]
     const employeemenu = menuName?.filter(menu =>
         userSettings?.some(item => item.menu_slno === menu.menuSlno)

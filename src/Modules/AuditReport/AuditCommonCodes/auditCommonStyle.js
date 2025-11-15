@@ -127,7 +127,7 @@ export const AuditusercolumnsByTab = {
         { label: 'mobile', key: 'mobile' },
         { label: 'email', key: 'email' },
         { label: 'Created time', key: 'created_time' },
-        { label: 'last_login_date', key: 'last_login_date' },
+        { label: 'last login date', key: 'last_login_date' },
         { label: 'Ip Address', key: 'created_ip' },
         { label: 'Browser ', key: 'created_browser_name' },
         { label: 'Browser Version', key: 'created_browser_version' },
@@ -155,11 +155,11 @@ export const AuditusercolumnsByTab = {
 export const AuditDocTypecolumnsByTab = {
     Created: [
         { label: '#', key: 'log_slno' },
-        { label: 'doc_type_slno', key: 'doc_type_slno' },
-        { label: 'doc_type_master_name', key: 'doc_type_master_name' },
-        { label: 'main_type_name', key: 'main_type_name' },
+        { label: 'doc type slno', key: 'doc_type_slno' },
+        { label: 'doc type Name', key: 'doc_type_master_name' },
+        { label: 'main type name', key: 'main_type_name' },
         { label: 'Status', key: 'status' },
-        { label: 'create_date', key: 'create_date' },
+        { label: 'create Date', key: 'create_date' },
         { label: 'Created User', key: 'username' },
         { label: 'Ip Address', key: 'create_ip' },
         { label: 'Browser ', key: 'create_browser_name' },
@@ -169,7 +169,172 @@ export const AuditDocTypecolumnsByTab = {
     ],
     Updated: [
         { label: '#', key: 'log_slno' },
-        { label: 'doc_type_slno', key: 'doc_type_slno' },
+        { label: 'doc type slno', key: 'doc_type_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+export const AuditSubTypecolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'subtype slno', key: 'sub_type_slno' },
+        { label: 'Sub Type Name', key: 'doc_sub_type_name' },
+        { label: 'SubType Status', key: 'docsubtype_status' },
+        { label: 'Status', key: 'docinstitute_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'sub_type_slno', key: 'sub_type_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+//Document category Audit report
+
+export const AuditCategoryecolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Cat slno', key: 'cat_slno' },
+        { label: 'Category Name', key: 'category_name' },
+        { label: 'Category Status', key: 'cat_status' },
+        { label: 'Create User', key: 'create_user' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'cat slno', key: 'cat_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+//document sub category audit report
+
+
+export const AuditSubCategoryecolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'SubCat slno', key: 'subcat_slno' },
+        { label: 'Sub Category Name', key: 'subcat_name' },
+        { label: 'Main Category Name', key: 'category_name' },
+        { label: 'Status', key: 'sub_category_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Subcat slno', key: 'subcat_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+export const AuditNestedCategoryecolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'SubCat nested_cat_slno', key: 'nested_cat_slno' },
+        { label: 'Nested Category Name', key: 'nested_cat_name' },
+        { label: 'Sub Category Name', key: 'subcat_name' },
+        { label: 'Status', key: 'nested_catstatus' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: ' nested cat slno', key: 'nested_cat_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//ghh
+
+export const DocGroupAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Group Slno', key: 'group_slno' },
+        { label: 'Group Name', key: 'group_name' },
+        { label: 'Status', key: 'groupstatus' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Group slno', key: 'group_slno' },
         { label: 'Previous Event', key: 'prev_event' },
         { label: 'New Event', key: 'new_event' },
         { label: 'Updated Date', key: 'edit_date' },
