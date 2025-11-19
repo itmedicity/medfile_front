@@ -52,6 +52,8 @@ const DocCategoryReport = lazy(() => import("./Modules/AuditReport/DocCategoryRe
 const DocSubCategoryReport = lazy(() => import("./Modules/AuditReport/DocSubCategoryReport/DocSubCategoryReport.jsx"))
 const DocNestedCategoryReport = lazy(() => import("./Modules/AuditReport/DocNestedCategoryReport/DocNestedCategoryReport.jsx"))
 const DocGroupAuditReport = lazy(() => import("./Modules/AuditReport/DocGroupAuditReport/DocGroupAuditReport.jsx"))
+const InstituteTypeAuditReport = lazy(() => import("./Modules/AuditReport/InstituteTypeAuditReport/InstituteTypeAuditReport.jsx"))
+const InstituteMastAuditReport = lazy(() => import("./Modules/AuditReport/InstituteMastAuditReport/InstituteMastAuditReport.jsx"))
 
 const routes = createBrowserRouter([
   {
@@ -135,6 +137,8 @@ const routes = createBrowserRouter([
           { path: "DocSubCategoryReport", element: <DocSubCategoryReport />, errorElement: <ErrorElement /> },
           { path: "DocNestedCategoryReport", element: <DocNestedCategoryReport />, errorElement: <ErrorElement /> },
           { path: "DocGroupAuditReport", element: <DocGroupAuditReport />, errorElement: <ErrorElement /> },
+          { path: "InstituteTypeAuditReport", element: <InstituteTypeAuditReport />, errorElement: <ErrorElement /> },
+          { path: "InstituteMastAuditReport", element: <InstituteMastAuditReport />, errorElement: <ErrorElement /> },
 
         ],
       },

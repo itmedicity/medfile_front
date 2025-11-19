@@ -948,6 +948,31 @@ const FileUpload = () => {
                     </Box>
 
                     <Box className="flex flex-1 py-[0.1rem] flex-wrap gap-2 justify-between">
+
+                      {/* Document from todate */}
+                      {/* <Box className="flex flex-col flex-auto">
+                        <Typography
+                          sx={{
+                            fontWeight: 600,
+                            fontFamily: "var(--font-varient)",
+                            opacity: 0.8,
+                            paddingLeft: "0.36rem",
+                            lineHeight: "1.0rem",
+                            fontSize: "0.81rem",
+                            color: 'rgba(var(--font-primary-white))'
+                          }}
+                        >
+                          Document Date
+                        </Typography>
+                        <CustomDateFeild
+                          date={docDate}
+                          setDate={(date) =>
+                            handleDocumentState({
+                              target: { name: "docDate", value: date },
+                            })
+                          }
+                        />
+                      </Box> */}
                       <Box className="flex flex-col flex-auto">
                         <Typography
                           sx={{
@@ -971,7 +996,7 @@ const FileUpload = () => {
                           }
                         />
                       </Box>
-                      <Box className="flex flex-col flex-auto">
+                      {/* <Box className="flex flex-col flex-auto">
                         <Typography
                           level="body-sm"
                           sx={{
@@ -990,7 +1015,32 @@ const FileUpload = () => {
                           date={docVersionDate}
                           setDate={(date) => handleDocumentState({ target: { name: "docVersionDate", value: date } })}
                         />
+                      </Box> */}
+
+                      <Box className="flex flex-col flex-auto">
+                        <Typography
+                          sx={{
+                            fontWeight: 600,
+                            fontFamily: "var(--font-varient)",
+                            opacity: 0.8,
+                            paddingLeft: "0.36rem",
+                            lineHeight: "1.0rem",
+                            fontSize: "0.81rem",
+                            color: 'rgba(var(--font-primary-white))'
+                          }}
+                        >
+                          Document Version Date
+                        </Typography>
+                        <CustomDateFeild
+                          date={docVersionDate}
+                          setDate={(date) =>
+                            handleDocumentState({
+                              target: { name: "docVersionDate", value: date },
+                            })
+                          }
+                        />
                       </Box>
+
                     </Box>
 
                     <Box className="flex flex-1 items-center justify-between py-[0.1rem] px-2">
@@ -1074,20 +1124,64 @@ const FileUpload = () => {
 
 
                     {Boolean(isRequiredExp) && !lifeLongValidity && (
-                      <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
-                        <Box className="flex flex-auto">
+                      <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap mt-1">
+                        {/* validation date */}
+                        {/* <Box className="flex flex-auto">
                           <CustomButtonDateFeild
                             startLabel={'From Date'}
                             date={docExpStart}
                             setDate={(date) => handleDocumentState({ target: { name: "docExpStart", value: date } })}
                           />
-                        </Box>
+                        </Box> */}
                         <Box className="flex flex-auto">
-                          <CustomButtonDateFeild
+                          <Box className="flex flex-col flex-auto">
+                            <Typography
+                              level="body-sm"
+                              sx={{
+                                fontWeight: 600,
+                                fontFamily: "var(--font-varient)",
+                                opacity: 0.8,
+                                paddingLeft: "0.36rem",
+                                lineHeight: "1.0rem",
+                                fontSize: "0.81rem",
+                                color: 'rgba(var(--font-primary-white))'
+                              }}
+                            >
+                              From Date
+                            </Typography>
+                            <CustomDateFeild
+                              date={docExpStart}
+                              setDate={(date) => handleDocumentState({ target: { name: "docExpStart", value: date } })}
+                            />
+                          </Box>
+                        </Box>
+
+                        <Box className="flex flex-auto">
+                          {/* <CustomButtonDateFeild
                             startLabel={'To Date'}
                             date={docExpEnd}
                             setDate={(date) => handleDocumentState({ target: { name: "docExpEnd", value: date } })}
-                          />
+                          /> */}
+                          <Box className="flex flex-col flex-auto">
+                            <Typography
+                              level="body-sm"
+                              sx={{
+                                fontWeight: 600,
+                                fontFamily: "var(--font-varient)",
+                                opacity: 0.8,
+                                paddingLeft: "0.36rem",
+                                lineHeight: "1.0rem",
+                                fontSize: "0.81rem",
+                                color: 'rgba(var(--font-primary-white))'
+                              }}
+                            >
+                              To Date
+                            </Typography>
+                            <CustomDateFeild
+                              date={docExpEnd}
+                              setDate={(date) => handleDocumentState({ target: { name: "docExpEnd", value: date } })}
+                            />
+                          </Box>
                         </Box>
                       </Box>
                     )}

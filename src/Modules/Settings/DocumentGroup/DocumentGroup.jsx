@@ -155,7 +155,7 @@ const DocumentGroup = () => {
                 />
             </MasterPageLayout>
             <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                <DocGroupMasterList tableHeaderCol={['Action', 'Group Name', 'Group Status']} >
+                <DocGroupMasterList tableHeaderCol={['Action', 'Slno', 'Group Name', 'Group Status']} >
                     {
                         data?.map((item, idx) => (
                             <tr key={idx}>

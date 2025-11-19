@@ -30,8 +30,8 @@ const AuditReportMain = () => {
         { menuSlno: 33, menuName: 'Doc Nested Category Report', menuCodeName: 'DocNestedCategoryReport' },
 
         { menuSlno: 34, menuName: 'Doc Group Audit Report', menuCodeName: 'DocGroupAuditReport' },
-        // { menuSlno: 35, menuName: 'Institute Type Audit Report', menuCodeName: 'InstituteTypeAuditReport' },
-        // { menuSlno: 36, menuName: 'Institute Mast Audit Report', menuCodeName: 'InstituteMastAuditReport' },
+        { menuSlno: 35, menuName: 'Institute Type Audit Report', menuCodeName: 'InstituteTypeAuditReport' },
+        { menuSlno: 36, menuName: 'Institute Mast Audit Report', menuCodeName: 'InstituteMastAuditReport' },
         // { menuSlno: 37, menuName: 'Course Type Report', menuCodeName: 'CourseTypeAuditReport' },
         // { menuSlno: 38, menuName: 'Course Name Report', menuCodeName: 'CourseAuditReport' },
     ]

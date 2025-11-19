@@ -835,5 +835,53 @@ export const getDocGroupEditAuditReports = async () => {
 };
 
 
+export const getInstituteTypeCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getInstituteTypeCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getInstituteTypeEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getInstituteTypeEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+
+
+//gjhjkhkjhj
+
+export const getInstituteMastCreateAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getInstituteMastCreateAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
+export const getInstituteMastEditAuditReports = async () => {
+  return await axiosApi
+    .get("/docMasterAuditReports/getInstituteMastEditAuditReports")
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data;
+      }
+    });
+};
+
 
 

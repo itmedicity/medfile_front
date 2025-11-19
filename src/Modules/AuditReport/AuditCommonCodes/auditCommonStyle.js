@@ -314,8 +314,6 @@ export const AuditNestedCategoryecolumnsByTab = {
 };
 
 
-//ghh
-
 export const DocGroupAuditReportcolumnsByTab = {
 
     Created: [
@@ -335,6 +333,73 @@ export const DocGroupAuditReportcolumnsByTab = {
     Updated: [
         { label: '#', key: 'log_slno' },
         { label: 'Group slno', key: 'group_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//INSTITUTION TYPE
+
+export const InstituteTypeAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Institute Slno', key: 'institute_type_slno' },
+        { label: 'Institute Name', key: 'institute_type_name' },
+        { label: 'Status', key: 'institute_type_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Institute Slno', key: 'institute_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+//Institute master audit report
+
+export const InstituteMastAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Institute Slno', key: 'institution_slno' },
+        { label: 'Institute Name', key: 'institution_name' },
+        { label: 'Institutetype Name', key: 'institute_type_name' },
+        { label: 'Status', key: 'institute_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Institute Slno', key: 'institution_slno' },
         { label: 'Previous Event', key: 'prev_event' },
         { label: 'New Event', key: 'new_event' },
         { label: 'Updated Date', key: 'edit_date' },

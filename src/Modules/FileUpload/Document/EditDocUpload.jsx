@@ -779,11 +779,29 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                             <CustomTypoPara label={cust_name} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Custodian Name : </span>} startIconStyle={{ opacity: 0.8, }} />
                                                         </Box>
-                                                        {
+                                                        {/* {
                                                             isRequiredExp === 1 &&
                                                             <CustomTypoPara label={`${format(new Date(doc_exp_start), "do-LLLL-yyyy")}  to  ${format(new Date(doc_exp_end), "do-LLLL-yyyy")}`} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Document Validity Period : </span>} startIconStyle={{ opacity: 0.8, }} />
+                                                        } */}
+                                                        {
+                                                            isRequiredExp === 1 && !lifelong_validity && (
+                                                                <CustomTypoPara
+                                                                    label={`${format(new Date(doc_exp_start), "do-LLLL-yyyy")} to ${format(new Date(doc_exp_end), "do-LLLL-yyyy")}`}
+                                                                    className="flex flex-1 border-[0.1rem] p-1 rounded-md"
+                                                                    startIcon={
+                                                                        <span
+                                                                            className="flex justify-between items-center gap-2"
+                                                                            style={{ fontWeight: 500 }}
+                                                                        >
+                                                                            {Menuscale}Document Validity Period :
+                                                                        </span>
+                                                                    }
+                                                                    startIconStyle={{ opacity: 0.8 }}
+                                                                />
+                                                            )
                                                         }
+
                                                         <Box className="flex flex-1 flex-row gap-x-1" >
                                                             <CustomTypoPara label={uploadUserName} className="flex flex-1 border-[0.1rem] p-1 rounded-md"
                                                                 startIcon={<span className="flex justify-between items-center gap-2" style={{ fontWeight: 500 }} >{Menuscale}Created User : </span>} startIconStyle={{ opacity: 0.8, }} />
@@ -1033,34 +1051,34 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                             </Box>
 
                                                             {/* Days Before Renewal - Only if not lifelong */}
-                                                            {/* {!lifelong_validity && ( */}
-                                                            <Box className="flex flex-col">
-                                                                <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
-                                                                    color: 'rgba(var(--font-primary-white))',
-                                                                    fontFamily: "var(--font-varient)",
-                                                                }}>
-                                                                    Days Before Renew
-                                                                </label>
-                                                                <input
-                                                                    style={{
+                                                            {!lifelong_validity && (
+                                                                <Box className="flex flex-col">
+                                                                    <label htmlFor="renewalTime" className="text-sm font-medium text-gray-700 mb-0" style={{
                                                                         color: 'rgba(var(--font-primary-white))',
                                                                         fontFamily: "var(--font-varient)",
-                                                                    }}
-                                                                    id="renewalTime"
-                                                                    type="number"
-                                                                    min={0}
-                                                                    value={days_torenew}
-                                                                    onChange={(e) =>
-                                                                        handleDocumentUpdateChange({ target: { name: "days_torenew", value: e.target.value } })
-                                                                    }
-                                                                    className="border border-gray-300 rounded px-0 py-0.5 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                                />
-                                                            </Box>
-                                                            {/* )} */}
+                                                                    }}>
+                                                                        Days Before Renew
+                                                                    </label>
+                                                                    <input
+                                                                        style={{
+                                                                            color: 'rgba(var(--font-primary-white))',
+                                                                            fontFamily: "var(--font-varient)",
+                                                                        }}
+                                                                        id="renewalTime"
+                                                                        type="number"
+                                                                        min={0}
+                                                                        value={days_torenew}
+                                                                        onChange={(e) =>
+                                                                            handleDocumentUpdateChange({ target: { name: "days_torenew", value: e.target.value } })
+                                                                        }
+                                                                        className="border border-gray-300 rounded px-0 py-0.5 w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                    />
+                                                                </Box>
+                                                            )}
                                                         </Box>
                                                         {/* : null} */}
 
-                                                        {Boolean(isRequiredExp) === true && (
+                                                        {Boolean(isRequiredExp) === true && !lifelong_validity && (
                                                             <Box className="flex  items-center justify-evenly py-[0.1rem] gap-5 flex-wrap">
                                                                 <Box className="flex flex-auto">
                                                                     <Box className="flex flex-col flex-auto">
