@@ -95,29 +95,29 @@ const DocCategoryDetails = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
-                    height: '100vh', // total available height for all sheets
+                    gap: 1,
+                    height: '94vh', // total available height for all sheets
                     overflow: 'hidden', // prevent double scrolls,
                     modalbgcolor: "rgba(var(--modal-bg-color))",
+                    p: 3
                 }}
             >
                 <Box
-                    // variant="outlined"
                     sx={{
                         borderRadius: 'md',
-                        p: { xs: 2, md: 3 },
-                        mb: 3,
+                        // p: { xs: 2, md: 3 },
                         overflowY: 'auto', // scrollable content
                         minHeight: 0, // required for flex scroll
                         modalbgcolor: "rgba(var(--modal-bg-color))",
+                        // p: 3
                     }}
                 >
-                    <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
+                    <Typography level="h6" sx={{ mb: 0, color: "#637e8cff", }}>
                         📁 CORE CATEGORIES
                     </Typography>
-                    <Divider sx={{ mb: 2 }} />
+                    <Divider sx={{ mb: 1 }} />
 
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
                         {mainCategoriesList.map((item) => (
                             <FolderCard
                                 key={item.value}
@@ -134,22 +134,21 @@ const DocCategoryDetails = () => {
                 {/* ===== SUB CATEGORY SECTION ===== */}
                 {dtlView === 1 && (
                     <Box
-                        // variant="outlined"
                         sx={{
                             borderRadius: 'md',
-                            p: { xs: 2, md: 3 },
-                            mb: 3,
+                            // p: { xs: 2, md: 3 },
                             overflowY: 'auto', // scrollable content
                             minHeight: 0, // required for flex scroll
-                            modalbgcolor: "rgba(var(--modal-bg-color))",
+                            // height: '23vh',
+                            // bgcolor: "pink"
                         }}
                     >
                         <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
                             {`📂 ${mainCatData?.label}`}
                         </Typography>
-                        <Divider sx={{ mb: 2 }} />
+                        <Divider sx={{ mb: 1 }} />
 
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
                             {docCatList
                                 .filter((item) => {
                                     const label = item.label.trim().toUpperCase();
@@ -165,14 +164,17 @@ const DocCategoryDetails = () => {
                                         ).length || 0;
 
                                     return (
-                                        <FolderCard
-                                            key={item.value}
-                                            value={item.value}
-                                            label={item.label}
-                                            count={count}
-                                            onClick={() => handleClick(item)}
-                                            isSelected={selectedFolder === item.value}
-                                        />
+                                        <Box sx={{}}>
+                                            <FolderCard
+                                                key={item.value}
+                                                value={item.value}
+                                                label={item.label}
+                                                count={count}
+                                                onClick={() => handleClick(item)}
+                                                isSelected={selectedFolder === item.value}
+                                            />
+                                        </Box>
+
                                     );
                                 })}
                         </Box>
@@ -181,21 +183,20 @@ const DocCategoryDetails = () => {
 
                 {viewSub === 1 && subCategories.length > 0 && (
                     <Box
-                        // variant="outlined"
                         sx={{
                             borderRadius: 'md',
-                            p: { xs: 2, md: 3 },
+                            // p: { xs: 2, md: 3 },
                             overflowY: 'auto', // scrollable content
                             minHeight: 0, // required for flex scroll
-                            modalbgcolor: "rgba(var(--modal-bg-color))",
+                            // pr: 3, m: 0
                         }}
                     >
-                        <Typography level="h6" sx={{ mb: 1, color: "#637e8cff", }}>
+                        <Typography level="h6" sx={{ mb: 0, color: "#637e8cff", }}>
                             {`📂 ${subCatData?.label}`}
                         </Typography>
-                        <Divider sx={{ mb: 2 }} />
+                        <Divider sx={{ mb: 1 }} />
 
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
                             {subCategories
                                 .filter((item) => {
                                     const label = item.subcat_name;

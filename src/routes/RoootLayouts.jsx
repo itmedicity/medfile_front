@@ -21,7 +21,7 @@ import OtpInput from 'react-otp-input';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axiosApi from "../Axios/Axios";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import { getTime } from "date-fns";
 import CustomBackDrop from "../Components/CustomBackDrop";
 import useAuth from "../hooks/useAuth";
@@ -41,6 +41,7 @@ const RoootLayouts = () => {
   const [OTP, setOTP] = useState(0);
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false);
   const [loginwithUserCred, setloginwithUserCred] = useState(false);
+
 
   useEffect(() => {
     const message = localStorage.getItem("message");
@@ -111,8 +112,8 @@ const RoootLayouts = () => {
             warningNofity(message); // incorrected OTP
           } else if (success === 2) {
             succesNofity(message); // OTP Verified
-            const { user_slno, name, login_type, tokenValidity, printer_access, accessToken } = JSON.parse(userInfo);
-            // console.log(accessToken, "accessToken");
+            const { user_slno, name, login_type, tokenValidity, printer_access, accessToken, IPAddress, browserName, browserVersion, osName, osVersion } = JSON.parse(userInfo);
+            // console.log(IPAddress, "IPAddress");
 
             const authData = {
               authNo: btoa(user_slno),
@@ -120,8 +121,15 @@ const RoootLayouts = () => {
               authType: btoa(login_type),
               authTimeStamp: getTime(new Date(tokenValidity)),
               printeraccess: btoa(printer_access),
-              authToken: btoa(accessToken)
+              authToken: btoa(accessToken),
+              IPAddress: btoa(IPAddress),
+              browserName: btoa(browserName),
+              browserVersion: btoa(browserVersion),
+              osName: btoa(osName),
+              osVersion: btoa(osVersion)
             };
+
+            // console.log("userInfo:", userInfo);
 
             setAuth((prev) => {
               return {

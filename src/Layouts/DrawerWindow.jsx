@@ -14,6 +14,7 @@ import { HomeAltSlimHoriz, NavArrowRight, PageSearch, PrivacyPolicy, Settings, S
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserModules, userWiseSettingsRights } from '../api/commonAPI';
+import { AiOutlineAudit } from "react-icons/ai";
 
 const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
 
@@ -44,6 +45,7 @@ const DrawerWindow = memo(({ drawerWidth, handleDrawerClose }) => {
             { module_slno: 2, menu: "File Upload", text: "/Home/FileUpload", icon: <ShieldUpload height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { module_slno: 3, menu: "Doc Approval", text: "/Home/FileSearch", icon: <PrivacyPolicy height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { module_slno: 4, menu: "Advance Search", text: "/Home/AdvancedSearch", icon: <PageSearch height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
+            { module_slno: 6, menu: "Audit Report", text: "/Home/AuditReport", icon: <AiOutlineAudit height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
             { module_slno: 5, menu: "Settings", text: "/Home/Settings", icon: <Settings height={20} width={20} color="rgba(var(--drawer-font-color))" className='hoverClass' /> },
         ]
     }, [])

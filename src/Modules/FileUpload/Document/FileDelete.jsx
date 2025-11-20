@@ -17,7 +17,12 @@ const FileDelete = ({ data, deleteModal, setDeleteModal, refetchDocDetl }) => {
             doc_id: Number(data.doc_id),
             filename: data.filename,
             docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
-            docd_slno: Number(data.docd_slno)
+            docd_slno: Number(data.docd_slno),
+            IPAddress: data.IPAddress ? data.IPAddress : 'Unknown',
+            browserName: data.browserName ? data.browserName : 'Unknown',
+            browserVersion: data.browserVersion ? data.browserVersion : 'Unknown',
+            osName: data.osName ? data.osName : 'Unknown',
+            osVersion: data.osVersion ? data.osVersion : 'Unknown'
         }
 
         // console.log("obj", obj);
