@@ -412,3 +412,197 @@ export const InstituteMastAuditReportcolumnsByTab = {
     ],
 };
 
+
+//course type audit report
+export const CourseTypeAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'course Slno', key: 'course_type_slno' },
+        { label: 'Course Name', key: 'course_type_name' },
+        { label: 'Status', key: 'course_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Course Slno', key: 'course_type_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//course name master
+export const CourseNameAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'course Slno', key: 'course_slno' },
+        { label: 'Course Name', key: 'course_name' },
+        { label: 'Course Type', key: 'course_type_name' },
+        { label: 'Status', key: 'course_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Course Slno', key: 'course_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//location name master
+export const LocationAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Location Slno', key: 'loc_slno' },
+        { label: 'Location Name', key: 'loc_name' },
+        { label: 'Status', key: 'locationstatus' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Location Slno', key: 'loc_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//Rack name master
+export const RackAuditReportcolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Rack Slno', key: 'rac_slno' },
+        { label: 'Rack Name', key: 'rac_desc' },
+        { label: 'Rack Alice', key: 'rac_alice' },
+        { label: 'Location', key: 'loc_name' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Rack Slno', key: 'rac_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//Rack name master
+export const CustDeptAuditReportcolumnsByTab = {
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Cust Department Slno', key: 'cust_dept_slno' },
+        { label: 'Cust Department Name', key: 'cust_dept_name' },
+        { label: 'Status', key: 'custdept_status' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Cust Department Slno', key: 'cust_dept_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
+
+//cust master audit report
+
+export const CustMasterAuditReportcolumnsByTab = {
+
+    Created: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Cust Slno', key: 'cust_slno' },
+        { label: 'Custodian Name', key: 'cust_name' },
+        { label: 'Custodian Department Name', key: 'cust_dept_name' },
+        { label: 'Status', key: 'custstatus' },
+        { label: 'Create Date', key: 'create_date' },
+        { label: 'Created User', key: 'username' },
+        { label: 'Ip Address', key: 'create_ip' },
+        { label: 'Browser ', key: 'create_browser_name' },
+        { label: 'Browser Version', key: 'create_browser_version' },
+        { label: 'OS Name', key: 'create_os_name' },
+        { label: 'OS Version', key: 'create_os_version' },
+    ],
+    Updated: [
+        { label: '#', key: 'log_slno' },
+        { label: 'Cust Slno', key: 'cust_slno' },
+        { label: 'Previous Event', key: 'prev_event' },
+        { label: 'New Event', key: 'new_event' },
+        { label: 'Updated Date', key: 'edit_date' },
+        { label: 'User', key: 'username' },
+        { label: 'IP Address', key: 'edit_ip' },
+        { label: 'Browser Name', key: 'edit_browser_name' },
+        { label: 'Browser Version', key: 'edit_browser_version' },
+        { label: 'OS Name', key: 'edit_os_name' },
+        { label: 'OS Version', key: 'edit_os_version' },
+    ],
+};
+
