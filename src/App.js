@@ -54,6 +54,12 @@ const DocNestedCategoryReport = lazy(() => import("./Modules/AuditReport/DocNest
 const DocGroupAuditReport = lazy(() => import("./Modules/AuditReport/DocGroupAuditReport/DocGroupAuditReport.jsx"))
 const InstituteTypeAuditReport = lazy(() => import("./Modules/AuditReport/InstituteTypeAuditReport/InstituteTypeAuditReport.jsx"))
 const InstituteMastAuditReport = lazy(() => import("./Modules/AuditReport/InstituteMastAuditReport/InstituteMastAuditReport.jsx"))
+const CourseTypeAuditReport = lazy(() => import("./Modules/AuditReport/CourseTypeAuditReport/CourseTypeAuditReport.jsx"))
+const CourseAuditReport = lazy(() => import("./Modules/AuditReport/CourseAuditReport/CourseAuditReport.jsx"))
+const LocationAuditReport = lazy(() => import("./Modules/AuditReport/LocationAuditReport/LocationAuditReport.jsx"))
+const RackAuditReport = lazy(() => import("./Modules/AuditReport/RackAuditReport/RackAuditReport.jsx"))
+const CustodianAuditReport = lazy(() => import("./Modules/AuditReport/CustodianAuditReport/CustodianAuditReport.jsx"))
+const CustodianMasterAuditReport = lazy(() => import("./Modules/AuditReport/CustodianMasterAuditReport/CustodianMasterAuditReport.jsx"))
 
 const routes = createBrowserRouter([
   {
@@ -139,6 +145,12 @@ const routes = createBrowserRouter([
           { path: "DocGroupAuditReport", element: <DocGroupAuditReport />, errorElement: <ErrorElement /> },
           { path: "InstituteTypeAuditReport", element: <InstituteTypeAuditReport />, errorElement: <ErrorElement /> },
           { path: "InstituteMastAuditReport", element: <InstituteMastAuditReport />, errorElement: <ErrorElement /> },
+          { path: "CourseTypeAuditReport", element: <CourseTypeAuditReport />, errorElement: <ErrorElement /> },
+          { path: "CourseAuditReport", element: <CourseAuditReport />, errorElement: <ErrorElement /> },
+          { path: "LocationAuditReport", element: <LocationAuditReport />, errorElement: <ErrorElement /> },
+          { path: "RackAuditReport", element: <RackAuditReport />, errorElement: <ErrorElement /> },
+          { path: "CustodianAuditReport", element: <CustodianAuditReport />, errorElement: <ErrorElement /> },
+          { path: "CustodianMasterAuditReport", element: <CustodianMasterAuditReport />, errorElement: <ErrorElement /> },
 
         ],
       },

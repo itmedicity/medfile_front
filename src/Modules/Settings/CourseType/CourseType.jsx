@@ -14,15 +14,25 @@ import { commonStatus } from '../../../Constant/Data'
 import { useCallback } from 'react'
 import { getCourseTypeList } from '../../../api/commonAPI'
 import axiosApi from '../../../Axios/Axios'
+import { Edit } from 'iconoir-react'
 
 const CourseTypeList = lazy(() => import('../../../Components/CustomTable'));
 
 const CourseType = () => {
     const queryClient = useQueryClient();
+    const userData = localStorage.getItem("app_auth");
+    const user = atob(JSON.parse(userData)?.authNo);
+    const IPAddress = atob(JSON.parse(userData)?.IPAddress);
+    const browserName = atob(JSON.parse(userData)?.browserName);
+    const browserVersion = atob(JSON.parse(userData)?.browserVersion);
+    const osName = atob(JSON.parse(userData)?.osName);
+    const osVersion = atob(JSON.parse(userData)?.osVersion);
 
+    const [editData, setEditData] = useState(0)
     const [courseTypeState, setCourseTypeState] = useState({
         courseTypeName: '',
-        courseTypeStatus: 0
+        courseTypeStatus: 0,
+        courseSlno: 0
     })
 
     const { courseTypeName, courseTypeStatus } = courseTypeState
@@ -33,48 +43,93 @@ const CourseType = () => {
 
     const handleSubmitButtonFun = useCallback(async (e) => {
         e.preventDefault()
+        if (editData === 0) {
 
-        if (courseTypeState.courseTypeName === '') {
-            warningNofity('Course Type Name cannot be empty' || 'An error has occurred')
-            return
-        }
-
-        if (courseTypeState.courseTypeStatus === 0) {
-            warningNofity('Course Type Status cannot be empty' || 'An error has occurred')
-            return
-        }
-
-        const FormData = {
-            course_type_name: courseTypeState.courseTypeName?.trim(),
-            course_type_status: courseTypeState.courseTypeStatus
-        }
-
-        try {
-            const res = await axiosApi.post('/courseType/insertCourseType', FormData)
-            const { success, message } = res.data
-            if (success === 1) {
-                succesNofity(message)
-                queryClient.invalidateQueries({ queryKey: ['courseType'] })
-                setCourseTypeState({
-                    courseTypeName: '',
-                    courseTypeStatus: 0
-                })
-            } else if (success === 0) {
-                errorNofity(message)
-            } else {
-                warningNofity(message)
+            if (courseTypeState.courseTypeName === '') {
+                warningNofity('Course Type Name cannot be empty' || 'An error has occurred')
+                return
             }
 
-        } catch (error) {
-            errorNofity(error.message || 'An error has occurred')
-        }
+            if (courseTypeState.courseTypeStatus === 0) {
+                warningNofity('Course Type Status cannot be empty' || 'An error has occurred')
+                return
+            }
 
-    }, [courseTypeState])
+            const FormData = {
+                course_type_name: courseTypeState.courseTypeName?.trim(),
+                course_type_status: courseTypeState.courseTypeStatus,
+                IPAddress: IPAddress ? IPAddress : 'Unknown',
+                browserName: browserName ? browserName : 'Unknown',
+                browserVersion: browserVersion ? browserVersion : 'Unknown',
+                osName: osName ? osName : 'Unknown',
+                osVersion: osVersion ? osVersion : 'Unknown',
+                user: Number(user),
+            }
+
+            try {
+                const res = await axiosApi.post('/courseType/insertCourseType', FormData)
+                const { success, message } = res.data
+                if (success === 1) {
+                    succesNofity(message)
+                    queryClient.invalidateQueries({ queryKey: ['courseType'] })
+                    setCourseTypeState({
+                        courseTypeName: '',
+                        courseTypeStatus: 0
+                    })
+                } else if (success === 0) {
+                    errorNofity(message)
+                } else {
+                    warningNofity(message)
+                }
+
+            } catch (error) {
+                errorNofity(error.message || 'An error has occurred')
+            }
+        }
+        else {
+            const postdata = {
+                course_type_name: courseTypeState.courseTypeName?.trim(),
+                course_type_status: courseTypeState.courseTypeStatus,
+                courseSlno: courseTypeState?.courseSlno,
+                IPAddress: IPAddress ? IPAddress : 'Unknown',
+                browserName: browserName ? browserName : 'Unknown',
+                browserVersion: browserVersion ? browserVersion : 'Unknown',
+                osName: osName ? osName : 'Unknown',
+                osVersion: osVersion ? osVersion : 'Unknown',
+                user: Number(user),
+            }
+            const response = await axiosApi.patch('/courseType/editCourseTypeMaster', postdata)
+            const { message, success } = response.data;
+            if (success === 1) {
+                queryClient.invalidateQueries(['courseType'])
+                succesNofity(message)
+                setCourseTypeState({
+                    courseTypeName: '',
+                    courseTypeStatus: 0,
+                    courseSlno: 0
+                })
+            }
+            else {
+                warningNofity(message)
+            }
+        }
+    }, [courseTypeState, IPAddress, browserName, browserVersion, osName, osVersion, user, queryClient, editData])
 
     const { isLoading, data, error } = useQuery({
         queryKey: ['courseType'],
         queryFn: getCourseTypeList
     })
+
+    const EditBtn = useCallback((item) => {
+        // console.log("item:", item);
+        setEditData(1);
+        setCourseTypeState({
+            courseTypeName: item.course_type_name,
+            courseTypeStatus: item.course_type_status,
+            courseSlno: item.course_type_slno,
+        })
+    }, []);
+
 
     if (isLoading) return <CustomBackDropWithOutState message="Loading..." />
 
@@ -104,10 +159,16 @@ const CourseType = () => {
                 />
             </MasterPageLayout>
             <Suspense fallback={<CustomBackDropWithOutState message={'Loading...'} />} >
-                <CourseTypeList tableHeaderCol={['Action', 'Course Type Name', 'Course Type Status']} >
+                <CourseTypeList tableHeaderCol={['Action', 'Slno', 'Course Type Name', 'Course Type Status']} >
                     {
                         data?.map((item, idx) => (
                             <tr key={idx}>
+                                <td ><Edit onClick={() => EditBtn(item)} style={{
+                                    color: "rgba(var(--color-pink))",
+                                    ":hover": {
+                                        color: "grey",
+                                    }, p: 0.5
+                                }} /></td>
                                 <td>{item.course_type_slno}</td>
                                 <td>{item.course_type_name?.toUpperCase()}</td>
                                 <td>{item.status}</td>
