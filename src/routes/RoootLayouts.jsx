@@ -333,12 +333,13 @@ const RoootLayouts = () => {
             flexDirection: 'column',
           }}
         >
-          <Box className="h-15 p-2 flex justify-center items-center text-white">
+          <Box className="h-15 p-2 flex justify-center items-center text-white mt-1">
             <button onClick={handleChange}
               style={{
                 fontFamily: 'var(--font-varient)',
                 color: 'white',
-                fontWeight: 600
+                fontWeight: 600,
+
               }}
             >sign in with otp</button>
           </Box>
@@ -374,7 +375,7 @@ const RoootLayouts = () => {
                   size="md"
                   variant="outlined"
                   // color="neutral"
-                  className="w-[17.5rem] h-10"
+                  className="w-[17.5rem] h-09"
                   sx={{
                     color: "white",
                     borderColor: "#53b6e7",
