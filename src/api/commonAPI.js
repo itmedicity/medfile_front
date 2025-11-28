@@ -618,18 +618,15 @@ export const gethrmDeptDetails = async () => {
 
 // Common function for audit reports
 export const getAuditReports = async (endpoint) => {
-  try {
-    const res = await axiosApi.get(endpoint);
-    const { success, data } = res.data;
+  const res = await axiosApi.get(endpoint);
+  const { success, data } = res.data;
+  // console.log("dataaaaaaaa", data);
 
-    // Decide what to return if request fails
-    if (success === 1) {
-      return data;
-    } else {
-      // You can customize this per endpoint if needed
-      return [];
-    }
-  } catch (error) {
+  // Decide what to return if request fails
+  if (success === 1) {
+    return data;
+  } else {
+    // You can customize this per endpoint if needed
     return [];
   }
 };
@@ -730,156 +727,6 @@ export const getCustMasterEditAuditReports = () =>
   getAuditReports("/docMasterAuditReports/getCustMasterEditAuditReports");
 
 
-//course name master
-
-// export const getCourseNameCreateAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCourseNameCreateAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-// export const getCourseNameEditAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCourseNameEditAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-
-// //location master
-// export const getLocationCreateAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getLocationCreateAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-
-// export const getLocationEditAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getLocationEditAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-
-// //Rack Audit report
-// export const getRackCreateAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getRackCreateAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-
-// export const getRackEditAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getRackEditAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-// //Custodian Department Audit report
-// export const getCustDeptCreateAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCustDeptCreateAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-
-// export const getCustDeptEditAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCustDeptEditAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return [];
-//     }
-//   } catch (error) {
-//     return [];
-//   }
-// };
-
-// export const getCustMasterCreateAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCustMasterCreateAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return [];
-//     }
-//   } catch (error) {
-//     return [];
-//   }
-// };
-
-
-// export const getCustMasterEditAuditReports = async () => {
-//   try {
-//     const res = await axiosApi.get("/docMasterAuditReports/getCustMasterEditAuditReports");
-//     const { success, data } = res.data;
-//     if (success === 1) {
-//       return data;
-//     } else {
-//       return [];
-//     }
-//   } catch (error) {
-//     return [];
-//   }
-// };
 
 
 

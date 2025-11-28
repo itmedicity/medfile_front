@@ -87,7 +87,6 @@ export const AuditMastcolumnsByTab = {
     ],
 };
 
-
 export const AuditDetailcolumnsByTab = {
     Created: [
         { label: '#', key: 'docd_slno' },
@@ -280,7 +279,6 @@ export const AuditSubCategoryecolumnsByTab = {
         { label: 'OS Version', key: 'edit_os_version' },
     ],
 };
-
 
 export const AuditNestedCategoryecolumnsByTab = {
     Created: [
@@ -606,3 +604,33 @@ export const CustMasterAuditReportcolumnsByTab = {
     ],
 };
 
+
+
+export const TableHeaderVirtues = ({ columns }) => {
+    // Optional: log columns once for debugging
+    console.log(columns, "columns in header");
+
+    return (
+        <thead>
+            <tr>
+                {columns.map((col) => (
+                    <th key={col.field} style={{ textAlign: 'left', padding: '8px' }}>
+                        {col.headerName}
+                    </th>
+                ))}
+            </tr>
+        </thead>
+    );
+};
+
+export const TableContentVirtues = ({ log, columns }) => (
+    <>
+        {columns.map((col) => (
+            <td key={col.field} style={{ padding: '8px' }}>
+                {col.field === 'create_date'
+                    ? new Date(log[col.field]).toLocaleString()
+                    : log[col.field]}
+            </td>
+        ))}
+    </>
+);
