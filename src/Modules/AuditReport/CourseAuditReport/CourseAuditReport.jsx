@@ -6,13 +6,13 @@ import {
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useQuery } from "@tanstack/react-query";
-import { getDocCatCreateAuditReports, getDocCatEditAuditReports } from '../../../api/commonAPI';
+import { getCourseNameCreateAuditReports, getCourseNameEditAuditReports } from '../../../api/commonAPI';
 import DefaultPageLayout from '../../../Components/DefaultPageLayout';
-import { AuditCategoryecolumnsByTab, searchIconStyle, searchInputStyle } from '../AuditCommonCodes/auditCommonStyle';
+import { CourseNameAuditReportcolumnsByTab, searchIconStyle, searchInputStyle } from '../AuditCommonCodes/auditCommonStyle';
 import DateRangeFilter from '../AuditCommonCodes/DateRangeFilter';
 import VirtualTable from '../VirtualTable';
 
-const DocCategoryReport = () => {
+const CourseAuditReport = () => {
 
     const [selectedTab, setSelectedTab] = useState('Created');
     const [searchTerm, setSearchTerm] = useState('');
@@ -21,14 +21,16 @@ const DocCategoryReport = () => {
 
     // Queries
     const { data: createdData } = useQuery({
-        queryKey: ["getCreatedAuditReport"],
-        queryFn: getDocCatCreateAuditReports,
+        queryKey: ["getCreatedDocMastAudit"],
+        queryFn: getCourseNameCreateAuditReports,
+        // staleTime: Infinity,
         refetchOnWindowFocus: false,
     });
 
     const { data: editedData } = useQuery({
-        queryKey: ["getEditedAuditReport"],
-        queryFn: getDocCatEditAuditReports,
+        queryKey: ["getEditedDocMastAudit"],
+        queryFn: getCourseNameEditAuditReports,
+        // staleTime: Infinity,
         refetchOnWindowFocus: false,
     });
 
@@ -36,7 +38,7 @@ const DocCategoryReport = () => {
 
     // Filter logs by date
     const dateFilteredLogs = auditLogs.filter((log) => {
-        // Determine the date of the log            
+        // Determine the date of the log
         const logDate = new Date(log.timestamp || log.create_date || log.edit_date);
         if (isNaN(logDate.getTime())) return false;
 
@@ -56,20 +58,17 @@ const DocCategoryReport = () => {
         return true;
     });
 
-
     // Search filter
     const filteredLogs = dateFilteredLogs.filter((log) => {
         // Collect all field values from the log object
         const valuesToSearch = Object.values(log).map((v) =>
             v !== null && v !== undefined ? String(v).toLowerCase() : ''
         );
-
         // Check if any field contains the search term
         return valuesToSearch.some((v) => v.includes(searchTerm.toLowerCase()));
     });
-
     return (
-        <DefaultPageLayout label="Document Category Audit Report">
+        <DefaultPageLayout label="Course Name Audit Report">
             <Box sx={{ mt: 0, p: 1, bgcolor: '#fff' }}>
                 {/* Tabs */}
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -114,15 +113,16 @@ const DocCategoryReport = () => {
                         <Search sx={searchIconStyle} />
                     </Box>
                 </Box>
-
-                {/* Table */}
                 <VirtualTable
                     data={filteredLogs}
-                    columns={AuditCategoryecolumnsByTab[selectedTab]}
+                    columns={CourseNameAuditReportcolumnsByTab[selectedTab]}
                 />
             </Box>
         </DefaultPageLayout>
     );
 };
-export default memo(DocCategoryReport);
+export default memo(CourseAuditReport);
+
+
+
 

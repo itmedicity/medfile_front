@@ -1,9 +1,8 @@
 // @ts-nocheck
 import { Box, Button, Input, Skeleton } from "@mui/joy";
 import Grid from "@mui/material/Grid2";
-import React, { Fragment, memo, useCallback, useContext, useEffect, useState } from "react";
+import React, { Fragment, memo, useCallback, useEffect, useState } from "react";
 import {
-  baseColor,
   sanitizeInput,
   warningNofity,
 } from "../../Constant/Constant";
@@ -21,11 +20,8 @@ import {
 import DashBoadTile from "./Components/DashBoadTile";
 import TableHeaderVirtue from "./Components/TableHeaderVirtue";
 import TableContentVirtue from "./Components/TableContentVirtue";
-import { ToastContainer } from "react-toastify";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import axiosApi from "../../Axios/Axios";
 import DocCatagoryDetails from "./DocumentCategory/DocCatagoryDetails";
-import GetSystemInfo from "../../Components/GetSystemInfo";
 
 const localData = localStorage.getItem("app_auth");
 const credValue = atob(JSON.parse(localData)?.authType);
@@ -67,9 +63,9 @@ const Dashboard = () => {
   // GET DOC ALL
 
   const {
-    isLoading: allDocLoading,
+    // isLoading: allDocLoading,
     data: allDocData,
-    error: allDocError,
+    // error: allDocError,
   } = useQuery({
     queryKey: ["getAllDoc"],
     queryFn: Number(credValue) === 1 ? getnonSecureDoconly : getDocAll,
@@ -77,10 +73,10 @@ const Dashboard = () => {
   });
 
   const {
-    isLoading: docNameLoading,
+    // isLoading: docNameLoading,
     data: docNameData,
     refetch,
-    error: docNameError,
+    // error: docNameError,
   } = useQuery({
     queryKey: ["getDocNameSearch"],
     queryFn: () =>
