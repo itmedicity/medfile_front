@@ -65,6 +65,58 @@ const VirtualTable = ({ data, columns, height = 600 }) => {
 
             />
         </Box>
+
+        // <Box
+        //     sx={{
+        //         height: "400px",      // Y-axis scroll (vertical)
+        //         width: "100%",        // you can set fixed px if needed
+        //         overflow: "auto"      // Enables both X & Y scrolling
+        //     }}
+        // >
+        //     <TableVirtuoso
+        //         data={data}
+        //         components={{
+        //             Table: (props) => (
+        //                 <table {...props} style={{ width: "1200px", borderCollapse: "collapse" }} />
+        //             ),
+        //             TableRow: (props) => <tr {...props} style={{ borderBottom: "1px solid #ddd" }} />,
+        //             TableBody: "tbody"
+        //         }}
+        //         fixedHeaderContent={() => (
+        //             <tr>
+        //                 {columns.map((col) => (
+        //                     <th
+        //                         key={col.key}
+        //                         style={{
+        //                             padding: "8px",
+        //                             position: "sticky",
+        //                             top: 0,
+        //                             background: "#fff",
+        //                             zIndex: 10,
+        //                             borderBottom: "1px solid #ddd"
+        //                         }}
+        //                     >
+        //                         {col.label}
+        //                     </th>
+        //                 ))}
+        //             </tr>
+        //         )}
+        //         itemContent={(index, log) => (
+        //             <>
+        //                 {columns.map((col) => (
+        //                     <td key={col.key} style={{ padding: "8px", textAlign: "center", fontSize: 15 }}>
+        //                         {col.key === "create_date" || col.key === "edit_date"
+        //                             ? log[col.key]
+        //                                 ? new Date(log[col.key]).toLocaleString()
+        //                                 : ""
+        //                             : log[col.key] ?? ""}
+        //                     </td>
+        //                 ))}
+        //             </>
+        //         )}
+        //     />
+        // </Box>
+
     );
 }
 

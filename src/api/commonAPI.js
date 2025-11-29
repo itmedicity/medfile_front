@@ -558,6 +558,15 @@ export const getMenuNames = async () => {
   });
 };
 
+export const getNestedCategoryList = async () => {
+  return await axiosApi.get(`/docNestedCategoryName/getAllNestedCategory`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
 export const getUserModules = async (loggedUser) => {
   return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${loggedUser}`).then((res) => {
     const { success, data } = res.data;
@@ -635,8 +644,6 @@ export const getdocMasterEditAuditReports = () =>
   getAuditReports("/docMasterAuditReports/getdocMasterEditAuditReports");
 export const getDocumentCreateAuditReports = () =>
   getAuditReports("/docMasterAuditReports/getDocumentCreateAuditReports");
-export const getNestedCategoryList = () =>
-  getAuditReports("/docMasterAuditReports/getNestedCategoryList");
 
 export const getUserEditAuditReports = () =>
   getAuditReports("/docMasterAuditReports/getUserEditAuditReports");
