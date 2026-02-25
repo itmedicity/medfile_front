@@ -12,8 +12,6 @@ import JSZip from "jszip";
 import axiosApi from "../../../Axios/Axios";
 
 const TableContentVirtue = ({ data, credValue, printerAccess }) => {
-  console.log(data, "data");
-
   const [otpModal, setOtpModal] = useState(false)
 
   const {

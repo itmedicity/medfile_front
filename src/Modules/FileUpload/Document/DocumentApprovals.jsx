@@ -73,6 +73,12 @@ const DocumentApprovals = ({ params }) => {
     const queryClient = useQueryClient();
     const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
 
+    // console.log("params:", params);
+    // console.log("doc_slno:", doc_slno);
+    // console.log("doc_id:", doc_id);
+
+
+
     const docmntSlno = doc_slno; // ID FOR GETTIG THE DOC DETAILS
     const docmntID = doc_id
 
