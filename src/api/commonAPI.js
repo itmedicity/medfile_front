@@ -558,6 +558,15 @@ export const getMenuNames = async () => {
   });
 };
 
+export const getNestedCategoryList = async () => {
+  return await axiosApi.get(`/docNestedCategoryName/getAllNestedCategory`).then((res) => {
+    const { success, data } = res.data;
+    if (success === 1) {
+      return data;
+    }
+  });
+};
+
 export const getUserModules = async (loggedUser) => {
   return await axiosApi.get(`/UserGroupRightMaster/ModulewiseMenus/${loggedUser}`).then((res) => {
     const { success, data } = res.data;
@@ -613,275 +622,118 @@ export const gethrmDeptDetails = async () => {
   }
 };
 
-export const getNestedCategoryList = async () => {
-  return await axiosApi
-    .get("/docNestedCategoryName/getAllNestedCategory")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
+
+
+
+// Common function for audit reports
+export const getAuditReports = async (endpoint) => {
+  const res = await axiosApi.get(endpoint);
+  const { success, data } = res.data;
+  // console.log("dataaaaaaaa", data);
+
+  // Decide what to return if request fails
+  if (success === 1) {
+    return data;
+  } else {
+    // You can customize this per endpoint if needed
+    return [];
+  }
 };
 
+export const getdocMasterEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getdocMasterEditAuditReports");
+export const getDocumentCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocumentCreateAuditReports");
 
-export const getDocumentCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getdocMasterCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getUserEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getUserEditAuditReports");
+export const getUserCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getUserCreateAuditReports");
+export const getdocDetailEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getdocDetailEditAuditReports");
+export const getDocumentDetailCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocumentDetailCreateAuditReports");
 
-export const getdocMasterEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getdocMasterEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocCatEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocCatEditAuditReports");
+export const getDocCatCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocCatCreateAuditReports");
+export const getSubTypeEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getSubTypeEditAuditReports");
+export const getSubTypeCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getSubTypeCreateAuditReports");
+export const getDocTypeEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocTypeEditAuditReports");
+export const getDocTypeCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocTypeCreateAuditReports");
 
-//document details
-export const getDocumentDetailCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getdocDetailCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocGroupEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocGroupEditAuditReports");
 
-export const getdocDetailEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getdocDetailEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocGroupCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocGroupCreateAuditReports");
 
+export const getDocNestedCatEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocNestedCatEditAuditReports");
 
-export const getUserCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getUserCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocNestedCatCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocNestedCatCreateAuditReports");
 
-export const getUserEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getUserEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocSubCategoryEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocSubCategoryEditAuditReports");
 
-//document type MASTER
-export const getDocTypeCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocTypeCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getDocSubCategoryAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getDocSubCategoryAuditReports");
 
-export const getDocTypeEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocTypeEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getInstituteMastCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getInstituteMastCreateAuditReports");
 
-//sub type master
+export const getInstituteTypeEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getInstituteTypeEditAuditReports");
 
-export const getSubTypeCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getSubTypeCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getInstituteTypeCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getInstituteTypeCreateAuditReports");
 
-export const getSubTypeEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getSubTypeEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
+export const getCourseTypeEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCourseTypeEditAuditReports");
+
+export const getCourseTypeCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCourseTypeCreateAuditReports");
+
+export const getInstituteMastEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getInstituteMastEditAuditReports");
+
+export const getCourseNameCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCourseNameCreateAuditReports");
+
+export const getCourseNameEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCourseNameEditAuditReports");
+
+export const getLocationCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getLocationCreateAuditReports");
+
+export const getLocationEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getLocationEditAuditReports");
+
+export const getRackCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getRackCreateAuditReports");
+
+export const getRackEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getRackEditAuditReports");
+
+export const getCustDeptCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCustDeptCreateAuditReports");
+
+export const getCustDeptEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCustDeptEditAuditReports");
+
+export const getCustMasterCreateAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCustMasterCreateAuditReports");
+
+export const getCustMasterEditAuditReports = () =>
+  getAuditReports("/docMasterAuditReports/getCustMasterEditAuditReports");
 
 
-//document Category Audit report
-export const getDocCatCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocCatCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getDocCatEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocCatEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-
-//document Category Audit report
-export const getDocSubCategoryAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocSubCategoryAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getDocSubCategoryEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocSubCategoryEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-
-//document nested category
-export const getDocNestedCatCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocNestedCatCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getDocNestedCatEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocNestedCatEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getDocGroupCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocGroupCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getDocGroupEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getDocGroupEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-
-export const getInstituteTypeCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getInstituteTypeCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getInstituteTypeEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getInstituteTypeEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-
-
-//gjhjkhkjhj
-
-export const getInstituteMastCreateAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getInstituteMastCreateAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
-
-export const getInstituteMastEditAuditReports = async () => {
-  return await axiosApi
-    .get("/docMasterAuditReports/getInstituteMastEditAuditReports")
-    .then((res) => {
-      const { success, data } = res.data;
-      if (success === 1) {
-        return data;
-      }
-    });
-};
 
 
 

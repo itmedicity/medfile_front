@@ -1,13 +1,6 @@
 import React, { memo, useState } from 'react';
 import {
     Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
     Tabs,
     Tab,
 } from '@mui/material';
@@ -15,24 +8,25 @@ import { Search } from '@mui/icons-material';
 import { useQuery } from "@tanstack/react-query";
 import { getDocTypeCreateAuditReports, getDocTypeEditAuditReports } from '../../../api/commonAPI';
 import DefaultPageLayout from '../../../Components/DefaultPageLayout';
-import { AuditDocTypecolumnsByTab, AuditformatDate, searchIconStyle, searchInputStyle } from '../AuditCommonCodes/auditCommonStyle';
+import { AuditDocTypecolumnsByTab, searchIconStyle, searchInputStyle } from '../AuditCommonCodes/auditCommonStyle';
 import DateRangeFilter from '../AuditCommonCodes/DateRangeFilter';
+import VirtualTable from '../VirtualTable';
 
 const DocMasterAudit = () => {
     const [selectedTab, setSelectedTab] = useState('Created');
     const [searchTerm, setSearchTerm] = useState('');
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
 
     // Queries
-    const { isLoading: isLoadingCreated, data: createdData } = useQuery({
+    const { data: createdData } = useQuery({
         queryKey: ["getCreatedDocMastAudit"],
         queryFn: getDocTypeCreateAuditReports,
         // staleTime: Infinity,
         refetchOnWindowFocus: false,
     });
 
-    const { isLoading: isLoadingEdited, data: editedData } = useQuery({
+    const { data: editedData } = useQuery({
         queryKey: ["getEditedDocMastAudit"],
         queryFn: getDocTypeEditAuditReports,
         // staleTime: Infinity,
@@ -43,51 +37,40 @@ const DocMasterAudit = () => {
 
     // Filter logs by date
     const dateFilteredLogs = auditLogs.filter((log) => {
-        try {
-            // Determine the date of the log
-            const logDate = new Date(log.timestamp || log.create_date || log.edit_date);
-            if (isNaN(logDate.getTime())) return false;
+        // Determine the date of the log
+        const logDate = new Date(log.timestamp || log.create_date || log.edit_date);
+        if (isNaN(logDate.getTime())) return false;
 
-            const from = fromDate ? new Date(fromDate) : null;
-            const to = toDate ? new Date(toDate) : null;
+        const from = fromDate ? new Date(fromDate) : null;
+        const to = toDate ? new Date(toDate) : null;
 
-            // Check if log is before "from" date
-            if (from && logDate < from) return false;
+        // Check if log is before "from" date
+        if (from && logDate < from) return false;
 
-            // Check if log is after "to" date
-            if (to) {
-                const toEndOfDay = new Date(to);
-                toEndOfDay.setHours(23, 59, 59, 999);
-                if (logDate > toEndOfDay) return false;
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error filtering log by date:', log, error);
-            return false;
+        // Check if log is after "to" date
+        if (to) {
+            const toEndOfDay = new Date(to);
+            toEndOfDay.setHours(23, 59, 59, 999);
+            if (logDate > toEndOfDay) return false;
         }
+
+        return true;
     });
 
 
     // Search filter
     const filteredLogs = dateFilteredLogs.filter((log) => {
-        try {
-            // Collect all field values from the log object
-            const valuesToSearch = Object.values(log).map((v) =>
-                v !== null && v !== undefined ? String(v).toLowerCase() : ''
-            );
+        // Collect all field values from the log object
+        const valuesToSearch = Object.values(log).map((v) =>
+            v !== null && v !== undefined ? String(v).toLowerCase() : ''
+        );
 
-            // Check if any field contains the search term
-            return valuesToSearch.some((v) => v.includes(searchTerm.toLowerCase()));
-        } catch (error) {
-            console.error('Error filtering log by search term:', log, error);
-            return false;
-        }
+        // Check if any field contains the search term
+        return valuesToSearch.some((v) => v.includes(searchTerm.toLowerCase()));
     });
 
-
     return (
-        <DefaultPageLayout label="Document Master Audit Report">
+        <DefaultPageLayout label="Document Type Master Audit Report">
             <Box sx={{ mt: 0, p: 1, bgcolor: '#fff' }}>
                 {/* Tabs */}
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -134,60 +117,11 @@ const DocMasterAudit = () => {
                 </Box>
 
                 {/* Table */}
-                <TableContainer component={Paper} sx={{ borderRadius: 1 }}>
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{ bgcolor: '#f4f6f8' }}>
-                                {AuditDocTypecolumnsByTab[selectedTab].map((col) => (
-                                    <TableCell key={col.key} sx={{ fontWeight: 600 }}>
-                                        {col.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {(isLoadingCreated || isLoadingEdited) ? (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={AuditDocTypecolumnsByTab[selectedTab].length}
-                                        align="center"
-                                        sx={{ color: 'text.secondary', py: 3 }}
-                                    >
-                                        Loading...
-                                    </TableCell>
-                                </TableRow>
-                            ) : filteredLogs.length > 0 ? (
-                                filteredLogs.map((log, index) => (
-                                    <TableRow
-                                        key={log.audit_slno || log.id}
-                                        sx={{
-                                            '&:hover': { bgcolor: '#f9f9f9' },
-                                            transition: 'background 0.2s ease',
-                                        }}
-                                    >
-                                        {AuditDocTypecolumnsByTab[selectedTab].map((col) => {
-                                            let value = col.key === 'slno' ? index + 1 : log[col.key];
-                                            if (col.key === 'create_date' || col.key === 'edit_date') {
-                                                value = AuditformatDate(value);
-                                            }
-                                            return <TableCell key={col.key}>{value}</TableCell>;
-                                        })}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={AuditDocTypecolumnsByTab[selectedTab].length}
-                                        align="center"
-                                        sx={{ color: 'text.secondary', py: 3 }}
-                                    >
-                                        No Audit Records Found
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+
+                <VirtualTable
+                    data={filteredLogs}
+                    columns={AuditDocTypecolumnsByTab[selectedTab]}
+                />
             </Box>
         </DefaultPageLayout>
     );

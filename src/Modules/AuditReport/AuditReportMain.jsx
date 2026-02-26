@@ -26,14 +26,19 @@ const AuditReportMain = () => {
         { menuSlno: 29, menuName: 'Doc Type Audit Report', menuCodeName: 'DocTypeAuditReport' },
         { menuSlno: 30, menuName: 'Doc Sub Type Audit Report', menuCodeName: 'DocSubTypeReport' },
         { menuSlno: 31, menuName: 'Doc Category Audit Report', menuCodeName: 'DocCategoryReport' },
-        { menuSlno: 32, menuName: 'Doc Sub Category Report', menuCodeName: 'DocSubCategoryReport' },
-        { menuSlno: 33, menuName: 'Doc Nested Category Report', menuCodeName: 'DocNestedCategoryReport' },
+        { menuSlno: 32, menuName: 'Doc Sub Category Audit Report', menuCodeName: 'DocSubCategoryReport' },
+        { menuSlno: 33, menuName: 'Doc Nested Category Audit Report', menuCodeName: 'DocNestedCategoryReport' },
 
         { menuSlno: 34, menuName: 'Doc Group Audit Report', menuCodeName: 'DocGroupAuditReport' },
         { menuSlno: 35, menuName: 'Institute Type Audit Report', menuCodeName: 'InstituteTypeAuditReport' },
         { menuSlno: 36, menuName: 'Institute Mast Audit Report', menuCodeName: 'InstituteMastAuditReport' },
-        // { menuSlno: 37, menuName: 'Course Type Report', menuCodeName: 'CourseTypeAuditReport' },
-        // { menuSlno: 38, menuName: 'Course Name Report', menuCodeName: 'CourseAuditReport' },
+        { menuSlno: 37, menuName: 'Course Type Audit Report', menuCodeName: 'CourseTypeAuditReport' },
+        { menuSlno: 38, menuName: 'Course Name Audit Report', menuCodeName: 'CourseAuditReport' },
+        { menuSlno: 39, menuName: 'Location Master Audit Report', menuCodeName: 'LocationAuditReport' },
+        { menuSlno: 40, menuName: 'Rack Master Audit Report', menuCodeName: 'RackAuditReport' },
+        { menuSlno: 41, menuName: 'Custodian Audit Report', menuCodeName: 'CustodianAuditReport' },
+        { menuSlno: 42, menuName: 'Custodian Master Audit Report', menuCodeName: 'CustodianMasterAuditReport' },
+
     ]
     const employeemenu = menuName?.filter(menu =>
         userSettings?.some(item => item.menu_slno === menu.menuSlno)

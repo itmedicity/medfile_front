@@ -42,6 +42,9 @@ const RoootLayouts = () => {
   const [onclickGenerateOTPbtn, setonclickGenerateOTPbtn] = useState(false);
   const [loginwithUserCred, setloginwithUserCred] = useState(false);
 
+  //timer
+  const [resendTimer, setResendTimer] = useState(60); // 60 sec countdown
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
 
   useEffect(() => {
     const message = localStorage.getItem("message");
@@ -53,36 +56,69 @@ const RoootLayouts = () => {
   }, [])
 
   // GENERATE OTP FUNCTION
+  // const generateOtp = useCallback(() => {
+  //   // console.log("mob", mobileNumber);
+
+  //   if (mobileNumber === "") {
+  //     warningNofity("Mobile Number cannot be empty");
+  //     return;
+  //   }
+
+  //   if (!isValidOTPMobileNumber(mobileNumber)) {
+  //     //validity checking for 12 digit mobile number
+  //     warningNofity("Invalid Mobile Number");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   const sanitizedMobileNumber = sanitizeInput(mobileNumber);
+  //   axiosApi.get("/generateOTP/" + sanitizedMobileNumber).then((res) => {
+  //     const { message, success } = res.data;
+  //     if (success === 0) {
+  //       errorNofity(message);
+  //     } else if (success === 1) {
+  //       warningNofity(message);
+  //       setLoading(false);
+  //     } else if (success === 2) {
+  //       succesNofity(message);
+  //       setonclickGenerateOTPbtn(true);
+  //       setLoading(false);
+  //     } else {
+  //       errorNofity(message);
+  //       setLoading(false);
+  //     }
+  //   });
+  // }, [mobileNumber]);
+
+  //timer
   const generateOtp = useCallback(() => {
     if (mobileNumber === "") {
       warningNofity("Mobile Number cannot be empty");
       return;
     }
-
     if (!isValidOTPMobileNumber(mobileNumber)) {
-      //validity checking for 12 digit mobile number
       warningNofity("Invalid Mobile Number");
       return;
     }
+
     setLoading(true);
     const sanitizedMobileNumber = sanitizeInput(mobileNumber);
+
     axiosApi.get("/generateOTP/" + sanitizedMobileNumber).then((res) => {
       const { message, success } = res.data;
-      if (success === 0) {
-        errorNofity(message);
-      } else if (success === 1) {
-        warningNofity(message);
-        setLoading(false);
-      } else if (success === 2) {
+      if (success === 2) {
         succesNofity(message);
         setonclickGenerateOTPbtn(true);
-        setLoading(false);
+        setResendTimer(60);          // reset timer
+        setIsResendDisabled(true);   // disable resend initially
+      } else if (success === 1) {
+        warningNofity(message);
       } else {
         errorNofity(message);
-        setLoading(false);
       }
+      setLoading(false);
     });
   }, [mobileNumber]);
+
 
   // VERIFY OTP FUNCTION
   const verifyOTPFunction = useCallback(() => {
@@ -245,6 +281,22 @@ const RoootLayouts = () => {
 
   }, [userState])
 
+
+  //timer
+  useEffect(() => {
+    let timer;
+    if (isResendDisabled && resendTimer > 0) {
+      timer = setInterval(() => {
+        setResendTimer(prev => prev - 1);
+      }, 1000);
+    } else if (resendTimer === 0) {
+      setIsResendDisabled(false); // enable resend
+    }
+
+    return () => clearInterval(timer);
+  }, [resendTimer, isResendDisabled]);
+
+
   return (
     <Box className="flex flex-col justify-center items-center w-full h-screen "
       sx={{ backgroundColor: 'rgba(253, 253, 253)' }}
@@ -255,6 +307,7 @@ const RoootLayouts = () => {
       <Box
         sx={{
           position: "relative",
+          // minHeight: '55%',
           minHeight: '55%',
           maxWidth: "470px",
           width: "100%",
@@ -280,18 +333,19 @@ const RoootLayouts = () => {
             flexDirection: 'column',
           }}
         >
-          <Box className="h-20 p-4 flex justify-center items-center text-white">
+          <Box className="h-15 p-2 flex justify-center items-center text-white mt-1">
             <button onClick={handleChange}
               style={{
                 fontFamily: 'var(--font-varient)',
                 color: 'white',
-                fontWeight: 600
+                fontWeight: 600,
+
               }}
             >sign in with otp</button>
           </Box>
           {onclickGenerateOTPbtn ? (
             // {/* OTP Verification form start here */}
-            <Box className="flex flex-1 flex-col ">
+            <Box className="flex flex-1 flex-col " >
               <Box className="flex justify-center items-end" >
                 <Box component={'img'} src={Logo} width={'68px'} height={'105px'} className="flex ml-[-35px]" />
                 <Box className="flex float-start pb-2" sx={{ color: 'white', fontFamily: 'var(--font-varient)', fontSize: '1.2rem', fontWeight: 600 }} >Travancore Medicity</Box>
@@ -313,7 +367,7 @@ const RoootLayouts = () => {
                 numInputs={6}
                 renderInput={(props) => <input {...props} />}
                 containerStyle="flex items-center justify-center gap-2"
-                inputStyle="!mr-0 py-[0.4rem] !w-[2.4rem] rounded-lg outline-1 outline-[#53b6e7] text-[#001C30] text-xl"
+                inputStyle="!mr-0 py-[0.4rem] !w-[2.1rem] rounded-lg outline-1 outline-[#53b6e7] text-[#001C30] text-xl"
               />
               <Box className="flex pt-1 justify-center mt-4">
                 <Button
@@ -321,7 +375,7 @@ const RoootLayouts = () => {
                   size="md"
                   variant="outlined"
                   // color="neutral"
-                  className="w-[17.5rem] h-10"
+                  className="w-[17.5rem] h-09"
                   sx={{
                     color: "white",
                     borderColor: "#53b6e7",
@@ -337,9 +391,36 @@ const RoootLayouts = () => {
                   Verify OTP
                 </Button>
               </Box>
+
               <Box>
                 {/* RESEND OTP FUNCTION HERE */}
+                <Box className="flex flex-col items-center mt-2">
+                  <Box className="flex items-center gap-2 text-white text-sm">
+                    <span>Didn’t receive the code?</span>
+
+                    <Box sx={{ fontWeight: 600, color: "#FFD700", minWidth: "40px", textAlign: "center" }}>
+                      {`00:${resendTimer < 10 ? `0${resendTimer}` : resendTimer}`}
+                    </Box>
+
+
+                    <Box
+                      onClick={() => {
+                        if (!isResendDisabled) generateOtp();
+                      }}
+                      sx={{
+                        fontWeight: 700,
+                        cursor: isResendDisabled ? "not-allowed" : "pointer",
+                        color: isResendDisabled ? "#bfced5ab" : "White",
+                        "&:hover": { textDecoration: isResendDisabled ? "none" : "underline" },
+                      }}
+                    >
+                      Resend
+                    </Box>
+                  </Box>
+
+                </Box>
               </Box>
+
             </Box>
           ) : (
             // {/* OTP verification form end here */}
@@ -439,7 +520,7 @@ const RoootLayouts = () => {
           }}
         >
           <Box
-            className="h-20 p-4 flex justify-center items-center text-white"
+            className="h-20 p-3 flex justify-center items-center text-white"
           >
             <button onClick={handleChange}
               style={{

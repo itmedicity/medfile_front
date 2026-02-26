@@ -73,7 +73,7 @@ import SelectNestedCate from "../../../Components/SelectNestedCate";
 const EditDocUpload = ({ refetchDocList, params }) => {
 
     const queryClient = useQueryClient();
-    const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAMS
+    const { doc_slno, doc_id } = params.row; // DATA FROM TABLE ACTION || FROM THE PARAM
 
     const docmntSlno = doc_slno; // ID FOR GETTIG THE DOC DETAILS
     const docmntID = doc_id
@@ -140,11 +140,15 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     const { isLoading, data, error, refetch: refetchDocInfoByID } = useQuery({
         queryKey: ["getDocInfoByID", docmntSlno],
         queryFn: async () => await getDocInforByID(docmntSlno),
+        enabled: !!docmntSlno,
+
         // enabled: false,
         // staleTime: Infinity,
     });
 
     const docData = useMemo(() => data, [data]);
+
+    // console.log("docData:", docData);
 
 
     useEffect(() => {
@@ -362,26 +366,14 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
                     };
                 });
-                // console.log("enrichedItems::::::::::", enrichedItems);
                 return {
                     docVer: `${docVer}.${firstItem.docVer_amentment}.${firstItem.dovVer_infoAment}`,
                     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
                     docVersionAment: enrichedItems // enriched with uploaded images
                 };
 
-                // return {
-                //     docVer: docVer + "." + firstItem.docVer_amentment + "." + firstItem.dovVer_infoAment,
-                //     docVerDate: format(new Date(firstItem.docVerDate), "dd-MM-yyyy HH:mm"),
-                //     docVersionAment:
-                //         items,
-                //     matchedFiles
-
-                // };
             });
     }, [docDetlArray, UploadedImagesall, IPAddress, browserName, browserVersion, osName, osVersion]);
-
-    // console.log("docDetlInfpArray:", docDetlInfpArray);
-
 
 
     const handleModelOpen = async () => {
@@ -393,18 +385,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
     const PinIcon = <Pin height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Calender = <Calendar height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
     const Menuscale = <MenuScale height={16} width={16} color="rgba(var(--icon-primary))" style={{ opacity: 0.8 }} />
-    // if (!docData) return <div>Loading Document Details...</div>;
 
-    // HANDLE CHANGE FUNTIONS FOR UPDATING THE DOCUMENT DETAILS
-
-    // const handleDocumentUpdateChange = useCallback((e) => {
-    //     seteditDocumentState({ ...editDocumentState, [e.target.name]: sanitizeInput(e.target.value) });
-    // }, [editDocumentState]);
-
-    //   short_name,
-    //     lifelong_validity,
-    //     days_torenew
-    // } = editDocumentState;
     const handleDocumentUpdateChange = useCallback((e) => {
         const { name, value } = e.target;
 
@@ -433,90 +414,21 @@ const EditDocUpload = ({ refetchDocList, params }) => {
 
 
 
+    // useEffect(() => {
+    //     isLegalDoc === "true" ? seteditDocumentState({ ...editDocumentState, isSecure: true }) : seteditDocumentState({ ...editDocumentState, isSecure: false })
+    // }, [isLegalDoc])
     useEffect(() => {
-        isLegalDoc === "true" ? seteditDocumentState({ ...editDocumentState, isSecure: true }) : seteditDocumentState({ ...editDocumentState, isSecure: false })
-    }, [isLegalDoc])
+        seteditDocumentState(prev => ({
+            ...prev,
+            isSecure: Boolean(isLegalDoc)
+        }));
+    }, [isLegalDoc]);
 
 
     const handleUpdateDocument = useCallback(async (e) => {
 
         e.preventDefault();
 
-        // if (editDocumentState.doc_name === "") {
-        //     warningNofity("Document Name cannot be empty");
-        //     return;
-        // }
-
-        // if (editDocumentState.doc_desc === "") {
-        //     warningNofity("Document Description cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.doc_type) === 0) {
-        //     warningNofity("Document Type cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.doc_sub_type) === 0) {
-        //     warningNofity("Document Sub Type cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.institute) === 0) {
-        //     warningNofity("Institute cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.institute) === 2 && Number(editDocumentState.course) === 0) {
-        //     warningNofity("Course cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.category) === 0) {
-        //     warningNofity("Category cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.sub_category) === 0) {
-        //     warningNofity("Sub Category cannot be empty");
-        //     return;
-        // }
-
-        // if (Number(editDocumentState.group_mast) === 0) {
-        //     warningNofity("Group cannot be empty");
-        //     return;
-        // }
-
-        // if (Boolean(editDocumentState.isRequiredExp) === true && isValid(new Date(editDocumentState.doc_exp_start)) === false) {
-        //     warningNofity(
-        //         "Document Expiry Start Date cannot be empty || Valid Date is required"
-        //     );
-        //     return;
-        // }
-
-        // if (
-        //     Boolean(editDocumentState.isRequiredExp) === true &&
-        //     isValid(new Date(editDocumentState.doc_exp_end)) === false
-        // ) {
-        //     warningNofity(
-        //         "Document Expiry End Date cannot be empty || Valid Date is required"
-        //     );
-        //     return;
-        // }
-
-        // if (
-        //     Boolean(editDocumentState.isRequiredExp) === true &&
-        //     new Date(editDocumentState.doc_exp_start) > new Date(editDocumentState.doc_exp_end)
-        // ) {
-        //     warningNofity(
-        //         "Document Expiry Start Date cannot be greater than Expiry End Date"
-        //     );
-        //     return;
-        // }
-
-        //  docVer,
-        // docVersionAment,
-        //     docVersionInfoEdit,
 
         const FormPostData = {
             docID: doc_id,
@@ -566,10 +478,11 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             // console.log(updateRes)
         } catch (error) {
             // console.log(error)
-            errorNofity("Something went wrong".error);
+            errorNofity("Something went wrong");
         }
 
-    }, [editDocumentState, docVersionInfoEdit, docVer, user, docVersionAment, docmntSlno, IPAddress, browserName, browserVersion, osName, osVersion])
+        // }, [editDocumentState, docVersionInfoEdit, docVer, user, docVersionAment, docmntSlno, IPAddress, browserName, browserVersion, osName, osVersion])
+    }, [editDocumentState, docVersionInfoEdit, docVer, user, docVersionAment, doc_id, IPAddress, browserName, browserVersion, osName, osVersion])
 
     const docUpdationState = useMemo(() => {
         return {

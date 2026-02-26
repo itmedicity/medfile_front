@@ -28,6 +28,8 @@ const FileApprovals = () => {
         refetchOnWindowFocus: false
     });
 
+    // console.log("tableData:", tableData);
+
     useEffect(() => {
         if (data) {
             setTableData(data);
@@ -71,7 +73,7 @@ const FileApprovals = () => {
 
 
     const columns = useMemo(() => [
-        { field: "doc_slno", headerName: "Slno", width: 50, },
+        { field: "docslno", headerName: "Slno", width: 50, },
         { field: "actions", headerName: 'Actions', width: 70, type: 'actions', renderCell: renderCmp },
         { field: "apprvl_status", headerName: "Status", width: 70, renderCell: approvalStatus },
         { field: "doc_id", headerName: "Doc ID", width: 70, type: "number" },
