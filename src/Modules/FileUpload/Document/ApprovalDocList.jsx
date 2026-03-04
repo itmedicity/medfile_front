@@ -2,10 +2,11 @@ import { Box } from "@mui/joy";
 import React, { Fragment, memo, useCallback } from "react";
 import FileLink from "../../../assets/images/pdfSvg2.svg";
 import { useState } from "react";
-import FileDisplayModal from "./FileDisplayModal";
+// import FileDisplayModal from "./FileDisplayModal";
 import { format } from "date-fns";
 import JSZip from "jszip";
 import axiosApi from "../../../Axios/Axios";
+import ReqImageDisModal from "./ReqImageDisModal";
 
 const ApprovalDocList = ({ data }) => {
 
@@ -80,7 +81,8 @@ const ApprovalDocList = ({ data }) => {
 
             <Box className="p-1 border-[0.5px] rounded-md h-16 flex flex-1 flex-row mb-1 bg-bgcard border-borderprimary justify-between gap-1">
                 {openFile && (
-                    <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
+                    // <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
+                    <ReqImageDisModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
                 )}
 
                 <Box
