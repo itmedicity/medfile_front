@@ -9,6 +9,7 @@ import FileReplaceModal from "./FileReplaceModal";
 import FileDelete from "./FileDelete";
 import JSZip from "jszip";
 import axiosApi from "../../../Axios/Axios";
+import ReqImageDisModal from "./ReqImageDisModal";
 
 const FilleListCmp = ({ data, refetchDocDetl }) => {
     const {
@@ -107,7 +108,9 @@ const FilleListCmp = ({ data, refetchDocDetl }) => {
             ) : (
                 <Box className="p-1 border-[0.5px] rounded-md h-16 flex flex-1 flex-row mb-1 bg-bgcard border-borderprimary justify-between gap-1">
                     {openFile && (
-                        <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
+                        // <FileDisplayModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
+
+                        <ReqImageDisModal openFile={openFile} setOpenFile={setOpenFile} UploadedImages={UploadedImages} />
                     )}
                     <Box
 

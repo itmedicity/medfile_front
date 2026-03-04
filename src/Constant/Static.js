@@ -1,4 +1,6 @@
 export const API_URL = "http://192.168.22.3:58888/api";
+// export const API_URL = "http://192.168.10.88:58888/api";
+
 export const RETURN_URL = "http://192.168.22.3:3000";
 
 // export const NAS_FOLDER = "http://localhost/DocMeliora/Inteliqo/";

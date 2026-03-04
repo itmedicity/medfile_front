@@ -19,12 +19,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const FileDisplayModal = ({ openFile, setOpenFile, UploadedImages }) => {
 
+
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
 
     const fileType = UploadedImages?.blob?.type;
-
-    // console.log("fileType:", fileType);
 
     // const isImage = fileType?.startsWith('image/jpeg');
     const isImage = fileType?.startsWith('image/jpeg') || fileType?.startsWith('image/png');
@@ -52,7 +51,7 @@ const FileDisplayModal = ({ openFile, setOpenFile, UploadedImages }) => {
             aria-describedby="modal-desc"
             open={openFile}
             onClose={() => setOpenFile(false)}
-            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}
         >
             <ModalDialog size="lg" >
                 <Box

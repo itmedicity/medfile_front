@@ -20,7 +20,12 @@ const PdfViewComponent = ({ fileLink }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
+
+  // const fileType = UploadedImages?.blob?.type;
+
   const fileType = fileLink?.type;
+  // console.log("fileType:", fileType);
+
 
   const isImage = fileType?.startsWith('image/jpeg') || fileType?.startsWith('image/png');
   const isPDF = fileType === 'application/pdf';
@@ -78,13 +83,83 @@ const PdfViewComponent = ({ fileLink }) => {
       >
         <Box
           sx={{
+            width: '100%',
+            borderRadius: 1,
+            border: '0.1px solid grey',
+            margin: 'auto',
+            height: window.innerHeight - 180,
+            overflow: 'auto',
+            '::-webkit-scrollbar': { display: 'none' }
+          }}
+        >
+          {fileType?.startsWith('image') ? (
+            <img
+              src={fileLink.url}
+              alt='Preview'
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain'
+              }}
+            />
+          ) : fileType === 'application/pdf' ? (
+            <embed
+              src={fileLink.url}
+              type="application/pdf"
+              width="100%"
+              height="100%"
+            />
+          ) : (
+            <Skeleton
+              variant="rectangular"
+              sx={{
+                height: "calc(100vh - 180px)",
+                backgroundColor: "rgba(var(--border-primary))",
+              }}
+              animation="wave"
+            />
+          )}
+        </Box>
+
+        {/* <Box
+          sx={{
             display: "flex",
             overflow: "scroll",
             justifyContent: "center",
           }}
         >
+          {fileType?.startsWith('image') ? (
+            <img
+              src={fileLink.url}
+              alt='Preview'
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain'
+              }}
+            />
+          ) : fileType === 'application/pdf' ? (
+            <embed
+              src={fileLink.url}
+              type="application/pdf"
+            // style={{
+            //   width: '100%',
+            //   height: '100%',
+            //   objectFit: 'contain'
+            // }}
+            />
+          ) : (
+            <Skeleton
+              variant="rectangular"
+              sx={{
+                height: "calc(100vh - 180px)",
+                backgroundColor: "rgba(var(--border-primary))",
+              }}
+              animation="wave"
+            />
+          )} */}
 
-          {fileType === 'image/jpeg' || fileType === 'image/png' ? (
+        {/* {fileType === 'image/jpeg' || fileType === 'image/png' ? (
             <img
               src={fileLink.url}
               alt="Preview"
@@ -112,9 +187,9 @@ const PdfViewComponent = ({ fileLink }) => {
                 }}
                 animation="wave"
               />
-            )}
+            )} */}
 
-        </Box>
+        {/* </Box> */}
       </Box>
     </>
   );
