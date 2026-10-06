@@ -54,6 +54,7 @@ import { MultiplePages, MenuScale, MessageText, Pin, Calendar, Lock, LockSlash, 
 import CustomTypoHeader from "../Components/CustomTypoHeader";
 import CustomTypoPara from "../Components/CustomTypoPara";
 import SelectCmpRackMaster from "../../../Components/SelectCmpRackMaster";
+import SelectCmpCustodienDept from "../../../Components/SelectCmpCustodienDept";
 import SelectCmpCustodianMaster from "../../../Components/SelectCmpCustodianMaster";
 import CustomCheckBoxWithLabel from "../../../Components/CustomCheckBoxWithLabel";
 import CustomInput from "../../../Components/CustomInput";
@@ -188,6 +189,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                 rac_desc: docData?.rac_desc,
                 loc_name: docData?.loc_name,
                 rack: docData?.rack,
+                docCustodianDept: docData?.docCustodian || 0,
+                docCustodianName: 0,
                 docCustodian: docData?.docCustodian,
                 cust_name: docData?.cust_name,
                 uploadUser: docData?.uploadUser,
@@ -234,6 +237,8 @@ const EditDocUpload = ({ refetchDocList, params }) => {
         rac_desc,
         loc_name,
         rack,
+        docCustodianDept,
+        docCustodianName,
         docCustodian,
         cust_name,
         uploadUser,
@@ -452,7 +457,7 @@ const EditDocUpload = ({ refetchDocList, params }) => {
             isSecure: Boolean(editDocumentState.isSecure) === true ? 1 : 0,
             isLegalDoc: Boolean(editDocumentState.isLegalDoc) === true ? 1 : 0,
             docRack: Number(editDocumentState.docRack),
-            docCustodian: Number(editDocumentState.docCustodian),
+            docCustodian: Number(editDocumentState.docCustodianDept),
             docEditDate: format(new Date(), "yyyy-MM-dd HH:mm"),
             userID: user,
             docActiveStatus: 0,
@@ -913,18 +918,30 @@ const EditDocUpload = ({ refetchDocList, params }) => {
                                                                 </Box>
                                                             </>
                                                         ) : null}
-                                                        <Box className="flex flex-1 py-[0.4rem] gap-5" >
-                                                            {/* rack  name */}
+                                                         <Box className="flex flex-1 py-[0.4rem] gap-5" >
+                                                             {/* rack  name */}
                                                             <SelectCmpRackMaster
                                                                 label={"Rack Name"}
                                                                 handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "docRack", value: element } })}
                                                                 value={docRack}
                                                             />
+                                                        </Box>
+                                                        <Box className="flex flex-1 py-[0.4rem] gap-5" >
+                                                            {/* custodian department */}
+                                                            <SelectCmpCustodienDept
+                                                                label={"Custodian Department"}
+                                                                handleChange={(e, element) => {
+                                                                    handleDocumentUpdateChange({ target: { name: "docCustodianDept", value: element } });
+                                                                    handleDocumentUpdateChange({ target: { name: "docCustodianName", value: 0 } });
+                                                                }}
+                                                                value={docCustodianDept}
+                                                            />
                                                             {/* custodian name */}
                                                             <SelectCmpCustodianMaster
                                                                 label={"Custodian Name"}
-                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "docCustodian", value: element } })}
-                                                                value={docCustodian}
+                                                                custDeptSlno={docCustodianDept}
+                                                                handleChange={(e, element) => handleDocumentUpdateChange({ target: { name: "docCustodianName", value: element } })}
+                                                                value={docCustodianName}
                                                             />
                                                         </Box>
                                                         {/* Document Validity Period */}

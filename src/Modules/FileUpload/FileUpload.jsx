@@ -63,6 +63,7 @@ import MarkUnreadChatAltOutlinedIcon from "@mui/icons-material/MarkUnreadChatAlt
 import { PageStar, PrivacyPolicy } from 'iconoir-react'
 import CustomCheckBoxWithLabel from "../../Components/CustomCheckBoxWithLabel";
 import SelectCmpRackMaster from "../../Components/SelectCmpRackMaster";
+import SelectCmpCustodienDept from "../../Components/SelectCmpCustodienDept";
 import SelectCmpCustodianMaster from "../../Components/SelectCmpCustodianMaster";
 import CommonRightBasedMenus from "../../Components/CommonRightBasedMenus";
 import SelectNestedCate from "../../Components/SelectNestedCate";
@@ -168,6 +169,7 @@ const FileUpload = () => {
     isSecure: false,
     isLegalDoc: false,
     docRack: 0,
+    docCustodianDept: 0,
     docCustodian: 0,
     shortName: '',
     lifeLongValidity: false,
@@ -194,6 +196,7 @@ const FileUpload = () => {
     isSecure,
     isLegalDoc,
     docRack,
+    docCustodianDept,
     docCustodian,
     shortName,
     lifeLongValidity,
@@ -425,7 +428,7 @@ const FileUpload = () => {
       isSecure: Boolean(documentState.isSecure) === true ? 1 : 0,
       isLegalDoc: Boolean(documentState.isLegalDoc) === true ? 1 : 0,
       docRack: Number(documentState.docRack),
-      docCustodian: Number(documentState.docCustodian),
+      docCustodian: Number(documentState.docCustodianDept),
       userID: user,
       docUpload: format(new Date(), "yyyy-MM-dd HH:mm"),
       shortName: documentState.shortName,
@@ -504,6 +507,7 @@ const FileUpload = () => {
       isSecure: false,
       isLegalDoc: false,
       docRack: 0,
+      docCustodianDept: 0,
       docCustodian: 0,
       shortName: '',
       lifeLongValidity: false,
@@ -939,9 +943,22 @@ const FileUpload = () => {
                         handleChange={(e, element) => handleDocumentState({ target: { name: "docRack", value: element } })}
                         value={docRack}
                       />
+                    </Box>
+
+                    <Box className="flex flex-1 py-[0.4rem] gap-2" >
+                      {/* custodian department */}
+                      <SelectCmpCustodienDept
+                        label={"Custodian Department"}
+                        handleChange={(e, element) => {
+                          handleDocumentState({ target: { name: "docCustodianDept", value: element } });
+                          handleDocumentState({ target: { name: "docCustodian", value: 0 } });
+                        }}
+                        value={docCustodianDept}
+                      />
                       {/* custodian name */}
                       <SelectCmpCustodianMaster
                         label={"Custodian Name"}
+                        custDeptSlno={docCustodianDept}
                         handleChange={(e, element) => handleDocumentState({ target: { name: "docCustodian", value: element } })}
                         value={docCustodian}
                       />
