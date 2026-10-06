@@ -483,6 +483,22 @@ export const getSelectCustodianDepartmentData = async () => {
     });
 };
 
+export const getCustodianByDept = async (deptId) => {
+  return await axiosApi.get(`/custodianMaster/selectCustodianByDept/${deptId}`)
+    .then((res) => {
+      const { success, data } = res.data;
+      if (success === 1) {
+        return data?.map((item) => {
+          return {
+            value: item.cust_slno,
+            label: item.cust_name.toUpperCase()
+          };
+        });
+      }
+      return [];
+    });
+};
+
 export const getAllSuperUsers = async () => {
   return await axiosApi.get(`/user/getSuperUsers`).then((res) => {
     const { success, data } = res.data;
